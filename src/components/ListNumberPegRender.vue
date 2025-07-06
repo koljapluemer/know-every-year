@@ -25,7 +25,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="item in associations" :key="item.number">
+          <tr 
+            v-for="item in associations" 
+            :key="item.number"
+            class="cursor-pointer hover:bg-base-200 transition-colors"
+            @click="navigateToManage(item.number)"
+          >
             <td class="font-mono text-lg font-bold">{{ item.number }}</td>
             <td>
               <span v-if="item.association" class="font-medium">
@@ -60,6 +65,7 @@
 
 <script setup lang="ts">
 import { CheckCircle, Circle } from 'lucide-vue-next'
+import { useRouter } from 'vue-router'
 
 interface Props {
   associations: Array<{
@@ -70,5 +76,10 @@ interface Props {
   total: number
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+const router = useRouter()
+
+const navigateToManage = (number: string) => {
+  router.push({ name: 'ManagePeg', params: { number } })
+}
 </script>

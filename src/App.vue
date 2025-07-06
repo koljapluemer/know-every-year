@@ -6,7 +6,12 @@
     </nav>
   </header>
   <RouterView />
+  <ToastManager />
 </template>
+
+<script setup lang="ts">
+import ToastManager from './ui/ToastManager.vue'
+</script>
 
 <style>
 @import "tailwindcss";

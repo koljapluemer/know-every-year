@@ -123,6 +123,7 @@ interface Props {
     secondDigit: number
     firstDigitAssociation?: DigitAssociation
     secondDigitAssociation?: DigitAssociation
+    prefillData?: { word: string; notes: string } | null
 }
 
 const props = defineProps<Props>()
@@ -131,8 +132,8 @@ const emit = defineEmits<{
 }>()
 
 const form = reactive({
-    word: '',
-    notes: ''
+    word: props.prefillData?.word || '',
+    notes: props.prefillData?.notes || ''
 })
 
 const errors = reactive({
@@ -155,8 +156,10 @@ const handleSubmit = () => {
         notes: form.notes.trim() || undefined
     })
 
-    // Reset form
-    form.word = ''
-    form.notes = ''
+    // Don't reset form when editing - let the parent handle navigation
+    if (!props.prefillData) {
+        form.word = ''
+        form.notes = ''
+    }
 }
 </script>

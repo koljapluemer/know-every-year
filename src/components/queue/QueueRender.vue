@@ -6,7 +6,7 @@
     </div>
 
     <!-- Task components -->
-    <div v-else>
+    <div v-else class="text-center flex-col gap-8 flex items-center">
       <!-- TaskRememberWordByNumber -->
       <div v-if="currentTask.component === 'TaskRememberWordByNumber'">
         <InstructionRender 

@@ -3,6 +3,7 @@ import ListAllNumberPegsPage from './pages/ListAllNumberPegsPage.vue'
 import ManageNumberPegPage from './pages/ManageNumberPegPage.vue'
 import ManageDigitPegsPage from './pages/ManageDigitPegsPage.vue'
 import QueuePage from './pages/QueuePage.vue'
+import ListAllYearsPage from './pages/ListAllYearsPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -31,6 +32,11 @@ const router = createRouter({
       path: '/practice',
       name: 'Practice',
       component: QueuePage
+    },
+    {
+      path: '/year-associations',
+      name: 'YearAssociations',
+      component: ListAllYearsPage
     }
   ]
 })

@@ -2,8 +2,6 @@
     <div class="max-w-2xl mx-auto p-6">
         <!-- Number display -->
         <div class="text-center mb-8">
-            <p class="text-lg text-gray-600">Create your association for this number</p>
-
             <h1 class="text-9xl font-bold text-primary mb-4">{{ number }}</h1>
         </div>
 

@@ -5,6 +5,7 @@
       <RouterLink class="btn btn-primary" :class="{ 'btn-secondary': $route.name === 'Practice' }" :to="{ name: 'Practice' }">Practice</RouterLink>
       <RouterLink class="btn" :class="{ 'btn-secondary': $route.name === 'ManageDigitPegs' }" :to="{ name: 'ManageDigitPegs' }">Digit Pegs</RouterLink>
       <RouterLink class="btn" :class="{ 'btn-secondary': $route.name === 'ListPegs' }" :to="{ name: 'ListPegs' }">Number Pegs</RouterLink>
+      <RouterLink class="btn" :class="{ 'btn-secondary': $route.name === 'YearAssociations' }" :to="{ name: 'YearAssociations' }">Year Events</RouterLink>
     </nav>
   </header>
   <RouterView />

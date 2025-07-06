@@ -1,12 +1,10 @@
 <template>
-  <header class="flex flex-row justify-between p-4 mb-4">
-    <h1 class="text-2xl font-bold">Know Every Year</h1>
-    <nav class="flex gap-2 justify-center">
-      <RouterLink class="btn btn-primary" :class="{ 'btn-secondary': $route.name === 'Practice' }" :to="{ name: 'Practice' }">Practice</RouterLink>
-      <RouterLink class="btn" :class="{ 'btn-secondary': $route.name === 'ManageDigitPegs' }" :to="{ name: 'ManageDigitPegs' }">Digit Pegs</RouterLink>
-      <RouterLink class="btn" :class="{ 'btn-secondary': $route.name === 'ListPegs' }" :to="{ name: 'ListPegs' }">Number Pegs</RouterLink>
-      <RouterLink class="btn" :class="{ 'btn-secondary': $route.name === 'YearAssociations' }" :to="{ name: 'YearAssociations' }">Year Events</RouterLink>
-    </nav>
+  <header class="navbar bg-base-100 shadow-sm mb-4">
+    <div class="navbar-start">
+      <h1 class="text-xl font-bold lg:text-2xl">Know Every Year</h1>
+    </div>
+    
+    <NavList :nav-items="navItems" />
   </header>
   <RouterView />
   <ToastManager />
@@ -14,6 +12,14 @@
 
 <script setup lang="ts">
 import ToastManager from './ui/ToastManager.vue'
+import NavList from '@/components/widgets/NavList.vue'
+
+const navItems = [
+  { name: 'Practice', label: 'Practice', isPrimary: true },
+  { name: 'ManageDigitPegs', label: 'Digit Pegs' },
+  { name: 'ListPegs', label: 'Number Pegs' },
+  { name: 'YearAssociations', label: 'Year Events' }
+]
 </script>
 
 <style>

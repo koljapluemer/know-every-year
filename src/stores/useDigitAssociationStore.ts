@@ -328,5 +328,25 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
     }
   },
 
-  persist: true
+  persist: {
+    afterHydrate: (ctx) => {
+      // Convert string dates back to Date objects after hydration
+      Object.values(ctx.store.associations).forEach((association: any) => {
+        if (association.numberToSoundLearningData?.due && typeof association.numberToSoundLearningData.due === 'string') {
+          association.numberToSoundLearningData.due = new Date(association.numberToSoundLearningData.due)
+        }
+        if (association.soundToNumberLearningData?.due && typeof association.soundToNumberLearningData.due === 'string') {
+          association.soundToNumberLearningData.due = new Date(association.soundToNumberLearningData.due)
+        }
+      })
+      
+      // Handle ignored sounds
+      if (ctx.store.ignoredSounds?.numberToSoundLearningData?.due && typeof ctx.store.ignoredSounds.numberToSoundLearningData.due === 'string') {
+        ctx.store.ignoredSounds.numberToSoundLearningData.due = new Date(ctx.store.ignoredSounds.numberToSoundLearningData.due)
+      }
+      if (ctx.store.ignoredSounds?.soundToNumberLearningData?.due && typeof ctx.store.ignoredSounds.soundToNumberLearningData.due === 'string') {
+        ctx.store.ignoredSounds.soundToNumberLearningData.due = new Date(ctx.store.ignoredSounds.soundToNumberLearningData.due)
+      }
+    }
+  }
 })

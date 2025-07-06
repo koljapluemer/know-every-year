@@ -216,5 +216,14 @@ export const useYearAssociationStore = defineStore('yearAssociation', {
     }
   },
 
-  persist: true
+  persist: {
+    afterHydrate: (ctx) => {
+      // Convert string dates back to Date objects after hydration
+      Object.values(ctx.store.years).forEach((year: any) => {
+        if (year.yearToEventsLearningData?.due && typeof year.yearToEventsLearningData.due === 'string') {
+          year.yearToEventsLearningData.due = new Date(year.yearToEventsLearningData.due)
+        }
+      })
+    }
+  }
 })

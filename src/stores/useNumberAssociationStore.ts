@@ -320,5 +320,17 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
     }
   },
 
-  persist: true
+  persist: {
+    afterHydrate: (ctx) => {
+      // Convert string dates back to Date objects after hydration
+      Object.values(ctx.store.associations).forEach((association: any) => {
+        if (association.numberToWordLearningData?.due && typeof association.numberToWordLearningData.due === 'string') {
+          association.numberToWordLearningData.due = new Date(association.numberToWordLearningData.due)
+        }
+        if (association.wordToNumberLearningData?.due && typeof association.wordToNumberLearningData.due === 'string') {
+          association.wordToNumberLearningData.due = new Date(association.wordToNumberLearningData.due)
+        }
+      })
+    }
+  }
 })

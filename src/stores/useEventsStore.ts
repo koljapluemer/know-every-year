@@ -197,5 +197,14 @@ export const useEventsStore = defineStore('events', {
     }
   },
 
-  persist: true
+  persist: {
+    afterHydrate: (ctx) => {
+      // Convert string dates back to Date objects after hydration
+      Object.values(ctx.store.events).forEach((event: any) => {
+        if (event.eventToYearLearningData?.due && typeof event.eventToYearLearningData.due === 'string') {
+          event.eventToYearLearningData.due = new Date(event.eventToYearLearningData.due)
+        }
+      })
+    }
+  }
 })

@@ -111,24 +111,49 @@ export function useQueueUtils() {
       }))
   })
 
-  // Debug log - only due
-  console.log('Queue Utils - Exercise Counts:')
-  console.log('Number Associations:')
-  console.log(`  Number→Word: ${getNrOfDueNumberToWordExercises.value} due`)
-  console.log(`  Word→Number: ${getNrOfDueWordToNumberExercises.value} due`)
-  console.log('Digit Associations:')
-  console.log(`  Digit→Sound: ${getNrOfDueDigitToSoundExercises.value} due`)
-  console.log(`  Sound→Digit: ${getNrOfDueSoundToDigitExercises.value} due`)
-  console.log('Year Associations:')
-  console.log(`  Year→Events: ${getNrOfDueYearToEventsExercises.value} due`)
-  console.log(`  Event→Year: ${getNrOfDueEventToYearExercises.value} due`)
-  console.log('Peg Creation:')
-  console.log(`  Create Peg: ${getNrOfDigitsWithoutAssociation.value} available`)
-  console.log('Event Creation:')
-  console.log(`  Create Events: ${getNrOfYearsWithoutEvents.value} available`)
+  // Debug logging - only computed when accessed
+  const debugExerciseCounts = computed(() => {
+    console.log('🔍 DEBUG: Queue Utils - Exercise Counts:')
+    console.log('🔍 DEBUG: Current time:', new Date().toISOString())
+    
+    // Debug store states
+    console.log('🔍 DEBUG: Number Association Store - Total associations:', Object.keys(numberAssociationStore.associations).length)
+    console.log('🔍 DEBUG: Digit Association Store - Total associations:', Object.keys(digitAssociationStore.associations).length)
+    console.log('🔍 DEBUG: Events Store - Total events:', Object.keys(eventsStore.events).length)
+    console.log('🔍 DEBUG: Year Association Store - Total years:', Object.keys(yearAssociationStore.years).length)
+    
+    // Debug due calculations
+    const dueNumbers = numberAssociationStore.getDueNumbers
+    const dueWords = numberAssociationStore.getDueWords
+    const dueDigits = digitAssociationStore.getDueDigits
+    const dueSounds = digitAssociationStore.getDueSounds
+    const dueYears = yearAssociationStore.getDueYears
+    const dueEvents = eventsStore.getDueEvents
+    
+    console.log('🔍 DEBUG: Raw due results:')
+    console.log('  Number→Word due:', dueNumbers.length, dueNumbers)
+    console.log('  Word→Number due:', dueWords.length, dueWords)
+    console.log('  Digit→Sound due:', dueDigits.length, dueDigits)
+    console.log('  Sound→Digit due:', dueSounds.length, dueSounds)
+    console.log('  Year→Events due:', dueYears.length, dueYears)
+    console.log('  Event→Year due:', dueEvents.length, dueEvents)
+    
+    console.log('🔍 DEBUG: Computed counts:')
+    console.log(`  Number→Word: ${getNrOfDueNumberToWordExercises.value} due`)
+    console.log(`  Word→Number: ${getNrOfDueWordToNumberExercises.value} due`)
+    console.log(`  Digit→Sound: ${getNrOfDueDigitToSoundExercises.value} due`)
+    console.log(`  Sound→Digit: ${getNrOfDueSoundToDigitExercises.value} due`)
+    console.log(`  Year→Events: ${getNrOfDueYearToEventsExercises.value} due`)
+    console.log(`  Event→Year: ${getNrOfDueEventToYearExercises.value} due`)
+    console.log(`  Create Peg: ${getNrOfDigitsWithoutAssociation.value} available`)
+    console.log(`  Create Events: ${getNrOfYearsWithoutEvents.value} available`)
+  })
 
   // Only due categories
   const getAvailableCategories = computed((): QueueTaskCategoryInfo[] => {
+    // Trigger debug logging when categories are computed
+    debugExerciseCounts.value
+    
     const categories: QueueTaskCategoryInfo[] = []
 
     if (getNrOfDueNumberToWordExercises.value > 0) {

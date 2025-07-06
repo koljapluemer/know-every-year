@@ -12,5 +12,5 @@
 </template>
 
 <script setup lang="ts">
-import ManageDigitPegsControl from '../components/ManageDigitPegsControl.vue'
+import ManageDigitPegsControl from '../components/forms/manage/ManageDigitPegsControl.vue'
 </script>

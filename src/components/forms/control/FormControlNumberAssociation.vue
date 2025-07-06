@@ -12,8 +12,8 @@
 
 <script setup lang="ts">
 import { computed, watch } from 'vue'
-import { useDigitAssociationStore } from '../stores/useDigitAssociationStore'
-import { useNumberAssociationStore } from '../stores/useNumberAssociationStore'
+import { useDigitAssociationStore } from '../../../stores/useDigitAssociationStore'
+import { useNumberAssociationStore } from '../../../stores/useNumberAssociationStore'
 import NumberPegFormRender from './NumberPegFormRender.vue'
 
 interface Props {

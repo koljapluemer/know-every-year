@@ -12,5 +12,5 @@
 </template>
 
 <script setup lang="ts">
-import ListAllNumberPegControl from '../components/ListAllNumberPegControl.vue'
+import ListAllNumberPegControl from '../components/lists/control/ListAllNumberPegControl.vue'
 </script>

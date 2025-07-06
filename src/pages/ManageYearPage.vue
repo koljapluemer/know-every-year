@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import ManageYearControl from '../components/ManageYearControl.vue'
+import ManageYearControl from '../components/forms/control/ManageYearControl.vue'
 
 interface Props {
   year: string

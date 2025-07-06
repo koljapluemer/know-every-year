@@ -2,8 +2,8 @@
     <div class="max-w-2xl mx-auto p-6">
         <!-- Exercise question -->
         <div class="text-center mb-8">
-            <h2 class="text-2xl font-bold mb-4">What digit is associated with this sound?</h2>
-            <div class="text-6xl font-bold text-primary mb-6 break-words">{{ sound }}</div>
+            <h2 class="text-2xl font-bold mb-4">What number is associated with this word?</h2>
+            <div class="text-6xl font-bold text-primary mb-6 break-words">{{ association?.word }}</div>
         </div>
 
         <!-- Reveal section -->
@@ -14,8 +14,8 @@
             <!-- Answer display -->
             <div class="card bg-base-100 shadow-lg">
                 <div class="card-body text-center">
-                    <p class="text-6xl font-bold text-primary mb-2">{{ digit }}</p>
-                    <p v-if="notes" class="text-gray-600">{{ notes }}</p>
+                    <p class="text-6xl font-bold text-primary mb-2">{{ number }}</p>
+                    <p v-if="association?.notes" class="text-gray-600">{{ association.notes }}</p>
                 </div>
             </div>
 
@@ -27,12 +27,12 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useDigitAssociationStore } from '@/stores/useDigitAssociationStore'
+import { useNumberAssociationStore } from '@/stores/useNumberAssociationStore'
 import { useTaskButtons } from '@/components/queue/widgets/buttonRow/useTaskButtons'
 import TaskButtonRender from '@/components/queue/widgets/buttonRow/TaskButtonRender.vue'
 
 interface Props {
-    sound: string
+    number: string
 }
 
 const props = defineProps<Props>()
@@ -40,28 +40,19 @@ const emit = defineEmits<{
     'exercise-completed': []
 }>()
 
-const digitAssociationStore = useDigitAssociationStore()
+const numberAssociationStore = useNumberAssociationStore()
 const { createRevealButton, createRatingButtons } = useTaskButtons()
 const isRevealed = ref(false)
 
-const digit = computed(() => {
-    const digitValue = digitAssociationStore.getDigitForSound(props.sound)
-    return digitValue?.toString() || '?'
-})
-
-const notes = computed(() => {
-    const digitValue = digitAssociationStore.getDigitForSound(props.sound)
-    if (digitValue === null) return undefined
-    return digitAssociationStore.associations[digitValue]?.notes
-})
+const association = computed(() => numberAssociationStore.getAssociation(props.number))
 
 const revealAnswer = () => {
     isRevealed.value = true
 }
 
 const selectRating = (rating: 'wrong' | 'hard' | 'good' | 'easy') => {
-    // Update the sound card with the rating
-    digitAssociationStore.updateSoundCard(props.sound, rating)
+    // Update the word card with the rating
+    numberAssociationStore.updateWordCard(props.number, rating)
 
     // Pass the event up to load next exercise
     emit('exercise-completed')

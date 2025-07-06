@@ -88,7 +88,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { X, Plus, Info } from 'lucide-vue-next'
-import type { DigitAssociation } from '../entities/DigitAssociation'
+import type { DigitAssociation } from '../../../entities/DigitAssociation'
 import RenderDueDate from './RenderDueDate.vue'
 
 interface Props {

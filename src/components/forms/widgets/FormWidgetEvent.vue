@@ -57,7 +57,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue'
-import type { Event } from '../entities/YearAssociations'
+import type { Event } from '../../../entities/YearAssociations'
 
 interface Props {
   event?: Event // Optional for new events

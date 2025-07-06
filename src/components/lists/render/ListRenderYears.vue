@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import ListYearRender from './ListYearRender.vue'
+import ListYearRender from './lists/render/ListYearRender.vue'
 
 interface Props {
   years: string[]

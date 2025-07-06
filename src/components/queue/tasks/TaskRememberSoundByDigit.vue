@@ -33,8 +33,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useDigitAssociationStore } from '@/stores/useDigitAssociationStore'
-import { useTaskButtons } from '@/components/queue/widgets/useTaskButtons'
-import TaskButtonRender from '@/components/queue/widgets/TaskButtonRender.vue'
+import { useTaskButtons } from '@/components/queue/widgets/buttonRow/useTaskButtons'
+import TaskButtonRender from '@/components/queue/widgets/buttonRow/TaskButtonRender.vue'
 
 interface Props {
     digit: string

@@ -16,9 +16,7 @@
 
     <!-- Reveal Button -->
     <div v-if="!isRevealed" class="text-center mb-6">
-      <button @click="$emit('reveal')" class="btn btn-primary btn-lg">
-        Reveal Events
-      </button>
+      <TaskButtonRender :buttons="[revealButton]" />
     </div>
 
     <!-- Events Display -->
@@ -46,33 +44,7 @@
       <!-- Rating Buttons -->
       <div v-if="!isCompleted" class="card bg-base-100 shadow-lg">
         <div class="card-body">
-          
-          <div class="flex flex-wrap gap-4 justify-center">
-            <button 
-              @click="$emit('rate', 'wrong')"
-              class="btn btn-error btn-lg"
-            >
-              Wrong
-            </button>
-            <button 
-              @click="$emit('rate', 'hard')"
-              class="btn btn-warning btn-lg"
-            >
-              Hard
-            </button>
-            <button 
-              @click="$emit('rate', 'good')"
-              class="btn btn-success btn-lg"
-            >
-              Good
-            </button>
-            <button 
-              @click="$emit('rate', 'easy')"
-              class="btn btn-info btn-lg"
-            >
-              Easy
-            </button>
-          </div>
+          <TaskButtonRender :buttons="ratingButtons" :config="{ gap: 'lg' }" />
         </div>
       </div>
 
@@ -88,20 +60,60 @@
 </template>
 
 <script setup lang="ts">
-import type { Event } from '../entities/YearAssociations'
-import EventFormRender from './EventFormRender.vue'
+import { ref, computed } from 'vue'
+import { useYearAssociationStore } from '@/stores/useYearAssociationStore'
+import { useEventsStore } from '@/stores/useEventsStore'
+import { useTaskButtons } from '@/components/queue/widgets/buttonRow/useTaskButtons'
+import TaskButtonRender from '@/components/queue/widgets/buttonRow/TaskButtonRender.vue'
+import type { Event } from '@/entities/YearAssociations'
+import EventFormRender from '@/components/forms/widgets/FormWidgetEvent.vue'
 
 interface Props {
   year: string
-  events: Event[]
-  isRevealed: boolean
-  isCompleted: boolean
 }
 
 const props = defineProps<Props>()
-
 const emit = defineEmits<{
-  'reveal': []
-  'rate': [rating: 'wrong' | 'hard' | 'good' | 'easy']
+  'exercise-completed': []
 }>()
+
+const yearAssociationStore = useYearAssociationStore()
+const eventsStore = useEventsStore()
+const { createRevealButton, createRatingButtons } = useTaskButtons()
+
+// Reactive state
+const isRevealed = ref(false)
+const isCompleted = ref(false)
+
+// Computed properties
+const events = computed(() => eventsStore.getEventsForYear(props.year))
+
+// Methods
+const handleReveal = () => {
+  isRevealed.value = true
+}
+
+const handleRate = (rating: 'wrong' | 'hard' | 'good' | 'easy') => {
+  try {
+    // Update the year card with the rating
+    yearAssociationStore.updateYearCard(props.year, rating)
+    
+    // Mark as completed
+    isCompleted.value = true
+    
+    // Emit completion event
+    emit('exercise-completed')
+  } catch (error) {
+    console.error('Error updating year card:', error)
+  }
+}
+
+// Button configurations
+const revealButton = computed(() => 
+  createRevealButton(handleReveal, { label: 'Reveal Events' })
+)
+
+const ratingButtons = computed(() => 
+  createRatingButtons(handleRate, { size: 'lg' })
+)
 </script>

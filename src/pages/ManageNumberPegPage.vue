@@ -18,7 +18,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useNumberAssociationStore } from '../stores/useNumberAssociationStore'
-import NumberPegFormControl from '../components/NumberPegFormControl.vue'
+import NumberPegFormControl from '../components/forms/control/NumberPegFormControl.vue'
 
 const route = useRoute()
 const router = useRouter()

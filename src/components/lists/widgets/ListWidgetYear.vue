@@ -53,9 +53,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useYearAssociationStore } from '../stores/useYearAssociationStore'
-import { useNumberAssociationStore } from '../stores/useNumberAssociationStore'
-import { useEventsStore } from '../stores/useEventsStore'
+import { useYearAssociationStore } from '../../../stores/useYearAssociationStore'
+import { useNumberAssociationStore } from '../../../stores/useNumberAssociationStore'
+import { useEventsStore } from '../../../stores/useEventsStore'
 import RenderDueDate from './RenderDueDate.vue'
 
 interface Props {

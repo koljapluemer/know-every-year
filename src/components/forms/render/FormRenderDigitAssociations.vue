@@ -1,3 +1,4 @@
+<!-- special case: we have only 10 digits, thus one form for all the digits at once -->
 <template>
   <div class="max-w-6xl mx-auto space-y-8">
     <!-- Digit associations table -->
@@ -43,8 +44,8 @@
 </template>
 
 <script setup lang="ts">
-import type { DigitAssociation } from '../entities/DigitAssociation'
-import ManageDigitPegRender from './ManageDigitPegRender.vue'
+import type { DigitAssociation } from '../../../entities/DigitAssociation'
+import ManageDigitPegRender from './forms/widgets/FormWidgetDigitAssociation.vue'
 import ManageIgnoredSoundsRender from './ManageIgnoredSoundsRender.vue'
 
 interface Props {

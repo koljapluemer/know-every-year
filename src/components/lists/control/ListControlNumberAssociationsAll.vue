@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useNumberAssociationStore } from '../stores/useNumberAssociationStore'
+import { useNumberAssociationStore } from '../../../stores/useNumberAssociationStore'
 import ListNumberPegRender from './ListNumberPegRender.vue'
 
 const numberAssociationStore = useNumberAssociationStore()

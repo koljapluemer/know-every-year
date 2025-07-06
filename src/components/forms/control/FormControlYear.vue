@@ -20,10 +20,10 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
-import { useYearAssociationStore } from '../stores/useYearAssociationStore'
-import { useEventsStore } from '../stores/useEventsStore'
-import { useNumberAssociationStore } from '../stores/useNumberAssociationStore'
-import { useToast } from '../ui/useToast'
+import { useYearAssociationStore } from '../../../stores/useYearAssociationStore'
+import { useEventsStore } from '../../../stores/useEventsStore'
+import { useNumberAssociationStore } from '../../../stores/useNumberAssociationStore'
+import { useToast } from '../../../ui/useToast'
 import ManageYearRender from './ManageYearRender.vue'
 
 interface Props {

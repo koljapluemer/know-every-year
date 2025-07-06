@@ -13,8 +13,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useDigitAssociationStore } from '../stores/useDigitAssociationStore'
-import { useToast } from '../ui/useToast'
+import { useDigitAssociationStore } from '../../../stores/useDigitAssociationStore'
+import { useToast } from '../../../ui/useToast'
 import ManageDigitPegsRender from './ManageDigitPegsRender.vue'
 
 const digitAssociationStore = useDigitAssociationStore()

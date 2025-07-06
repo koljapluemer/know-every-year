@@ -10,18 +10,18 @@ interface DigitAssociationState {
 export const useDigitAssociationStore = defineStore('digitAssociation', {
   state: (): DigitAssociationState => ({
     associations: {
-      0: { sounds: ['s', 'z', 'soft c'], notes: 'z is the first letter of zero. The other letters have a similar sound.' },
-      1: { sounds: ['t', 'd'], notes: 'd & t have one downstroke and sound similar (some people include th here)' },
-      2: { sounds: ['n'], notes: 'n looks something like 2 on its side and has 2 downstrokes' },
-      3: { sounds: ['m'], notes: 'M looks like a 3 on its side and has three downstrokes' },
-      4: { sounds: ['r'], notes: '4 and R are almost mirror images of each other, R is the last letter of "fouR"' },
-      5: { sounds: ['l'], notes: 'L is the Roman Numeral for 50' },
-      6: { sounds: ['sh', 'soft ch', 'j', 'soft g', 'zh'], notes: 'g looks like an upside-down 6, cursive j looks kind of like a 6' },
-      7: { sounds: ['k', 'hard c', 'hard g', 'hard ch', 'q', 'qu'], notes: 'capital K looks like two sevens stuck together' },
-      8: { sounds: ['f', 'v'], notes: 'cursive f looks like 8, v is a vocalize f (some people include th here)' },
-      9: { sounds: ['p', 'b'], notes: 'P looks like a mirror-image of 9. b sounds similar look like a rotated 9' }
+      0: { sounds: ['s', 'z', 'soft c'], notes: 'z is the first letter of zero. The other letters have a similar sound.', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
+      1: { sounds: ['t', 'd'], notes: 'd & t have one downstroke and sound similar (some people include th here)', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
+      2: { sounds: ['n'], notes: 'n looks something like 2 on its side and has 2 downstrokes', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
+      3: { sounds: ['m'], notes: 'M looks like a 3 on its side and has three downstrokes', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
+      4: { sounds: ['r'], notes: '4 and R are almost mirror images of each other, R is the last letter of "fouR"', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
+      5: { sounds: ['l'], notes: 'L is the Roman Numeral for 50', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
+      6: { sounds: ['sh', 'soft ch', 'j', 'soft g', 'zh'], notes: 'g looks like an upside-down 6, cursive j looks kind of like a 6', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
+      7: { sounds: ['k', 'hard c', 'hard g', 'hard ch', 'q', 'qu'], notes: 'capital K looks like two sevens stuck together', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
+      8: { sounds: ['f', 'v'], notes: 'cursive f looks like 8, v is a vocalize f (some people include th here)', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
+      9: { sounds: ['p', 'b'], notes: 'P looks like a mirror-image of 9. b sounds similar look like a rotated 9', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() }
     },
-    ignoredSounds: { sounds: ['Vowel sounds', 'w', 'h', 'y'], notes: 'These sounds are ignored in the traditional Major System' }
+    ignoredSounds: { sounds: ['Vowel sounds', 'w', 'h', 'y'], notes: 'These sounds are ignored in the traditional Major System', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() }
   }),
 
   getters: {
@@ -78,26 +78,15 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
     },
 
     /**
-     * Get digits that have never been practiced (numberToSound direction)
-     */
-    getNewDigits: (state): number[] => {
-      return Object.entries(state.associations)
-        .filter(([_, association]) => !association.numberToSoundLearningData)
-        .map(([digit, _]) => parseInt(digit))
-    },
-
-    /**
      * Get sounds that are due for review (soundToNumber direction)
      */
     getDueSounds: (state): string[] => {
       const now = new Date()
       const dueSounds: string[] = []
-      
       Object.entries(state.associations).forEach(([digit, association]) => {
         if (association.soundToNumberLearningData) {
           try {
             if (association.soundToNumberLearningData.due <= now) {
-              // Add all sounds for this digit since they share the same card
               dueSounds.push(...association.sounds)
             }
           } catch (error) {
@@ -105,86 +94,52 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
           }
         }
       })
-      
       return dueSounds
-    },
-
-    /**
-     * Get sounds that have never been practiced (soundToNumber direction)
-     */
-    getNewSounds: (state): string[] => {
-      const newSounds: string[] = []
-      
-      Object.entries(state.associations).forEach(([digit, association]) => {
-        if (!association.soundToNumberLearningData) {
-          // Add all sounds for this digit since they share the same card
-          newSounds.push(...association.sounds)
-        }
-      })
-      
-      return newSounds
     }
   },
 
   actions: {
     /**
-     * Add a sound to a specific digit
+     * Add or update a digit association
      */
-    addSoundToDigit(digit: number, sound: string, notes?: string) {
+    setDigitAssociation(digit: number, association: DigitAssociation) {
       if (digit < 0 || digit > 9) {
         throw new Error('Digit must be between 0 and 9')
       }
-
-      if (!this.associations[digit]) {
-        this.associations[digit] = { sounds: [], notes }
-      }
-
-      if (!this.associations[digit].sounds.includes(sound)) {
-        this.associations[digit].sounds.push(sound)
-      }
-
-      if (notes && !this.associations[digit].notes) {
-        this.associations[digit].notes = notes
-      }
+      association.numberToSoundLearningData = createEmptyCard()
+      association.soundToNumberLearningData = createEmptyCard()
+      this.associations[digit] = association
     },
 
     /**
-     * Remove a sound from a specific digit
-     */
-    removeSoundFromDigit(digit: number, sound: string) {
-      if (digit < 0 || digit > 9) {
-        throw new Error('Digit must be between 0 and 9')
-      }
-
-      if (this.associations[digit]) {
-        this.associations[digit].sounds = this.associations[digit].sounds.filter((s: string) => s !== sound)
-      }
-    },
-
-    /**
-     * Update all sounds for a digit
+     * Update all sounds for a digit (reset due)
      */
     updateDigitSounds(digit: number, sounds: string[], notes?: string) {
       if (digit < 0 || digit > 9) {
         throw new Error('Digit must be between 0 and 9')
       }
-
-      this.associations[digit] = { sounds, notes }
+      this.associations[digit] = {
+        sounds,
+        notes,
+        numberToSoundLearningData: createEmptyCard(),
+        soundToNumberLearningData: createEmptyCard()
+      }
     },
 
     /**
-     * Update notes for a digit
+     * Update notes for a digit (reset due)
      */
     updateDigitNotes(digit: number, notes: string) {
       if (digit < 0 || digit > 9) {
         throw new Error('Digit must be between 0 and 9')
       }
-
-      if (!this.associations[digit]) {
-        this.associations[digit] = { sounds: [] }
+      const association = this.associations[digit] || { sounds: [] }
+      this.associations[digit] = {
+        ...association,
+        notes,
+        numberToSoundLearningData: createEmptyCard(),
+        soundToNumberLearningData: createEmptyCard()
       }
-
-      this.associations[digit].notes = notes
     },
 
     /**
@@ -230,18 +185,18 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
      */
     resetToDefaults() {
       this.associations = {
-        0: { sounds: ['s', 'z', 'soft c'], notes: 'z is the first letter of zero. The other letters have a similar sound.' },
-        1: { sounds: ['t', 'd'], notes: 'd & t have one downstroke and sound similar (some people include th here)' },
-        2: { sounds: ['n'], notes: 'n looks something like 2 on its side and has 2 downstrokes' },
-        3: { sounds: ['m'], notes: 'M looks like a 3 on its side and has three downstrokes' },
-        4: { sounds: ['r'], notes: '4 and R are almost mirror images of each other, R is the last letter of "fouR"' },
-        5: { sounds: ['l'], notes: 'L is the Roman Numeral for 50' },
-        6: { sounds: ['sh', 'soft ch', 'j', 'soft g', 'zh'], notes: 'g looks like an upside-down 6, cursive j looks kind of like a 6' },
-        7: { sounds: ['k', 'hard c', 'hard g', 'hard ch', 'q', 'qu'], notes: 'capital K looks like two sevens stuck together' },
-        8: { sounds: ['f', 'v'], notes: 'cursive f looks like 8, v is a vocalize f (some people include th here)' },
-        9: { sounds: ['p', 'b'], notes: 'P looks like a mirror-image of 9. b sounds similar look like a rotated 9' }
+        0: { sounds: ['s', 'z', 'soft c'], notes: 'z is the first letter of zero. The other letters have a similar sound.', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
+        1: { sounds: ['t', 'd'], notes: 'd & t have one downstroke and sound similar (some people include th here)', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
+        2: { sounds: ['n'], notes: 'n looks something like 2 on its side and has 2 downstrokes', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
+        3: { sounds: ['m'], notes: 'M looks like a 3 on its side and has three downstrokes', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
+        4: { sounds: ['r'], notes: '4 and R are almost mirror images of each other, R is the last letter of "fouR"', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
+        5: { sounds: ['l'], notes: 'L is the Roman Numeral for 50', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
+        6: { sounds: ['sh', 'soft ch', 'j', 'soft g', 'zh'], notes: 'g looks like an upside-down 6, cursive j looks kind of like a 6', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
+        7: { sounds: ['k', 'hard c', 'hard g', 'hard ch', 'q', 'qu'], notes: 'capital K looks like two sevens stuck together', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
+        8: { sounds: ['f', 'v'], notes: 'cursive f looks like 8, v is a vocalize f (some people include th here)', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
+        9: { sounds: ['p', 'b'], notes: 'P looks like a mirror-image of 9. b sounds similar look like a rotated 9', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() }
       }
-      this.ignoredSounds = { sounds: ['Vowel sounds', 'w', 'h', 'y'], notes: 'These sounds are ignored in the traditional Major System' }
+      this.ignoredSounds = { sounds: ['Vowel sounds', 'w', 'h', 'y'], notes: 'These sounds are ignored in the traditional Major System', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() }
     },
 
     /**
@@ -264,7 +219,7 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
       let card = association.numberToSoundLearningData
       if (!card) {
         console.warn('Digit card missing for digit:', digit, '- creating new card')
-        card = createEmptyCard(new Date())
+        card = createEmptyCard()
         association.numberToSoundLearningData = card
       }
 
@@ -294,7 +249,7 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
       } catch (error) {
         console.error('Error updating digit card with FSRS:', error)
         // Recreate card on error
-        association.numberToSoundLearningData = createEmptyCard(new Date())
+        association.numberToSoundLearningData = createEmptyCard()
       }
     },
 
@@ -325,7 +280,7 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
       let card = association.soundToNumberLearningData
       if (!card) {
         console.warn('Sound card missing for digit:', digit, '- creating new card')
-        card = createEmptyCard(new Date())
+        card = createEmptyCard()
         association.soundToNumberLearningData = card
       }
 
@@ -355,7 +310,7 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
       } catch (error) {
         console.error('Error updating sound card with FSRS:', error)
         // Recreate card on error
-        association.soundToNumberLearningData = createEmptyCard(new Date())
+        association.soundToNumberLearningData = createEmptyCard()
       }
     },
 

@@ -111,22 +111,11 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
      * Add or update a number association
      */
     setAssociation(number: string, association: NumberAssociation) {
-      if (!/^\d{2}$/.test(number)) {
+      if (!/^[0-9]{2}$/.test(number)) {
         throw new Error('Number must be a two-digit string (00-99)')
       }
-      
-      // Create FSRS cards if this is a new association
-      if (!this.associations[number]) {
-        console.log('Creating new FSRS cards for number:', number)
-        const now = new Date()
-        association.numberToWordLearningData = createEmptyCard(now)
-        association.wordToNumberLearningData = createEmptyCard(now)
-        console.log('Created cards:', {
-          numberToWord: association.numberToWordLearningData,
-          wordToNumber: association.wordToNumberLearningData
-        })
-      }
-      
+      association.numberToWordLearningData = createEmptyCard()
+      association.wordToNumberLearningData = createEmptyCard()
       this.associations[number] = association
     },
 
@@ -159,6 +148,21 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
     },
 
     /**
+     * Update association (reset due)
+     */
+    updateAssociation(number: string, updates: Partial<NumberAssociation>) {
+      if (!this.associations[number]) {
+        throw new Error(`Association for number ${number} not found`)
+      }
+      this.associations[number] = {
+        ...this.associations[number],
+        ...updates,
+        numberToWordLearningData: createEmptyCard(),
+        wordToNumberLearningData: createEmptyCard()
+      }
+    },
+
+    /**
      * Update card with rating (numberToWord direction)
      */
     updateCard(number: string, rating: 'wrong' | 'hard' | 'good' | 'easy') {
@@ -178,7 +182,7 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
       let card = association.numberToWordLearningData
       if (!card) {
         console.warn('Card missing for number:', number, '- creating new card')
-        card = createEmptyCard(new Date())
+        card = createEmptyCard()
         association.numberToWordLearningData = card
       }
 
@@ -208,7 +212,7 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
       } catch (error) {
         console.error('Error updating card with FSRS:', error)
         // Recreate card on error
-        association.numberToWordLearningData = createEmptyCard(new Date())
+        association.numberToWordLearningData = createEmptyCard()
       }
     },
 
@@ -281,7 +285,7 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
       let card = association.wordToNumberLearningData
       if (!card) {
         console.warn('Word card missing for number:', number, '- creating new card')
-        card = createEmptyCard(new Date())
+        card = createEmptyCard()
         association.wordToNumberLearningData = card
       }
 
@@ -311,7 +315,7 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
       } catch (error) {
         console.error('Error updating word card with FSRS:', error)
         // Recreate card on error
-        association.wordToNumberLearningData = createEmptyCard(new Date())
+        association.wordToNumberLearningData = createEmptyCard()
       }
     }
   },

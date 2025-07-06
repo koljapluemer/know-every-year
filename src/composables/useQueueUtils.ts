@@ -2,161 +2,132 @@ import { computed } from 'vue'
 import { useNumberAssociationStore } from '../stores/useNumberAssociationStore'
 import { useDigitAssociationStore } from '../stores/useDigitAssociationStore'
 import { useYearAssociationStore } from '../stores/useYearAssociationStore'
+import { useEventsStore } from '../stores/useEventsStore'
 import type { QueueTask, QueueTaskCategoryInfo } from '../entities/QueueTasks'
 
 export function useQueueUtils() {
   const numberAssociationStore = useNumberAssociationStore()
   const digitAssociationStore = useDigitAssociationStore()
   const yearAssociationStore = useYearAssociationStore()
+  const eventsStore = useEventsStore()
 
-  // Internal helper functions
+  // Only due logic
   const getNrOfDueNumberToWordExercises = computed(() => numberAssociationStore.getDueNumbers.length)
-  const getNrOfNewNumberToWordExercises = computed(() => numberAssociationStore.getNewNumbers.length)
+  const getDueNumberToWordExercises = computed((): QueueTask[] =>
+    numberAssociationStore.getDueNumbers.map(number => ({
+      component: 'TaskRememberWordByNumber' as const,
+      identifier: number
+    }))
+  )
+
   const getNrOfDueWordToNumberExercises = computed(() => numberAssociationStore.getDueWords.length)
-  const getNrOfNewWordToNumberExercises = computed(() => numberAssociationStore.getNewWords.length)
+  const getDueWordToNumberExercises = computed((): QueueTask[] =>
+    numberAssociationStore.getDueWords.map(number => ({
+      component: 'TaskRememberNumberByWord' as const,
+      identifier: number
+    }))
+  )
+
   const getNrOfDueDigitToSoundExercises = computed(() => digitAssociationStore.getDueDigits.length)
-  const getNrOfNewDigitToSoundExercises = computed(() => digitAssociationStore.getNewDigits.length)
+  const getDueDigitToSoundExercises = computed((): QueueTask[] =>
+    digitAssociationStore.getDueDigits.map(digit => ({
+      component: 'TaskRememberSoundByDigit' as const,
+      identifier: digit.toString()
+    }))
+  )
+
   const getNrOfDueSoundToDigitExercises = computed(() => digitAssociationStore.getDueSounds.length)
-  const getNrOfNewSoundToDigitExercises = computed(() => digitAssociationStore.getNewSounds.length)
+  const getDueSoundToDigitExercises = computed((): QueueTask[] =>
+    digitAssociationStore.getDueSounds.map(sound => ({
+      component: 'TaskRememberDigitBySound' as const,
+      identifier: sound
+    }))
+  )
+
   const getNrOfDueYearToEventsExercises = computed(() => yearAssociationStore.getDueYears.length)
-  const getNrOfNewYearToEventsExercises = computed(() => yearAssociationStore.getNewYears.length)
-
-  // Log counts for debugging
-  console.log('Queue Utils - Exercise Counts:')
-  console.log('Number Associations:')
-  console.log(`  Number→Word: ${getNrOfDueNumberToWordExercises.value} due, ${getNrOfNewNumberToWordExercises.value} new`)
-  console.log(`  Word→Number: ${getNrOfDueWordToNumberExercises.value} due, ${getNrOfNewWordToNumberExercises.value} new`)
-  console.log('Digit Associations:')
-  console.log(`  Digit→Sound: ${getNrOfDueDigitToSoundExercises.value} due, ${getNrOfNewDigitToSoundExercises.value} new`)
-  console.log(`  Sound→Digit: ${getNrOfDueSoundToDigitExercises.value} due, ${getNrOfNewSoundToDigitExercises.value} new`)
-  console.log('Year Associations:')
-  console.log(`  Year→Events: ${getNrOfDueYearToEventsExercises.value} due, ${getNrOfNewYearToEventsExercises.value} new`)
-  console.log('Peg Creation:')
-  console.log(`  Create Peg: ${numberAssociationStore.unassociatedNumbers.length} available`)
-
-  // Public "eligible" functions
-  const getNrOfEligibleNumberToWordExercises = computed(() => 
-    getNrOfDueNumberToWordExercises.value + getNrOfNewNumberToWordExercises.value
-  )
-  const getEligibleNumberToWordExercises = computed((): QueueTask[] => [
-    ...numberAssociationStore.getDueNumbers.map(number => ({ 
-      component: 'TaskRememberWordByNumber' as const, 
-      identifier: number
-    })),
-    ...numberAssociationStore.getNewNumbers.map(number => ({ 
-      component: 'TaskRememberWordByNumber' as const, 
-      identifier: number
-    }))
-  ])
-
-  const getNrOfEligibleWordToNumberExercises = computed(() => 
-    getNrOfDueWordToNumberExercises.value + getNrOfNewWordToNumberExercises.value
-  )
-  const getEligibleWordToNumberExercises = computed((): QueueTask[] => [
-    ...numberAssociationStore.getDueWords.map(number => ({ 
-      component: 'TaskRememberNumberByWord' as const, 
-      identifier: number
-    })),
-    ...numberAssociationStore.getNewWords.map(number => ({ 
-      component: 'TaskRememberNumberByWord' as const, 
-      identifier: number
-    }))
-  ])
-
-  const getNrOfEligibleDigitToSoundExercises = computed(() => 
-    getNrOfDueDigitToSoundExercises.value + getNrOfNewDigitToSoundExercises.value
-  )
-  const getEligibleDigitToSoundExercises = computed((): QueueTask[] => [
-    ...digitAssociationStore.getDueDigits.map(digit => ({ 
-      component: 'TaskRememberSoundByDigit' as const, 
-      identifier: digit.toString()
-    })),
-    ...digitAssociationStore.getNewDigits.map(digit => ({ 
-      component: 'TaskRememberSoundByDigit' as const, 
-      identifier: digit.toString()
-    }))
-  ])
-
-  const getNrOfEligibleSoundToDigitExercises = computed(() => 
-    getNrOfDueSoundToDigitExercises.value + getNrOfNewSoundToDigitExercises.value
-  )
-  const getEligibleSoundToDigitExercises = computed((): QueueTask[] => [
-    ...digitAssociationStore.getDueSounds.map(sound => ({ 
-      component: 'TaskRememberDigitBySound' as const, 
-      identifier: sound
-    })),
-    ...digitAssociationStore.getNewSounds.map(sound => ({ 
-      component: 'TaskRememberDigitBySound' as const, 
-      identifier: sound
-    }))
-  ])
-
-  const getNrOfEligibleYearToEventsExercises = computed(() => 
-    getNrOfDueYearToEventsExercises.value + getNrOfNewYearToEventsExercises.value
-  )
-  const getEligibleYearToEventsExercises = computed((): QueueTask[] => [
-    ...yearAssociationStore.getDueYears.map(year => ({ 
-      component: 'TaskRememberEventsByYear' as const, 
-      identifier: year
-    })),
-    ...yearAssociationStore.getNewYears.map(year => ({ 
-      component: 'TaskRememberEventsByYear' as const, 
+  const getDueYearToEventsExercises = computed((): QueueTask[] =>
+    yearAssociationStore.getDueYears.map(year => ({
+      component: 'TaskRememberEventsByYear' as const,
       identifier: year
     }))
-  ])
+  )
+
+  const getNrOfDueEventToYearExercises = computed(() => eventsStore.getDueEvents.length)
+  const getDueEventToYearExercises = computed((): QueueTask[] =>
+    eventsStore.getDueEvents.map(eventId => ({
+      component: 'TaskRememberYearByEvent' as const,
+      identifier: eventId
+    }))
+  )
 
   const getNrOfDigitsWithoutAssociation = computed(() => numberAssociationStore.unassociatedNumbers.length)
-  const getDigitsWithoutAssociation = computed((): QueueTask[] => 
-    numberAssociationStore.unassociatedNumbers.map(number => ({ 
-      component: 'TaskCreateNumberAssociation' as const, 
+  const getDigitsWithoutAssociation = computed((): QueueTask[] =>
+    numberAssociationStore.unassociatedNumbers.map(number => ({
+      component: 'TaskCreateNumberAssociation' as const,
       identifier: number
     }))
   )
 
-  // Get available categories (categories with more than 0 exercises)
+  // Debug log - only due
+  console.log('Queue Utils - Exercise Counts:')
+  console.log('Number Associations:')
+  console.log(`  Number→Word: ${getNrOfDueNumberToWordExercises.value} due`)
+  console.log(`  Word→Number: ${getNrOfDueWordToNumberExercises.value} due`)
+  console.log('Digit Associations:')
+  console.log(`  Digit→Sound: ${getNrOfDueDigitToSoundExercises.value} due`)
+  console.log(`  Sound→Digit: ${getNrOfDueSoundToDigitExercises.value} due`)
+  console.log('Year Associations:')
+  console.log(`  Year→Events: ${getNrOfDueYearToEventsExercises.value} due`)
+  console.log(`  Event→Year: ${getNrOfDueEventToYearExercises.value} due`)
+  console.log('Peg Creation:')
+  console.log(`  Create Peg: ${getNrOfDigitsWithoutAssociation.value} available`)
+
+  // Only due categories
   const getAvailableCategories = computed((): QueueTaskCategoryInfo[] => {
     const categories: QueueTaskCategoryInfo[] = []
 
-    if (getNrOfEligibleNumberToWordExercises.value > 0) {
+    if (getNrOfDueNumberToWordExercises.value > 0) {
       categories.push({
         name: 'TaskRememberWordByNumber',
-        count: getNrOfEligibleNumberToWordExercises.value,
-        exercises: getEligibleNumberToWordExercises.value
+        count: getNrOfDueNumberToWordExercises.value,
+        exercises: getDueNumberToWordExercises.value
       })
     }
-
-    if (getNrOfEligibleWordToNumberExercises.value > 0) {
+    if (getNrOfDueWordToNumberExercises.value > 0) {
       categories.push({
         name: 'TaskRememberNumberByWord',
-        count: getNrOfEligibleWordToNumberExercises.value,
-        exercises: getEligibleWordToNumberExercises.value
+        count: getNrOfDueWordToNumberExercises.value,
+        exercises: getDueWordToNumberExercises.value
       })
     }
-
-    if (getNrOfEligibleDigitToSoundExercises.value > 0) {
+    if (getNrOfDueDigitToSoundExercises.value > 0) {
       categories.push({
         name: 'TaskRememberSoundByDigit',
-        count: getNrOfEligibleDigitToSoundExercises.value,
-        exercises: getEligibleDigitToSoundExercises.value
+        count: getNrOfDueDigitToSoundExercises.value,
+        exercises: getDueDigitToSoundExercises.value
       })
     }
-
-    if (getNrOfEligibleSoundToDigitExercises.value > 0) {
+    if (getNrOfDueSoundToDigitExercises.value > 0) {
       categories.push({
         name: 'TaskRememberDigitBySound',
-        count: getNrOfEligibleSoundToDigitExercises.value,
-        exercises: getEligibleSoundToDigitExercises.value
+        count: getNrOfDueSoundToDigitExercises.value,
+        exercises: getDueSoundToDigitExercises.value
       })
     }
-
-    if (getNrOfEligibleYearToEventsExercises.value > 0) {
+    if (getNrOfDueYearToEventsExercises.value > 0) {
       categories.push({
         name: 'TaskRememberEventsByYear',
-        count: getNrOfEligibleYearToEventsExercises.value,
-        exercises: getEligibleYearToEventsExercises.value
+        count: getNrOfDueYearToEventsExercises.value,
+        exercises: getDueYearToEventsExercises.value
       })
     }
-
+    if (getNrOfDueEventToYearExercises.value > 0) {
+      categories.push({
+        name: 'TaskRememberYearByEvent',
+        count: getNrOfDueEventToYearExercises.value,
+        exercises: getDueEventToYearExercises.value
+      })
+    }
     if (getNrOfDigitsWithoutAssociation.value > 0) {
       categories.push({
         name: 'TaskCreateNumberAssociation',
@@ -164,49 +135,42 @@ export function useQueueUtils() {
         exercises: getDigitsWithoutAssociation.value
       })
     }
-
     return categories
   })
 
   // Get a random exercise from a random category
   const getRandomExercise = (): QueueTask | null => {
     const availableCategories = getAvailableCategories.value
-    
     if (availableCategories.length === 0) {
       return null
     }
-
-    // Pick a random category
     const randomCategoryIndex = Math.floor(Math.random() * availableCategories.length)
     const selectedCategory = availableCategories[randomCategoryIndex]
-
-    // Pick a random exercise from that category
     const randomExerciseIndex = Math.floor(Math.random() * selectedCategory.exercises.length)
     return selectedCategory.exercises[randomExerciseIndex]
   }
 
   return {
     // Number Association Exercises
-    getNrOfEligibleNumberToWordExercises,
-    getEligibleNumberToWordExercises,
-    getNrOfEligibleWordToNumberExercises,
-    getEligibleWordToNumberExercises,
-
+    getNrOfDueNumberToWordExercises,
+    getDueNumberToWordExercises,
+    getNrOfDueWordToNumberExercises,
+    getDueWordToNumberExercises,
     // Digit Association Exercises
-    getNrOfEligibleDigitToSoundExercises,
-    getEligibleDigitToSoundExercises,
-    getNrOfEligibleSoundToDigitExercises,
-    getEligibleSoundToDigitExercises,
-
+    getNrOfDueDigitToSoundExercises,
+    getDueDigitToSoundExercises,
+    getNrOfDueSoundToDigitExercises,
+    getDueSoundToDigitExercises,
     // Year Association Exercises
-    getNrOfEligibleYearToEventsExercises,
-    getEligibleYearToEventsExercises,
-
+    getNrOfDueYearToEventsExercises,
+    getDueYearToEventsExercises,
+    getNrOfDueEventToYearExercises,
+    getDueEventToYearExercises,
     // Number Association Creation
     getNrOfDigitsWithoutAssociation,
     getDigitsWithoutAssociation,
-
     // Utility functions
+    getAvailableCategories,
     getRandomExercise
   }
 }

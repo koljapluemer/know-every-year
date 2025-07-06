@@ -43,6 +43,34 @@ export const useEventsStore = defineStore('events', {
      */
     totalEvents: (state): number => {
       return Object.keys(state.events).length
+    },
+
+    /**
+     * Get events that are due for review (eventToYear direction)
+     */
+    getDueEvents: (state): string[] => {
+      const now = new Date()
+      console.log('🔍 getDueEvents - checking events:', Object.keys(state.events).length, 'total events')
+      
+      const dueEvents = Object.entries(state.events)
+        .filter(([_, event]) => {
+          if (!event.eventToYearLearningData) {
+            console.log('❌ Event has no learning data:', event.id, event.content)
+            return false
+          }
+          try {
+            const isDue = event.eventToYearLearningData.due <= now
+            console.log('📅 Event due check:', event.id, event.content, 'due:', event.eventToYearLearningData.due, 'isDue:', isDue)
+            return isDue
+          } catch (error) {
+            console.error('Error checking due date for event card:', error)
+            return false
+          }
+        })
+        .map(([eventId, _]) => eventId)
+      
+      console.log('✅ getDueEvents result:', dueEvents.length, 'due events')
+      return dueEvents
     }
   },
 
@@ -52,12 +80,11 @@ export const useEventsStore = defineStore('events', {
      */
     addEvent(year: string, eventData: Omit<Event, 'id'>): string {
       const id = crypto.randomUUID()
-      const now = new Date()
       
       const event: Event = {
         ...eventData,
         id,
-        eventToYearLearningData: createEmptyCard(now)
+        eventToYearLearningData: createEmptyCard() // Due immediately
       }
 
       // Add event to events store
@@ -80,9 +107,13 @@ export const useEventsStore = defineStore('events', {
         throw new Error(`Event with ID ${id} not found`)
       }
 
+      // Reset learning data due date to now when event is edited
+      const updatedLearningData = createEmptyCard()
+
       this.events[id] = {
         ...this.events[id],
-        ...updates
+        ...updates,
+        eventToYearLearningData: updatedLearningData
       }
     },
 
@@ -129,7 +160,7 @@ export const useEventsStore = defineStore('events', {
       let card = event.eventToYearLearningData
       
       if (!card) {
-        card = createEmptyCard(new Date())
+        card = createEmptyCard()
         event.eventToYearLearningData = card
       }
 
@@ -140,7 +171,7 @@ export const useEventsStore = defineStore('events', {
         event.eventToYearLearningData = result.card
       } catch (error) {
         console.error('Error updating event card with FSRS:', error)
-        event.eventToYearLearningData = createEmptyCard(new Date())
+        event.eventToYearLearningData = createEmptyCard()
       }
     },
 

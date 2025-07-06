@@ -11,6 +11,7 @@
 
     <!-- Events Display -->
     <div v-if="isRevealed" class="space-y-6">
+      
       <!-- Events List -->
       <div class="card bg-base-100 shadow-lg">
         <div class="card-body">

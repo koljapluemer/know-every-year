@@ -3,7 +3,7 @@ import type { Card } from "ts-fsrs"
 export interface Year {
     events: Event[]
     notes?: string 
-    yearToEventsLearningData?: Card
+    yearToEventsLearningData: Card
 }
 
 export interface Event {
@@ -11,5 +11,5 @@ export interface Event {
     content: string
     mentalImage: string
     notes?: string 
-    eventToYearLearningData?: Card
+    eventToYearLearningData: Card
 }

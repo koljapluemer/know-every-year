@@ -16,7 +16,8 @@ export const useYearAssociationStore = defineStore('yearAssociation', {
       const yearStr = year === 0 ? '0000' : year.toString()
       years[yearStr] = {
         events: [],
-        notes: undefined
+        notes: undefined,
+        yearToEventsLearningData: createEmptyCard()
       }
     }
     
@@ -136,15 +137,13 @@ export const useYearAssociationStore = defineStore('yearAssociation', {
         throw new Error(`Year ${year} not found`)
       }
       
-      // Create FSRS card if this is a new year with content
+      // Always create/update FSRS card when content is added/updated
       const existing = this.years[year]
-      const hasNewContent = yearData.events?.length || yearData.notes?.trim()
-      const hadContent = existing.events.length || (existing.notes && existing.notes.trim())
+      const hasContent = yearData.events?.length || yearData.notes?.trim()
       
-      if (hasNewContent && !hadContent) {
-        console.log('Creating new FSRS card for year:', year)
-        const now = new Date()
-        yearData.yearToEventsLearningData = createEmptyCard(now)
+      if (hasContent) {
+        console.log('Creating/updating FSRS card for year:', year)
+        yearData.yearToEventsLearningData = createEmptyCard() // Due immediately
       }
       
       // Merge with existing data
@@ -172,7 +171,7 @@ export const useYearAssociationStore = defineStore('yearAssociation', {
       let card = yearData.yearToEventsLearningData
       
       if (!card) {
-        card = createEmptyCard(new Date())
+        card = createEmptyCard()
         yearData.yearToEventsLearningData = card
       }
 
@@ -183,7 +182,7 @@ export const useYearAssociationStore = defineStore('yearAssociation', {
         yearData.yearToEventsLearningData = result.card
       } catch (error) {
         console.error('Error updating year card with FSRS:', error)
-        yearData.yearToEventsLearningData = createEmptyCard(new Date())
+        yearData.yearToEventsLearningData = createEmptyCard()
       }
     },
 
@@ -210,7 +209,8 @@ export const useYearAssociationStore = defineStore('yearAssociation', {
         const yearStr = year === 0 ? '0000' : year.toString()
         this.years[yearStr] = {
           events: [],
-          notes: undefined
+          notes: undefined,
+          yearToEventsLearningData: createEmptyCard()
         }
       }
     }

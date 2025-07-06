@@ -13,15 +13,7 @@
       <div class="card bg-base-100 shadow-lg mb-4">
         <div class="card-body">
           <h2 class="card-title">Digit Associations</h2>
-          <div class="flex items-center gap-4">
-            <div class="text-5xl">
-              {{ firstNumberAssociation || '?' }}
-            </div>
-            <span class="text-5xl">+</span>
-            <div class="text-5xl">
-              {{ secondNumberAssociation || '?' }}
-            </div>
-          </div>
+          <WidgetNumberAssociationsForYear :year="year" />
         </div>
       </div>
 
@@ -77,12 +69,11 @@
       </div>
     </div>
 
-    <!-- Learning Data -->
     <div class="card bg-base-100 shadow-lg">
       <div class="card-body">
-        <h2 class="card-title">Learning Data</h2>
+        <h2 class="card-title">Manage Learning Data</h2>
         <div class="space-y-4">
-          <!-- Year Learning Data -->
+          <!-- Year Practice Due At -->
           <div class="flex items-center justify-between">
             <div>
               <h3 class="font-medium">Year → Events</h3>
@@ -94,7 +85,6 @@
             </button>
           </div>
 
-          <!-- Event Learning Data -->
           <div v-if="events.length > 0" class="space-y-2">
             <h3 class="font-medium">Events → Year</h3>
             <div v-for="event in events" :key="event.id" class="flex items-center justify-between">
@@ -120,6 +110,7 @@ import { RouterLink } from 'vue-router'
 import type { Year } from '@/entities/YearAssociations'
 import type { Event } from '@/entities/YearAssociations'
 import EventFormRender from '@/components/forms/widgets/FormWidgetEvent.vue'
+import WidgetNumberAssociationsForYear from '@/components/widgets/WidgetNumberAssociationsForYear.vue'
 
 interface Props {
   year: string

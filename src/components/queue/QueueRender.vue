@@ -84,6 +84,19 @@
           @task-done="loadNextTask"
         />
       </div>
+
+      <!-- TaskRememberYearByEvent -->
+      <div v-else-if="currentTask.component === 'TaskRememberYearByEvent'">
+        <InstructionRender 
+          subtitle="Answer the question"
+          title="What year did this event happen?"
+        />
+        <TaskRememberYearByEvent 
+          :event-id="currentTask.identifier"
+          :key="currentTask.identifier"
+          @task-done="loadNextTask"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -97,6 +110,7 @@ import TaskRememberSoundByDigit from '@/components/queue/tasks/TaskRememberSound
 import TaskRememberDigitBySound from '@/components/queue/tasks/TaskRememberDigitBySound.vue'
 import TaskCreateNumberAssociation from '@/components/queue/tasks/TaskCreateNumberAssociation.vue'
 import TaskRememberEventsByYear from '@/components/queue/tasks/TaskRememberEventsByYear.vue'
+import TaskRememberYearByEvent from '@/components/queue/tasks/TaskRememberYearByEvent.vue'
 
 interface Props {
   currentTask: QueueTask | null

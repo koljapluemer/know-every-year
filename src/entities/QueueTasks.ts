@@ -5,6 +5,7 @@ export type TaskComponentName =
   | 'TaskRememberDigitBySound'
   | 'TaskCreateNumberAssociation'
   | 'TaskRememberEventsByYear'
+  | 'TaskRememberYearByEvent'
 
 export interface QueueTask {
   component: TaskComponentName

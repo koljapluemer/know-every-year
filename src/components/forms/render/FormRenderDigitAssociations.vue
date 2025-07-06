@@ -14,7 +14,7 @@
                 <th class="w-16">Digit</th>
                 <th>Sound Associations</th>
                 <th>Notes</th>
-                <th class="w-48">Learning Data</th>
+                <th class="w-48">Practice Due At</th>
               </tr>
             </thead>
             <tbody>

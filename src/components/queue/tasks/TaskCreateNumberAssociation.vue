@@ -13,7 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
+import { useNumberAssociationStore } from '@/stores/useNumberAssociationStore'
 import FormControlNumberAssociation from '@/components/forms/control/FormControlNumberAssociation.vue'
 import { useTaskButtons } from '@/components/queue/widgets/buttonRow/useTaskButtons'
 import TaskButtonRender from '@/components/queue/widgets/buttonRow/TaskButtonRender.vue'
@@ -27,11 +28,15 @@ const emit = defineEmits<{
   'task-done': []
 }>()
 
+const numberAssociationStore = useNumberAssociationStore()
 const { createActionButtons } = useTaskButtons()
-const isFormValid = ref(false)
+
+const hasAssociation = computed(() => numberAssociationStore.hasAssociation(props.number))
 
 const handleFormValidityChanged = (valid: boolean) => {
-  isFormValid.value = valid
+  if (valid && hasAssociation.value) {
+    emit('task-done')
+  }
 }
 
 const handleSkip = () => {
@@ -57,7 +62,7 @@ const actionButtons = computed(() =>
       variant: 'primary',
       size: 'lg',
       onClick: handleDone,
-      disabled: !isFormValid.value
+      disabled: !hasAssociation.value
     }
   ])
 )

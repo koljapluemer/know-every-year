@@ -66,13 +66,29 @@ export function useQueueUtils() {
     }))
   )
 
-  const getNrOfDueSoundToDigitExercises = computed(() => digitAssociationStore.getDueSounds.length)
-  const getDueSoundToDigitExercises = computed((): QueueTask[] =>
-    digitAssociationStore.getDueSounds.map(sound => ({
-      component: 'TaskRememberDigitBySound' as const,
-      identifier: sound
-    }))
-  )
+  const getNrOfDueSoundToDigitExercises = computed(() => {
+    // Count all sounds from digits that are due
+    return digitAssociationStore.getDueSounds.reduce((total, digit) => {
+      const association = digitAssociationStore.associations[digit]
+      return total + (association?.sounds?.length || 0)
+    }, 0)
+  })
+  
+  const getDueSoundToDigitExercises = computed((): QueueTask[] => {
+    const tasks: QueueTask[] = []
+    digitAssociationStore.getDueSounds.forEach(digit => {
+      const association = digitAssociationStore.associations[digit]
+      if (association?.sounds) {
+        association.sounds.forEach(sound => {
+          tasks.push({
+            component: 'TaskRememberDigitBySound' as const,
+            identifier: sound
+          })
+        })
+      }
+    })
+    return tasks
+  })
 
   const getNrOfDueYearToEventsExercises = computed(() => yearAssociationStore.getDueYears.length)
   const getDueYearToEventsExercises = computed((): QueueTask[] =>

@@ -100,7 +100,7 @@ interface Props {
   total: number
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 const router = useRouter()
 
 const navigateToManage = (number: string) => {

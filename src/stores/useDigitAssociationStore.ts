@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { DigitAssociation } from '../entities/DigitAssociation'
-import { createEmptyCard, fsrs, type Card } from 'ts-fsrs'
+import { createEmptyCard, fsrs } from 'ts-fsrs'
 
 interface DigitAssociationState {
   associations: Record<number, DigitAssociation>
@@ -65,12 +65,12 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
     getDueDigits: (state): number[] => {
       const now = new Date()
       return Object.entries(state.associations)
-        .filter(([digit, association]) => {
+        .filter(([, association]) => {
           if (!association.numberToSoundLearningData) return false
           try {
             return association.numberToSoundLearningData.due <= now
           } catch (error) {
-            console.error('Error checking due date for digit card:', error)
+            console.error('Error checking due date for card:', error)
             return false
           }
         })
@@ -78,23 +78,39 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
     },
 
     /**
+     * Get digits that have never been practiced (numberToSound direction)
+     */
+    getNewDigits: (state): number[] => {
+      return Object.entries(state.associations)
+        .filter(([, association]) => !association.numberToSoundLearningData)
+        .map(([digit, _]) => parseInt(digit))
+    },
+
+    /**
      * Get sounds that are due for review (soundToNumber direction)
      */
-    getDueSounds: (state): string[] => {
+    getDueSounds: (state): number[] => {
       const now = new Date()
-      const dueSounds: string[] = []
-      Object.entries(state.associations).forEach(([digit, association]) => {
-        if (association.soundToNumberLearningData) {
+      return Object.entries(state.associations)
+        .filter(([, association]) => {
+          if (!association.soundToNumberLearningData) return false
           try {
-            if (association.soundToNumberLearningData.due <= now) {
-              dueSounds.push(...association.sounds)
-            }
+            return association.soundToNumberLearningData.due <= now
           } catch (error) {
             console.error('Error checking due date for sound card:', error)
+            return false
           }
-        }
-      })
-      return dueSounds
+        })
+        .map(([digit, _]) => parseInt(digit))
+    },
+
+    /**
+     * Get sounds that have never been practiced (soundToNumber direction)
+     */
+    getNewSounds: (state): number[] => {
+      return Object.entries(state.associations)
+        .filter(([, association]) => !association.soundToNumberLearningData)
+        .map(([digit, _]) => parseInt(digit))
     }
   },
 
@@ -102,75 +118,78 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
     /**
      * Add or update a digit association
      */
-    setDigitAssociation(digit: number, association: DigitAssociation) {
+    setAssociation(digit: number, association: DigitAssociation) {
       if (digit < 0 || digit > 9) {
         throw new Error('Digit must be between 0 and 9')
       }
-      association.numberToSoundLearningData = createEmptyCard()
-      association.soundToNumberLearningData = createEmptyCard()
       this.associations[digit] = association
     },
 
     /**
-     * Update all sounds for a digit (reset due)
+     * Get a specific digit association
      */
-    updateDigitSounds(digit: number, sounds: string[], notes?: string) {
-      if (digit < 0 || digit > 9) {
-        throw new Error('Digit must be between 0 and 9')
-      }
-      this.associations[digit] = {
-        sounds,
-        notes,
-        numberToSoundLearningData: createEmptyCard(),
-        soundToNumberLearningData: createEmptyCard()
-      }
+    getAssociation(digit: number): DigitAssociation | undefined {
+      return this.associations[digit]
     },
 
     /**
-     * Update notes for a digit (reset due)
+     * Remove a digit association
      */
-    updateDigitNotes(digit: number, notes: string) {
-      if (digit < 0 || digit > 9) {
-        throw new Error('Digit must be between 0 and 9')
-      }
-      const association = this.associations[digit] || { sounds: [] }
-      this.associations[digit] = {
-        ...association,
-        notes,
-        numberToSoundLearningData: createEmptyCard(),
-        soundToNumberLearningData: createEmptyCard()
-      }
-    },
-
-    /**
-     * Remove a digit association entirely
-     */
-    removeDigit(digit: number) {
-      if (digit < 0 || digit > 9) {
-        throw new Error('Digit must be between 0 and 9')
-      }
-
+    removeAssociation(digit: number) {
       delete this.associations[digit]
     },
 
     /**
-     * Add a sound to ignored sounds
+     * Check if a digit has an association
      */
-    addIgnoredSound(sound: string, notes?: string) {
+    hasAssociation(digit: number): boolean {
+      return digit in this.associations
+    },
+
+    /**
+     * Clear all associations
+     */
+    clearAll() {
+      this.associations = {}
+    },
+
+    /**
+     * Update digit sounds
+     */
+    updateDigitSounds(digit: number, sounds: string[]) {
+      if (!this.associations[digit]) {
+        throw new Error(`Association for digit ${digit} not found`)
+      }
+      this.associations[digit].sounds = sounds
+    },
+
+    /**
+     * Update digit notes
+     */
+    updateDigitNotes(digit: number, notes: string) {
+      if (!this.associations[digit]) {
+        throw new Error(`Association for digit ${digit} not found`)
+      }
+      this.associations[digit].notes = notes
+    },
+
+    /**
+     * Add an ignored sound
+     */
+    addIgnoredSound(sound: string) {
       if (!this.ignoredSounds.sounds.includes(sound)) {
         this.ignoredSounds.sounds.push(sound)
-      }
-
-      if (notes && !this.ignoredSounds.notes) {
-        this.ignoredSounds.notes = notes
       }
     },
 
     /**
-     * Remove a sound from ignored sounds
+     * Remove an ignored sound
      */
     removeIgnoredSound(sound: string) {
-      this.ignoredSounds.sounds = this.ignoredSounds.sounds.filter((s: string) => s !== sound)
+      const index = this.ignoredSounds.sounds.indexOf(sound)
+      if (index > -1) {
+        this.ignoredSounds.sounds.splice(index, 1)
+      }
     },
 
     /**
@@ -181,29 +200,10 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
     },
 
     /**
-     * Reset to default Major System data
+     * Update card with rating (numberToSound direction)
      */
-    resetToDefaults() {
-      this.associations = {
-        0: { sounds: ['s', 'z', 'soft c'], notes: 'z is the first letter of zero. The other letters have a similar sound.', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
-        1: { sounds: ['t', 'd'], notes: 'd & t have one downstroke and sound similar (some people include th here)', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
-        2: { sounds: ['n'], notes: 'n looks something like 2 on its side and has 2 downstrokes', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
-        3: { sounds: ['m'], notes: 'M looks like a 3 on its side and has three downstrokes', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
-        4: { sounds: ['r'], notes: '4 and R are almost mirror images of each other, R is the last letter of "fouR"', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
-        5: { sounds: ['l'], notes: 'L is the Roman Numeral for 50', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
-        6: { sounds: ['sh', 'soft ch', 'j', 'soft g', 'zh'], notes: 'g looks like an upside-down 6, cursive j looks kind of like a 6', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
-        7: { sounds: ['k', 'hard c', 'hard g', 'hard ch', 'q', 'qu'], notes: 'capital K looks like two sevens stuck together', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
-        8: { sounds: ['f', 'v'], notes: 'cursive f looks like 8, v is a vocalize f (some people include th here)', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() },
-        9: { sounds: ['p', 'b'], notes: 'P looks like a mirror-image of 9. b sounds similar look like a rotated 9', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() }
-      }
-      this.ignoredSounds = { sounds: ['Vowel sounds', 'w', 'h', 'y'], notes: 'These sounds are ignored in the traditional Major System', numberToSoundLearningData: createEmptyCard(), soundToNumberLearningData: createEmptyCard() }
-    },
-
-    /**
-     * Update digit card with rating (numberToSound direction)
-     */
-    updateDigitCard(digit: number, rating: 'wrong' | 'hard' | 'good' | 'easy') {
-      console.log('Updating digit card for digit:', digit, 'with rating:', rating)
+    updateCard(digit: number, rating: 'wrong' | 'hard' | 'good' | 'easy') {
+      console.log('Updating card for digit:', digit, 'with rating:', rating)
       
       const association = this.associations[digit]
       if (!association) {
@@ -218,18 +218,18 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
       // Get or create card
       let card = association.numberToSoundLearningData
       if (!card) {
-        console.warn('Digit card missing for digit:', digit, '- creating new card')
+        console.warn('Card missing for digit:', digit, '- creating new card')
         card = createEmptyCard()
         association.numberToSoundLearningData = card
       }
 
       // Ensure card is not undefined
       if (!card) {
-        console.error('Failed to create digit card for digit:', digit)
+        console.error('Failed to create card for digit:', digit)
         return
       }
 
-      console.log('Original digit card:', card)
+      console.log('Original card:', card)
 
       try {
         // Create FSRS instance with default parameters
@@ -239,33 +239,75 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
         // Use the next method for ts-fsrs >=4.0.0
         const result = f.next(card, now, fsrsGrade)
         
-        console.log('FSRS digit result:', result)
+        console.log('FSRS result:', result)
         
         // Update the card
         association.numberToSoundLearningData = result.card
         
-        console.log('Updated digit card:', result.card)
+        console.log('Updated card:', result.card)
         
       } catch (error) {
-        console.error('Error updating digit card with FSRS:', error)
+        console.error('Error updating card with FSRS:', error)
         // Recreate card on error
         association.numberToSoundLearningData = createEmptyCard()
       }
     },
 
     /**
-     * Update sound card with rating (soundToNumber direction)
+     * Map rating string to FSRS grade number
      */
-    updateSoundCard(sound: string, rating: 'wrong' | 'hard' | 'good' | 'easy') {
-      console.log('Updating sound card for sound:', sound, 'with rating:', rating)
-      
-      // Find which digit this sound belongs to
-      const digit = this.getDigitForSound(sound)
-      if (digit === null) {
-        console.error('Sound not found in any digit association:', sound)
-        return
+    mapRatingToFSRS(rating: 'wrong' | 'hard' | 'good' | 'easy'): number {
+      switch (rating) {
+        case 'wrong': return 1 // Again
+        case 'hard': return 2  // Hard
+        case 'good': return 3  // Good
+        case 'easy': return 4  // Easy
+        default: return 3      // Good
       }
+    },
 
+    /**
+     * Get a random exercise for practice (due or new, either direction)
+     */
+    getRandomPracticeExercise(): { digit: number; direction: 'numberToSound' | 'soundToNumber' } | null {
+      const dueDigits = this.getDueDigits
+      const newDigits = this.getNewDigits
+      const dueSounds = this.getDueSounds
+      const newSounds = this.getNewSounds
+      
+      // Combine all available exercises
+      const availableExercises: Array<{ digit: number; direction: 'numberToSound' | 'soundToNumber' }> = []
+      
+      // Add number-to-sound exercises
+      dueDigits.forEach(digit => {
+        availableExercises.push({ digit, direction: 'numberToSound' })
+      })
+      newDigits.forEach(digit => {
+        availableExercises.push({ digit, direction: 'numberToSound' })
+      })
+      
+      // Add sound-to-number exercises
+      dueSounds.forEach(digit => {
+        availableExercises.push({ digit, direction: 'soundToNumber' })
+      })
+      newSounds.forEach(digit => {
+        availableExercises.push({ digit, direction: 'soundToNumber' })
+      })
+      
+      if (availableExercises.length === 0) {
+        return null
+      }
+      
+      const randomIndex = Math.floor(Math.random() * availableExercises.length)
+      return availableExercises[randomIndex]
+    },
+
+    /**
+     * Update card with rating (soundToNumber direction)
+     */
+    updateSoundCard(digit: number, rating: 'wrong' | 'hard' | 'good' | 'easy') {
+      console.log('Updating sound card for digit:', digit, 'with rating:', rating)
+      
       const association = this.associations[digit]
       if (!association) {
         console.error('Association not found for digit:', digit)
@@ -311,19 +353,6 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
         console.error('Error updating sound card with FSRS:', error)
         // Recreate card on error
         association.soundToNumberLearningData = createEmptyCard()
-      }
-    },
-
-    /**
-     * Map rating string to FSRS grade number
-     */
-    mapRatingToFSRS(rating: 'wrong' | 'hard' | 'good' | 'easy'): number {
-      switch (rating) {
-        case 'wrong': return 1 // Again
-        case 'hard': return 2  // Hard
-        case 'good': return 3  // Good
-        case 'easy': return 4  // Easy
-        default: return 3      // Good
       }
     }
   },

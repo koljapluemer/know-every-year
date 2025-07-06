@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
+import { createEmptyCard, fsrs } from 'ts-fsrs'
 import type { Year } from '../entities/YearAssociations'
-import { createEmptyCard, fsrs, type Card } from 'ts-fsrs'
 import { useEventsStore } from './useEventsStore'
 
 interface YearAssociationState {

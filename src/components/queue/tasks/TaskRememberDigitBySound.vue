@@ -60,8 +60,11 @@ const revealAnswer = () => {
 }
 
 const selectRating = (rating: 'wrong' | 'hard' | 'good' | 'easy') => {
-    // Update the sound card with the rating
-    digitAssociationStore.updateSoundCard(props.sound, rating)
+    // Get the digit for this sound and update the sound card with the rating
+    const digitValue = digitAssociationStore.getDigitForSound(props.sound)
+    if (digitValue !== null) {
+        digitAssociationStore.updateSoundCard(digitValue, rating)
+    }
 
     // Pass the event up to load next task
     emit('task-done')

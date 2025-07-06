@@ -13,6 +13,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { createEmptyCard } from 'ts-fsrs'
 import { useDigitAssociationStore } from '@/stores/useDigitAssociationStore'
 import { useToast } from '@/ui/useToast'
 import FormRenderDigitAssociations from '@/components/forms/render/FormRenderDigitAssociations.vue'
@@ -47,8 +48,8 @@ const handleResetLearningData = (digit: number) => {
     // Clear both learning data cards for this digit
     const association = digitAssociationStore.associations[digit]
     if (association) {
-      association.numberToSoundLearningData = undefined
-      association.soundToNumberLearningData = undefined
+      association.numberToSoundLearningData = createEmptyCard()
+      association.soundToNumberLearningData = createEmptyCard()
     }
     success(`Reset learning data for digit ${digit}`)
   } catch (err) {

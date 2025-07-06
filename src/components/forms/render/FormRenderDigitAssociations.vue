@@ -27,7 +27,7 @@ interface Props {
   ignoredSoundsNotes?: string
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 const emit = defineEmits<{
   'update-sounds': [digit: number, sounds: string[]]
   'update-notes': [digit: number, notes: string]

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { NumberAssociation } from '../entities/NumberAssociation'
-import { createEmptyCard, fsrs, Grades, type Card, type RecordLog } from 'ts-fsrs'
+import { createEmptyCard, fsrs } from 'ts-fsrs'
 
 interface NumberAssociationState {
   associations: Record<string, NumberAssociation>

@@ -19,7 +19,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
+import { createEmptyCard } from 'ts-fsrs'
 import { useYearAssociationStore } from '@/stores/useYearAssociationStore'
 import { useEventsStore } from '@/stores/useEventsStore'
 import { useNumberAssociationStore } from '@/stores/useNumberAssociationStore'
@@ -76,7 +77,10 @@ const handleUpdateYearNotes = (notes: string) => {
 
 const handleAddEvent = (eventData: { content: string; mentalImage: string; notes?: string }) => {
   try {
-    const eventId = eventsStore.addEvent(props.year, eventData)
+    const eventId = eventsStore.addEvent(props.year, {
+      ...eventData,
+      eventToYearLearningData: createEmptyCard()
+    })
     success('Event added successfully!')
     return eventId
   } catch (err) {
@@ -106,7 +110,7 @@ const handleResetYearLearning = () => {
   try {
     const yearData = yearAssociationStore.getYear(props.year)
     if (yearData?.yearToEventsLearningData) {
-      yearData.yearToEventsLearningData = undefined
+      yearData.yearToEventsLearningData = createEmptyCard()
       success('Year learning data reset successfully!')
     }
   } catch (err) {
@@ -118,7 +122,7 @@ const handleResetEventLearning = (eventId: string) => {
   try {
     const event = eventsStore.getEvent(eventId)
     if (event?.eventToYearLearningData) {
-      event.eventToYearLearningData = undefined
+      event.eventToYearLearningData = createEmptyCard()
       success('Event learning data reset successfully!')
     }
   } catch (err) {

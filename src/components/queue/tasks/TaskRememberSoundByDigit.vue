@@ -53,7 +53,7 @@ const revealAnswer = () => {
 }
 
 const selectRating = (rating: 'wrong' | 'hard' | 'good' | 'easy') => {
-    digitAssociationStore.updateDigitCard(parseInt(props.digit), rating)
+    digitAssociationStore.updateCard(parseInt(props.digit), rating)
     emit('task-done')
 }
 

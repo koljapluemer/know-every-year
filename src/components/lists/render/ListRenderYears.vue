@@ -11,7 +11,7 @@
         </tr>
       </thead>
       <tbody>
-        <template v-for="(year, index) in yearsWithHeadings" :key="isHeading(year) ? (year as HeadingItem).text : year">
+        <template v-for="year in yearsWithHeadings" :key="isHeading(year) ? (year as HeadingItem).text : year">
           <!-- Century/Decade Heading -->
           <tr v-if="isHeading(year)" class="bg-base-200">
             <td colspan="5" class="text-center font-bold text-lg py-4">

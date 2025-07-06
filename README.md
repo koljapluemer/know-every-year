@@ -1,6 +1,6 @@
 # Know Every Year
 
-![demo combined screenshot](docs/img/demo_crop.webp)
+![demo combined screenshot](publicdemo_crop.webp)
 
 A little app to gradually memorize what happened in every year from 0 to 2025, using the [Major System](https://artofmemory.com/blog/major-system/)
 
@@ -36,36 +36,36 @@ This has so far demotivated me from actually starting this project, thus I built
 
 It uses spaced repetition flashcards (using the state of the art [ts-fsrs](github.com/open-spaced-repetition/ts-fsrs)) to familiarize you with the single digit pegs the system uses. You are challenged to associate sound with number, and number with sound(s):
 
-![screenshot](docs/img/learn_digit.webp) ![screenshot](docs/img/learn_sound.webp)
+![screenshot](publiclearn_digit.webp) ![screenshot](publiclearn_sound.webp)
 
 Then, gradually, it prompts you to invent mnemonics for digit pairs (00-99), using the pegs:
 
-![screenshot](docs/img/add_nr_association.webp) 
+![screenshot](publicadd_nr_association.webp) 
 
 These are also practiced with spaced repetition, in both directions: 
 
-![screenshot](docs/img/practice_nr.webp) ![screenshot](docs/img/practice_word.webp)
+![screenshot](publicpractice_nr.webp) ![screenshot](publicpractice_word.webp)
 
 Then, once you start collecting some digit pair pegs, it prompts you to research and add events for given years:
 
-![screenshot](docs/img/add_year.webp)
+![screenshot](publicadd_year.webp)
 
 > [!TIP]
 > You can put whatever events you want in here. [On This Day](https://www.onthisday.com) and Wikipedia are pretty good sources, but you could also focus on book or movie releases or anything, really.
 
 And again, it will quiz you on those using spaced repetition:
 
-![screenshot](docs/img/learn_by_event.webp) ![screenshot](docs/img/learn_by_year.webp)
+![screenshot](publiclearn_by_event.webp) ![screenshot](publiclearn_by_year.webp)
 
 ### Managing
 
 You can customize which digits should be associated with which sounds: 
 
-![screenshot](docs/img/manage_digits.webp)
+![screenshot](publicmanage_digits.webp)
 
 > [!WARNING]
 > If you want customize those pegs, do it early, otherwise you will create number pair associations with outdated pegs!
 
 In the same way, you can also view your number associations and your years+events in a list and edit them directly:
 
-![screenshot](docs/img/manage_nrs.webp) ![screenshot](docs/img/manage_years.webp)
+![screenshot](publicmanage_nrs.webp) ![screenshot](publicmanage_years.webp)

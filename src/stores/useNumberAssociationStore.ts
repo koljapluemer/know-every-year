@@ -76,6 +76,33 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
       return Object.entries(state.associations)
         .filter(([_, association]) => !association.numberToWordLearningData)
         .map(([number, _]) => number)
+    },
+
+    /**
+     * Get words that are due for review (wordToNumber direction)
+     */
+    getDueWords: (state): string[] => {
+      const now = new Date()
+      return Object.entries(state.associations)
+        .filter(([_, association]) => {
+          if (!association.wordToNumberLearningData) return false
+          try {
+            return association.wordToNumberLearningData.due <= now
+          } catch (error) {
+            console.error('Error checking due date for word card:', error)
+            return false
+          }
+        })
+        .map(([number, _]) => number)
+    },
+
+    /**
+     * Get words that have never been practiced (wordToNumber direction)
+     */
+    getNewWords: (state): string[] => {
+      return Object.entries(state.associations)
+        .filter(([_, association]) => !association.wordToNumberLearningData)
+        .map(([number, _]) => number)
     }
   },
 
@@ -186,23 +213,6 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
     },
 
     /**
-     * Get a random number for practice (due or new)
-     */
-    getRandomPracticeNumber(): string | null {
-      const dueNumbers = this.getDueNumbers
-      const newNumbers = this.getNewNumbers
-      
-      const availableNumbers = [...dueNumbers, ...newNumbers]
-      
-      if (availableNumbers.length === 0) {
-        return null
-      }
-      
-      const randomIndex = Math.floor(Math.random() * availableNumbers.length)
-      return availableNumbers[randomIndex]
-    },
-
-    /**
      * Map rating string to FSRS grade number
      */
     mapRatingToFSRS(rating: 'wrong' | 'hard' | 'good' | 'easy'): number {
@@ -212,6 +222,96 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
         case 'good': return 3  // Good
         case 'easy': return 4  // Easy
         default: return 3      // Good
+      }
+    },
+
+    /**
+     * Get a random exercise for practice (due or new, either direction)
+     */
+    getRandomPracticeExercise(): { number: string; direction: 'numberToWord' | 'wordToNumber' } | null {
+      const dueNumbers = this.getDueNumbers
+      const newNumbers = this.getNewNumbers
+      const dueWords = this.getDueWords
+      const newWords = this.getNewWords
+      
+      // Combine all available exercises
+      const availableExercises: Array<{ number: string; direction: 'numberToWord' | 'wordToNumber' }> = []
+      
+      // Add number-to-word exercises
+      dueNumbers.forEach(number => {
+        availableExercises.push({ number, direction: 'numberToWord' })
+      })
+      newNumbers.forEach(number => {
+        availableExercises.push({ number, direction: 'numberToWord' })
+      })
+      
+      // Add word-to-number exercises
+      dueWords.forEach(number => {
+        availableExercises.push({ number, direction: 'wordToNumber' })
+      })
+      newWords.forEach(number => {
+        availableExercises.push({ number, direction: 'wordToNumber' })
+      })
+      
+      if (availableExercises.length === 0) {
+        return null
+      }
+      
+      const randomIndex = Math.floor(Math.random() * availableExercises.length)
+      return availableExercises[randomIndex]
+    },
+
+    /**
+     * Update card with rating (wordToNumber direction)
+     */
+    updateWordCard(number: string, rating: 'wrong' | 'hard' | 'good' | 'easy') {
+      console.log('Updating word card for number:', number, 'with rating:', rating)
+      
+      const association = this.associations[number]
+      if (!association) {
+        console.error('Association not found for number:', number)
+        return
+      }
+
+      // Map rating to FSRS Grade
+      const fsrsGrade = this.mapRatingToFSRS(rating)
+      console.log('Mapped to FSRS grade:', fsrsGrade)
+      
+      // Get or create card
+      let card = association.wordToNumberLearningData
+      if (!card) {
+        console.warn('Word card missing for number:', number, '- creating new card')
+        card = createEmptyCard(new Date())
+        association.wordToNumberLearningData = card
+      }
+
+      // Ensure card is not undefined
+      if (!card) {
+        console.error('Failed to create word card for number:', number)
+        return
+      }
+
+      console.log('Original word card:', card)
+
+      try {
+        // Create FSRS instance with default parameters
+        const f = fsrs()
+        const now = new Date()
+        
+        // Use the next method for ts-fsrs >=4.0.0
+        const result = f.next(card, now, fsrsGrade)
+        
+        console.log('FSRS word result:', result)
+        
+        // Update the card
+        association.wordToNumberLearningData = result.card
+        
+        console.log('Updated word card:', result.card)
+        
+      } catch (error) {
+        console.error('Error updating word card with FSRS:', error)
+        // Recreate card on error
+        association.wordToNumberLearningData = createEmptyCard(new Date())
       }
     }
   },

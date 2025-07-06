@@ -51,7 +51,7 @@
               </span>
             </td>
             <td class="text-sm">
-              <span v-if="item.association?.numberToWordLearningData" class="font-mono">
+              <span v-if="item.association?.numberToWordLearningData" class="font-mono" :class="getDueDateClass(item.association.numberToWordLearningData.due)">
                 {{ formatDueDate(item.association.numberToWordLearningData.due) }}
               </span>
               <span v-else class="text-gray-400 italic">
@@ -59,7 +59,7 @@
               </span>
             </td>
             <td class="text-sm">
-              <span v-if="item.association?.wordToNumberLearningData" class="font-mono">
+              <span v-if="item.association?.wordToNumberLearningData" class="font-mono" :class="getDueDateClass(item.association.wordToNumberLearningData.due)">
                 {{ formatDueDate(item.association.wordToNumberLearningData.due) }}
               </span>
               <span v-else class="text-gray-400 italic">
@@ -110,24 +110,41 @@ const formatDueDate = (dueDate: Date | string) => {
   if (!dueDate) return 'No practice data yet'
   
   const date = new Date(dueDate)
+  
+  // Format as "MMM DD, YYYY HH:MM" (e.g., "Jul 06, 2025 14:30")
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric'
+  }) + ' ' + date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  })
+}
+
+const getDueDateClass = (dueDate: Date | string) => {
+  if (!dueDate) return ''
+  
+  const date = new Date(dueDate)
   const now = new Date()
   
-  // If due date is in the past, show as overdue
+  // If due date is in the past, show as red (overdue)
   if (date <= now) {
-    return 'Overdue'
+    return 'text-error font-semibold'
   }
   
-  // If due today, show "Today"
+  // If due today, show as orange (urgent)
   const today = new Date()
   today.setHours(0, 0, 0, 0)
   const dueToday = new Date(date)
   dueToday.setHours(0, 0, 0, 0)
   
   if (dueToday.getTime() === today.getTime()) {
-    return 'Today'
+    return 'text-warning font-semibold'
   }
   
-  // Otherwise show the date
-  return date.toLocaleDateString()
+  // Otherwise show as normal (future)
+  return 'text-success'
 }
 </script>

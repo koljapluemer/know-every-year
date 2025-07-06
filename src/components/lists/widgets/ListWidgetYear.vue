@@ -17,8 +17,8 @@
     </div>
     <span v-else>-</span>
   </td>
-  <td>{{ yearData?.notes || '-' }}</td>
-  <td>
+  <td class="hidden md:table-cell">{{ yearData?.notes || '-' }}</td>
+  <td class="hidden md:table-cell">
     <div class="flex flex-row gap-1">
       <div class="text-sm">
         {{ firstNumberAssociation || '?' }}
@@ -29,7 +29,7 @@
       </div>
     </div>
   </td>
-  <td>
+  <td class="hidden md:table-cell">
     <div class="flex flex-col gap-1 text-xs">
       <div v-if="yearData?.yearToEventsLearningData">
         <span class="text-gray-600">Year→Events:</span>

@@ -5,9 +5,9 @@
         <tr>
           <th>Year</th>
           <th>Events</th>
-          <th>Notes</th>
-          <th>Digit Associations</th>
-          <th>Learning Data</th>
+          <th class="hidden md:table-cell">Notes</th>
+          <th class="hidden md:table-cell">Digit Associations</th>
+          <th class="hidden md:table-cell">Learning Data</th>
         </tr>
       </thead>
       <tbody>

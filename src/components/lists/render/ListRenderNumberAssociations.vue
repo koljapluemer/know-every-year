@@ -20,10 +20,10 @@
           <tr>
             <th class="w-20">Number</th>
             <th>Association</th>
-            <th>Notes</th>
-            <th class="w-32">Number→Word Due</th>
-            <th class="w-32">Word→Number Due</th>
-            <th class="w-16">Status</th>
+            <th class="hidden md:table-cell">Notes</th>
+            <th class="hidden md:table-cell w-32">Number→Word Due</th>
+            <th class="hidden md:table-cell w-32">Word→Number Due</th>
+            <th class="hidden md:table-cell w-16">Status</th>
           </tr>
         </thead>
         <tbody>
@@ -42,7 +42,7 @@
                 No association yet
               </span>
             </td>
-            <td>
+            <td class="hidden md:table-cell">
               <span v-if="item.association?.notes" class="text-sm text-gray-600">
                 {{ item.association.notes }}
               </span>
@@ -50,7 +50,7 @@
                 -
               </span>
             </td>
-            <td class="text-sm">
+            <td class="hidden md:table-cell text-sm">
               <span v-if="item.association?.numberToWordLearningData">
                 <WidgetDueDate :due-date="item.association.numberToWordLearningData.due" />
               </span>
@@ -58,7 +58,7 @@
                 No practice data yet
               </span>
             </td>
-            <td class="text-sm">
+            <td class="hidden md:table-cell text-sm">
               <span v-if="item.association?.wordToNumberLearningData">
                 <WidgetDueDate :due-date="item.association.wordToNumberLearningData.due" />
               </span>
@@ -66,7 +66,7 @@
                 No practice data yet
               </span>
             </td>
-            <td class="text-center">
+            <td class="hidden md:table-cell text-center">
               <div v-if="item.association" class="flex justify-center">
                 <CheckCircle class="w-5 h-5 text-success" />
               </div>

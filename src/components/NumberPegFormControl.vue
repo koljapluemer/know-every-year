@@ -7,6 +7,7 @@
     :secondDigitAssociation="secondDigitAssociation"
     :prefillData="prefillData"
     @save="handleSave"
+    @skip="handleSkip"
   />
 </template>
 
@@ -25,6 +26,7 @@ interface Props {
 const props = defineProps<Props>()
 const emit = defineEmits<{
   saved: []
+  skipped: []
 }>()
 
 const digitAssociationStore = useDigitAssociationStore()
@@ -53,5 +55,9 @@ const handleSave = (association: { word: string; notes?: string }) => {
   numberAssociationStore.setAssociation(props.number, association)
   success(`Association for ${props.number} saved successfully!`)
   emit('saved')
+}
+
+const handleSkip = () => {
+  emit('skipped')
 }
 </script>

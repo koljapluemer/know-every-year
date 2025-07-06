@@ -28,7 +28,10 @@
                     class="textarea textarea-bordered w-full" rows="3"></textarea>
             </div>
 
-            <div class="flex justify-end">
+            <div class="flex justify-end gap-4">
+                <button type="button" @click="handleSkip" class="btn btn-outline">
+                    Skip
+                </button>
                 <button type="submit" class="btn btn-primary">
                     Save Association
                 </button>
@@ -142,6 +145,7 @@ interface Props {
 const props = defineProps<Props>()
 const emit = defineEmits<{
     save: [{ word: string; notes?: string }]
+    skip: []
 }>()
 
 const digitAssociationStore = useDigitAssociationStore()
@@ -179,5 +183,9 @@ const handleSubmit = () => {
         form.word = ''
         form.notes = ''
     }
+}
+
+const handleSkip = () => {
+    emit('skip')
 }
 </script>

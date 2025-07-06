@@ -27,6 +27,7 @@
   <NumberPegFormControl 
     :number="currentExercise!.identifier"
     @saved="loadNextExercise"
+    @skipped="loadNextExercise"
     v-else-if="isCreatePegExercise"
   />
   

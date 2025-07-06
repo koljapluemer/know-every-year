@@ -1,9 +1,9 @@
 <template>
-  <RandomNumberExerciseControl @no-exercises-available="handleNoExercisesAvailable" />
+  <RandomExerciseControl @no-exercises-available="handleNoExercisesAvailable" />
 </template>
 
 <script setup lang="ts">
-import RandomNumberExerciseControl from './RandomNumberExerciseControl.vue'
+import RandomExerciseControl from './RandomExerciseControl.vue'
 
 const handleNoExercisesAvailable = () => {
   console.log('No exercises available for practice')

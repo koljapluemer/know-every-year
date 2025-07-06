@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import type { DigitAssociation } from '../entities/DigitAssociation'
+import { createEmptyCard, fsrs, type Card } from 'ts-fsrs'
 
 interface DigitAssociationState {
   associations: Record<number, DigitAssociation>
@@ -56,6 +57,72 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
      */
     isSoundIgnored: (state) => (sound: string): boolean => {
       return state.ignoredSounds.sounds.includes(sound)
+    },
+
+    /**
+     * Get digits that are due for review (numberToSound direction)
+     */
+    getDueDigits: (state): number[] => {
+      const now = new Date()
+      return Object.entries(state.associations)
+        .filter(([digit, association]) => {
+          if (!association.numberToSoundLearningData) return false
+          try {
+            return association.numberToSoundLearningData.due <= now
+          } catch (error) {
+            console.error('Error checking due date for digit card:', error)
+            return false
+          }
+        })
+        .map(([digit, _]) => parseInt(digit))
+    },
+
+    /**
+     * Get digits that have never been practiced (numberToSound direction)
+     */
+    getNewDigits: (state): number[] => {
+      return Object.entries(state.associations)
+        .filter(([_, association]) => !association.numberToSoundLearningData)
+        .map(([digit, _]) => parseInt(digit))
+    },
+
+    /**
+     * Get sounds that are due for review (soundToNumber direction)
+     */
+    getDueSounds: (state): string[] => {
+      const now = new Date()
+      const dueSounds: string[] = []
+      
+      Object.entries(state.associations).forEach(([digit, association]) => {
+        if (association.soundToNumberLearningData) {
+          try {
+            if (association.soundToNumberLearningData.due <= now) {
+              // Add all sounds for this digit since they share the same card
+              dueSounds.push(...association.sounds)
+            }
+          } catch (error) {
+            console.error('Error checking due date for sound card:', error)
+          }
+        }
+      })
+      
+      return dueSounds
+    },
+
+    /**
+     * Get sounds that have never been practiced (soundToNumber direction)
+     */
+    getNewSounds: (state): string[] => {
+      const newSounds: string[] = []
+      
+      Object.entries(state.associations).forEach(([digit, association]) => {
+        if (!association.soundToNumberLearningData) {
+          // Add all sounds for this digit since they share the same card
+          newSounds.push(...association.sounds)
+        }
+      })
+      
+      return newSounds
     }
   },
 
@@ -175,6 +242,134 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
         9: { sounds: ['p', 'b'], notes: 'P looks like a mirror-image of 9. b sounds similar look like a rotated 9' }
       }
       this.ignoredSounds = { sounds: ['Vowel sounds', 'w', 'h', 'y'], notes: 'These sounds are ignored in the traditional Major System' }
+    },
+
+    /**
+     * Update digit card with rating (numberToSound direction)
+     */
+    updateDigitCard(digit: number, rating: 'wrong' | 'hard' | 'good' | 'easy') {
+      console.log('Updating digit card for digit:', digit, 'with rating:', rating)
+      
+      const association = this.associations[digit]
+      if (!association) {
+        console.error('Association not found for digit:', digit)
+        return
+      }
+
+      // Map rating to FSRS Grade
+      const fsrsGrade = this.mapRatingToFSRS(rating)
+      console.log('Mapped to FSRS grade:', fsrsGrade)
+      
+      // Get or create card
+      let card = association.numberToSoundLearningData
+      if (!card) {
+        console.warn('Digit card missing for digit:', digit, '- creating new card')
+        card = createEmptyCard(new Date())
+        association.numberToSoundLearningData = card
+      }
+
+      // Ensure card is not undefined
+      if (!card) {
+        console.error('Failed to create digit card for digit:', digit)
+        return
+      }
+
+      console.log('Original digit card:', card)
+
+      try {
+        // Create FSRS instance with default parameters
+        const f = fsrs()
+        const now = new Date()
+        
+        // Use the next method for ts-fsrs >=4.0.0
+        const result = f.next(card, now, fsrsGrade)
+        
+        console.log('FSRS digit result:', result)
+        
+        // Update the card
+        association.numberToSoundLearningData = result.card
+        
+        console.log('Updated digit card:', result.card)
+        
+      } catch (error) {
+        console.error('Error updating digit card with FSRS:', error)
+        // Recreate card on error
+        association.numberToSoundLearningData = createEmptyCard(new Date())
+      }
+    },
+
+    /**
+     * Update sound card with rating (soundToNumber direction)
+     */
+    updateSoundCard(sound: string, rating: 'wrong' | 'hard' | 'good' | 'easy') {
+      console.log('Updating sound card for sound:', sound, 'with rating:', rating)
+      
+      // Find which digit this sound belongs to
+      const digit = this.getDigitForSound(sound)
+      if (digit === null) {
+        console.error('Sound not found in any digit association:', sound)
+        return
+      }
+
+      const association = this.associations[digit]
+      if (!association) {
+        console.error('Association not found for digit:', digit)
+        return
+      }
+
+      // Map rating to FSRS Grade
+      const fsrsGrade = this.mapRatingToFSRS(rating)
+      console.log('Mapped to FSRS grade:', fsrsGrade)
+      
+      // Get or create card
+      let card = association.soundToNumberLearningData
+      if (!card) {
+        console.warn('Sound card missing for digit:', digit, '- creating new card')
+        card = createEmptyCard(new Date())
+        association.soundToNumberLearningData = card
+      }
+
+      // Ensure card is not undefined
+      if (!card) {
+        console.error('Failed to create sound card for digit:', digit)
+        return
+      }
+
+      console.log('Original sound card:', card)
+
+      try {
+        // Create FSRS instance with default parameters
+        const f = fsrs()
+        const now = new Date()
+        
+        // Use the next method for ts-fsrs >=4.0.0
+        const result = f.next(card, now, fsrsGrade)
+        
+        console.log('FSRS sound result:', result)
+        
+        // Update the card
+        association.soundToNumberLearningData = result.card
+        
+        console.log('Updated sound card:', result.card)
+        
+      } catch (error) {
+        console.error('Error updating sound card with FSRS:', error)
+        // Recreate card on error
+        association.soundToNumberLearningData = createEmptyCard(new Date())
+      }
+    },
+
+    /**
+     * Map rating string to FSRS grade number
+     */
+    mapRatingToFSRS(rating: 'wrong' | 'hard' | 'good' | 'easy'): number {
+      switch (rating) {
+        case 'wrong': return 1 // Again
+        case 'hard': return 2  // Hard
+        case 'good': return 3  // Good
+        case 'easy': return 4  // Easy
+        default: return 3      // Good
+      }
     }
   },
 

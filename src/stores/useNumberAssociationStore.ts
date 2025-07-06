@@ -262,6 +262,68 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
     },
 
     /**
+     * Get a random exercise from all available categories (number associations + digit associations)
+     * This method requires the digit association store to be passed in
+     */
+    getRandomPracticeExerciseFromAll(digitAssociationStore: any): { 
+      type: 'number' | 'digit'; 
+      identifier: string; 
+      direction: 'numberToWord' | 'wordToNumber' | 'numberToSound' | 'soundToNumber' 
+    } | null {
+      // Get all available exercises from both stores
+      const availableExercises: Array<{ 
+        type: 'number' | 'digit'; 
+        identifier: string; 
+        direction: 'numberToWord' | 'wordToNumber' | 'numberToSound' | 'soundToNumber' 
+      }> = []
+      
+      // Number association exercises
+      const dueNumbers = this.getDueNumbers
+      const newNumbers = this.getNewNumbers
+      const dueWords = this.getDueWords
+      const newWords = this.getNewWords
+      
+      dueNumbers.forEach(number => {
+        availableExercises.push({ type: 'number', identifier: number, direction: 'numberToWord' })
+      })
+      newNumbers.forEach(number => {
+        availableExercises.push({ type: 'number', identifier: number, direction: 'numberToWord' })
+      })
+      dueWords.forEach(number => {
+        availableExercises.push({ type: 'number', identifier: number, direction: 'wordToNumber' })
+      })
+      newWords.forEach(number => {
+        availableExercises.push({ type: 'number', identifier: number, direction: 'wordToNumber' })
+      })
+      
+      // Digit association exercises
+      const dueDigits = digitAssociationStore.getDueDigits
+      const newDigits = digitAssociationStore.getNewDigits
+      const dueSounds = digitAssociationStore.getDueSounds
+      const newSounds = digitAssociationStore.getNewSounds
+      
+      dueDigits.forEach((digit: number) => {
+        availableExercises.push({ type: 'digit', identifier: digit.toString(), direction: 'numberToSound' })
+      })
+      newDigits.forEach((digit: number) => {
+        availableExercises.push({ type: 'digit', identifier: digit.toString(), direction: 'numberToSound' })
+      })
+      dueSounds.forEach((sound: string) => {
+        availableExercises.push({ type: 'digit', identifier: sound, direction: 'soundToNumber' })
+      })
+      newSounds.forEach((sound: string) => {
+        availableExercises.push({ type: 'digit', identifier: sound, direction: 'soundToNumber' })
+      })
+      
+      if (availableExercises.length === 0) {
+        return null
+      }
+      
+      const randomIndex = Math.floor(Math.random() * availableExercises.length)
+      return availableExercises[randomIndex]
+    },
+
+    /**
      * Update card with rating (wordToNumber direction)
      */
     updateWordCard(number: string, rating: 'wrong' | 'hard' | 'good' | 'easy') {

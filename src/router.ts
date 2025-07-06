@@ -5,13 +5,15 @@ import ManageDigitPegsPage from './pages/PageDigitAssociationsManage.vue'
 import QueuePage from './pages/PageQueue.vue'
 import ListAllYearsPage from './pages/PageYearsList.vue'
 import ManageYearPage from './pages/PageYearManage.vue'
+import PageHome from './pages/PageHome.vue'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: '/',
-      redirect: '/practice'
+      name: 'Home',
+      component: PageHome
     },
     {
       path: '/list-pegs',

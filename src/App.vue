@@ -1,7 +1,8 @@
 <template>
   <header class="navbar bg-base-100 shadow-sm mb-4">
-    <div class="navbar-start">
-      <h1 class="text-xl font-bold lg:text-2xl">Know Every Year</h1>
+    <div class="navbar-start flex flex-col gap-1 items-start">
+      <router-link :to="{ name: 'Home' }" class="text-xl link link-hover font-bold lg:text-2xl">Know Every Year</router-link>
+      <small class="text-sm">by <a href="https://koljapluemer.com/" class="link">Kolja Sam</a></small>
     </div>
     
     <NavList :nav-items="navItems" />
@@ -18,7 +19,7 @@ const navItems = [
   { name: 'Practice', label: 'Practice', isPrimary: true },
   { name: 'ManageDigitPegs', label: 'Digit Pegs' },
   { name: 'ListPegs', label: 'Number Pegs' },
-  { name: 'YearAssociations', label: 'Year Events' }
+  { name: 'YearAssociations', label: 'Years & Events' }
 ]
 </script>
 

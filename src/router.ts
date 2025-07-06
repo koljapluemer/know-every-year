@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import CompleteNumberPegsPage from './pages/CompleteNumberPegsPage.vue'
 import ListAllNumberPegsPage from './pages/ListAllNumberPegsPage.vue'
 import ManageNumberPegPage from './pages/ManageNumberPegPage.vue'
+import QueuePage from './pages/QueuePage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -25,6 +26,11 @@ const router = createRouter({
       name: 'ManagePeg',
       component: ManageNumberPegPage,
       props: true
+    },
+    {
+      path: '/practice',
+      name: 'Practice',
+      component: QueuePage
     }
   ]
 })

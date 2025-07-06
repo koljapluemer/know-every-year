@@ -4,6 +4,7 @@ import ManageNumberPegPage from './pages/ManageNumberPegPage.vue'
 import ManageDigitPegsPage from './pages/ManageDigitPegsPage.vue'
 import QueuePage from './pages/QueuePage.vue'
 import ListAllYearsPage from './pages/ListAllYearsPage.vue'
+import ManageYearPage from './pages/ManageYearPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -37,6 +38,12 @@ const router = createRouter({
       path: '/year-associations',
       name: 'YearAssociations',
       component: ListAllYearsPage
+    },
+    {
+      path: '/manage-year/:year',
+      name: 'ManageYear',
+      component: ManageYearPage,
+      props: true
     }
   ]
 })

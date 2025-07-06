@@ -1,5 +1,9 @@
 <template>
-  <td class="font-mono">{{ year }}</td>
+  <td class="font-mono">
+    <RouterLink :to="{ name: 'ManageYear', params: { year } }" class="link link-primary hover:link-primary-focus">
+      {{ year }}
+    </RouterLink>
+  </td>
   <td>
     <div v-if="events.length > 0" class="space-y-2">
       <div 
@@ -48,6 +52,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { RouterLink } from 'vue-router'
 import { useYearAssociationStore } from '../stores/useYearAssociationStore'
 import { useNumberAssociationStore } from '../stores/useNumberAssociationStore'
 import { useEventsStore } from '../stores/useEventsStore'

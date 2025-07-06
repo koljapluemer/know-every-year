@@ -109,12 +109,25 @@
             </div>
         </div>
 
+        <!-- Ignored sounds info -->
+                <h3 class="mb-2">Ignored Sounds:</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span 
+                        v-for="sound in ignoredSounds" 
+                        :key="sound"
+                        class="badge badge-neutral"
+                    >
+                        {{ sound }}
+                    </span>
+                </div>
+                <p v-if="ignoredSoundsNotes" class="text-sm text-gray-600 mt-2">{{ ignoredSoundsNotes }}</p>
 
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
+import { useDigitAssociationStore } from '../stores/useDigitAssociationStore'
 import type { DigitAssociation } from '../entities/DigitAssociation'
 
 interface Props {
@@ -130,6 +143,11 @@ const props = defineProps<Props>()
 const emit = defineEmits<{
     save: [{ word: string; notes?: string }]
 }>()
+
+const digitAssociationStore = useDigitAssociationStore()
+
+const ignoredSounds = computed(() => digitAssociationStore.ignoredSounds.sounds)
+const ignoredSoundsNotes = computed(() => digitAssociationStore.ignoredSounds.notes)
 
 const form = reactive({
     word: props.prefillData?.word || '',

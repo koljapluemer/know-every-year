@@ -19,4 +19,18 @@ import ToastManager from './ui/ToastManager.vue'
 <style>
 @import "tailwindcss";
 @plugin "daisyui";
+
+@layer components {
+  .big-digit {
+    @apply text-9xl text-primary font-bold;
+  }
+
+  .letter-wrap {
+    @apply border-1 border-gray-300 rounded-md p-6;
+  }
+
+  .big-word {
+    @apply text-7xl text-primary font-bold;
+  }
+}
 </style>

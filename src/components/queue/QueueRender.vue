@@ -1,8 +1,8 @@
 <template>
-  <div class="container mx-auto py-8">
+  <div class="container mx-auto">
     <!-- No exercises available -->
     <div v-if="!currentTask" class="text-center p-8">
-      <h2 class="text-2xl font-bold mb-4">No Exercises Available</h2>
+      <h2 class="text-2xl font-bold mb-4">No Tasks Available</h2>
     </div>
 
     <!-- Task components -->
@@ -15,6 +15,7 @@
         />
         <TaskRememberWordByNumber 
           :number="currentTask.identifier"
+          :key="currentTask.identifier"
           @task-done="loadNextTask"
         />
       </div>
@@ -27,6 +28,7 @@
         />
         <TaskRememberNumberByWord 
           :number="currentTask.identifier"
+          :key="currentTask.identifier"
           @task-done="loadNextTask"
         />
       </div>
@@ -39,6 +41,7 @@
         />
         <TaskRememberSoundByDigit 
           :digit="currentTask.identifier"
+          :key="currentTask.identifier"
           @task-done="loadNextTask"
         />
       </div>
@@ -51,6 +54,7 @@
         />
         <TaskRememberDigitBySound 
           :sound="currentTask.identifier"
+          :key="currentTask.identifier"
           @task-done="loadNextTask"
         />
       </div>
@@ -63,6 +67,7 @@
         />
         <TaskCreateNumberAssociation 
           :number="currentTask.identifier"
+          :key="currentTask.identifier"
           @task-done="loadNextTask"
         />
       </div>
@@ -75,6 +80,7 @@
         />
         <TaskRememberEventsByYear 
           :year="currentTask.identifier"
+          :key="currentTask.identifier"
           @task-done="loadNextTask"
         />
       </div>

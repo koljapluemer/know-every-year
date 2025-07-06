@@ -1,7 +1,8 @@
 <template>
-    <div class="max-w-2xl mx-auto p-6">
+    <div class="text-center ">
+
         <div class="text-center mb-8">
-            <div class="text-6xl font-bold text-primary mb-6 break-words">{{ association?.word }}</div>
+            <div class="big-word">{{ association?.word }}</div>
         </div>
 
         <!-- Reveal section -->
@@ -12,7 +13,7 @@
             <!-- Answer display -->
             <div class="card bg-base-100 shadow-lg">
                 <div class="card-body text-center">
-                    <p class="text-6xl font-bold text-primary mb-2">{{ number }}</p>
+                    <p class="big-digit">{{ number }}</p>
                     <p v-if="association?.notes" class="text-gray-600">{{ association.notes }}</p>
                 </div>
             </div>

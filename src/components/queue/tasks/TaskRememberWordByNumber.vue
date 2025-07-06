@@ -1,5 +1,6 @@
 <template>
-    <div class="max-w-2xl mx-auto p-6">
+    <div class="text-center ">
+
         <div class="text-center mb-8">
             <div class="text-9xl font-bold text-primary mb-6">{{ number }}</div>
         </div>

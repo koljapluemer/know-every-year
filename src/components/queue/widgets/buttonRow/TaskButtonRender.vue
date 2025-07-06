@@ -1,29 +1,14 @@
 <template>
-  <div 
-    class="task-buttons"
-    :class="[
-      `justify-${alignment}`,
-      layoutClasses,
-      gapClasses
-    ]"
-  >
-    <slot 
-      :buttons="buttons"
-      :config="config"
-    >
+  <div class="task-buttons" :class="[
+    `justify-${alignment}`,
+    layoutClasses,
+    gapClasses
+  ]">
+    <slot :buttons="buttons" :config="config">
       <!-- Default slot content - renders buttons if no custom slot provided -->
-      <button
-        v-for="button in visibleButtons"
-        :key="button.id"
-        @click="button.onClick"
-        :disabled="button.disabled"
-        :class="buttonClasses(button)"
-      >
-        <component 
-          v-if="button.icon" 
-          :is="button.icon" 
-          class="w-4 h-4 mr-2" 
-        />
+      <button v-for="button in visibleButtons" :key="button.id" @click="button.onClick" :disabled="button.disabled"
+        :class="buttonClasses(button)">
+        <component v-if="button.icon" :is="button.icon" class="w-4 h-4 mr-2" />
         {{ button.label }}
       </button>
     </slot>
@@ -48,7 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
   })
 })
 
-const visibleButtons = computed(() => 
+const visibleButtons = computed(() =>
   props.buttons.filter(button => button.visible !== false)
 )
 
@@ -76,13 +61,13 @@ const buttonClasses = (button: TaskButton) => {
   const base = 'btn'
   const size = button.size || 'md'
   const variant = button.variant || 'primary'
-  
+
   return `${base} btn-${variant} btn-${size}`
 }
 </script>
 
 <style scoped>
 .task-buttons {
-  @apply flex items-center;
+  @reference flex items-center m-4 p-4;
 }
 </style>

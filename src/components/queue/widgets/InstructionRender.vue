@@ -1,7 +1,7 @@
 <template>
-  <div class="text-center mb-8">
-    <p class="text-lg text-gray-600 mb-2">{{ subtitle }}</p>
-    <h2 class="text-2xl font-bold">{{ title }}</h2>
+  <div class="text-center m-4 p-4">
+    <p class="text-xl text-gray-600 mb-2">{{ subtitle }}</p>
+    <h2 class="text-3xl font-bold">{{ title }}</h2>
   </div>
 </template>
 

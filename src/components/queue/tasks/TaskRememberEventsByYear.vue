@@ -1,5 +1,7 @@
 <template>
-  <div class="max-w-4xl mx-auto">
+
+  <div class="text-center ">
+
     <div class="text-center mb-8">
       <div class="text-6xl font-bold font-mono">{{ year }}</div>
     </div>
@@ -14,12 +16,7 @@
         <div class="card-body">
           <h3 class="card-title text-xl mb-4">Events for {{ year }}</h3>
           <div v-if="events.length > 0" class="space-y-4">
-            <FormWidgetEvent
-              v-for="event in events"
-              :key="event.id"
-              :event="event"
-              :readonly="true"
-            />
+            <FormWidgetEvent v-for="event in events" :key="event.id" :event="event" :readonly="true" />
           </div>
           <div v-else class="text-center py-8">
             <p class="text-gray-500 text-lg">No events found for this year</p>

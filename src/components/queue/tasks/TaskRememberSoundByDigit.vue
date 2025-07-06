@@ -1,7 +1,8 @@
 <template>
-    <div class="max-w-2xl mx-auto p-6">
+    <div class="text-center ">
+
         <div class="text-center mb-8">
-            <div class="text-9xl font-bold text-primary mb-6">{{ digit }}</div>
+            <div class="big-digit">{{ digit }}</div>
         </div>
 
         <!-- Reveal section -->
@@ -10,17 +11,12 @@
         <!-- Answer and rating section -->
         <div v-else class="space-y-6">
             <!-- Answer display -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body text-center">
-                    <div class="flex flex-wrap gap-2 justify-center mb-2">
-                        <span v-for="sound in sounds" :key="sound"
-                            class="badge badge-primary badge-lg text-lg px-4 py-2">
-                            {{ sound }}
-                        </span>
-                    </div>
-                    <p v-if="notes" class="text-gray-600">{{ notes }}</p>
-                </div>
+            <div class="flex flex-wrap gap-6 justify-center mb-2">
+                <span v-for="sound in sounds" :key="sound" class="big-digit letter-wrap">
+                    {{ sound }}
+                </span>
             </div>
+            <p v-if="notes" class="text-gray-600">{{ notes }}</p>
 
             <!-- Rating buttons -->
             <TaskButtonRender :buttons="ratingButtons" />

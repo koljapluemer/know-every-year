@@ -1,8 +1,9 @@
 <template>
-    <div class="max-w-2xl mx-auto p-6">
+    <div class="text-center ">
+
         <!-- Exercise question -->
         <div class="text-center mb-8">
-            <div class="text-6xl font-bold text-primary mb-6 break-words">{{ sound }}</div>
+            <div class="big-digit">{{ sound }}</div>
         </div>
 
         <!-- Reveal section -->
@@ -13,7 +14,7 @@
             <!-- Answer display -->
             <div class="card bg-base-100 shadow-lg">
                 <div class="card-body text-center">
-                    <p class="text-6xl font-bold text-primary mb-2">{{ digit }}</p>
+                    <p class="big-digit">{{ digit }}</p>
                     <p v-if="notes" class="text-gray-600">{{ notes }}</p>
                 </div>
             </div>
@@ -61,7 +62,7 @@ const revealAnswer = () => {
 const selectRating = (rating: 'wrong' | 'hard' | 'good' | 'easy') => {
     // Update the sound card with the rating
     digitAssociationStore.updateSoundCard(props.sound, rating)
-    
+
     // Pass the event up to load next task
     emit('task-done')
 }

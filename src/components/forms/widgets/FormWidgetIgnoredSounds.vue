@@ -1,33 +1,43 @@
 <template>
-  <div class="card bg-base-100 shadow-lg">
-    <div class="card-body">
-      <h3 class="card-title">Ignored Sounds</h3>
-      <p class="text-sm text-gray-600 mb-4">These sounds are ignored in the Major System and won't be used for number associations.</p>
+  <div class="card bg-base-300 shadow-lg">
+    <div class="card-body p-4">
+      <!-- Header -->
+      <div class="flex items-center gap-4 mb-4">
+        <div class="w-12 text-center">
+          <X class="w-6 h-6 text-neutral mx-auto" />
+        </div>
+        <div class="flex-1">
+          <h3 class="font-semibold">Ignored Sounds</h3>
+        </div>
+      </div>
       
-      <div class="flex flex-wrap gap-2 items-center mb-4">
-        <!-- Existing ignored sound pills -->
-        <span 
-          v-for="sound in ignoredSounds" 
-          :key="sound"
-          class="badge badge-neutral gap-2"
-        >
-          {{ sound }}
-          <button 
-            @click="removeIgnoredSound(sound)"
-            class="btn btn-ghost btn-xs p-0 h-auto min-h-0"
+      <!-- Ignored sounds -->
+      <div class="mb-4">
+        <div class="flex flex-wrap gap-2 items-center mb-2">
+          <!-- Existing ignored sound pills -->
+          <span 
+            v-for="sound in ignoredSounds" 
+            :key="sound"
+            class="badge badge-neutral gap-2"
           >
-            <X class="w-3 h-3" />
-          </button>
-        </span>
+            {{ sound }}
+            <button 
+              @click="removeIgnoredSound(sound)"
+              class="btn btn-ghost btn-xs p-0 h-auto min-h-0"
+            >
+              <X class="w-3 h-3" />
+            </button>
+          </span>
+        </div>
         
         <!-- Add new ignored sound input -->
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-2">
           <input 
             v-model="newIgnoredSound"
             @keyup.enter="addIgnoredSound"
             @blur="addIgnoredSound"
             placeholder="Add ignored sound..."
-            class="input input-bordered input-sm w-32"
+            class="input input-bordered input-sm flex-1 max-w-xs"
             :class="{ 'input-error': newIgnoredSoundError }"
           />
           <button 
@@ -38,20 +48,19 @@
             <Plus class="w-3 h-3" />
           </button>
         </div>
+        <div v-if="newIgnoredSoundError" class="text-error text-xs mt-1">{{ newIgnoredSoundError }}</div>
       </div>
       
-      <div v-if="newIgnoredSoundError" class="text-error text-xs mb-2">{{ newIgnoredSoundError }}</div>
-      
       <!-- Notes for ignored sounds -->
-      <div class="form-control">
+      <div class="border-t border-base-200 pt-4">
         <label class="label">
-          <span class="label-text">Notes</span>
+          <span class="label-text font-medium">Notes</span>
         </label>
         <textarea 
           v-model="ignoredSoundsNotes"
           @input="updateIgnoredSoundsNotes"
-          placeholder="Notes about ignored sounds..."
-          class="textarea textarea-bordered"
+          placeholder="Add notes about ignored sounds..."
+          class="textarea textarea-bordered w-full"
           rows="2"
         ></textarea>
       </div>

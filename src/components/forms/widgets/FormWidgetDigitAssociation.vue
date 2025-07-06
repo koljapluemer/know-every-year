@@ -1,35 +1,43 @@
 <!-- no control component for this, it's very simple -->
 
 <template>
-  <tr class="hover:bg-base-200">
-    <td class="font-mono text-lg font-bold w-16">{{ digit }}</td>
-    
-    <!-- Sound associations -->
-    <td class="py-4">
-      <div class="flex flex-wrap gap-2 items-center">
-        <!-- Existing sound pills -->
-        <span 
-          v-for="sound in sounds" 
-          :key="sound"
-          class="badge badge-primary gap-2"
-        >
-          {{ sound }}
-          <button 
-            @click="removeSound(sound)"
-            class="btn btn-ghost btn-xs p-0 h-auto min-h-0"
+  <div class="card bg-base-300 shadow-lg">
+    <div class="card-body p-4">
+      <!-- Header with digit -->
+      <div class="flex items-center gap-4 mb-4">
+        <div class="font-mono text-2xl font-bold text-primary w-12 text-center">{{ digit }}</div>
+        <div class="flex-1">
+          <h3 class="font-semibold">Sound Associations</h3>
+        </div>
+      </div>
+      
+      <!-- Sound associations -->
+      <div class="mb-4">
+        <div class="flex flex-wrap gap-2 items-center mb-2">
+          <!-- Existing sound pills -->
+          <span 
+            v-for="sound in sounds" 
+            :key="sound"
+            class="badge badge-primary gap-2"
           >
-            <X class="w-3 h-3" />
-          </button>
-        </span>
+            {{ sound }}
+            <button 
+              @click="removeSound(sound)"
+              class="btn btn-ghost btn-xs p-0 h-auto min-h-0"
+            >
+              <X class="w-3 h-3" />
+            </button>
+          </span>
+        </div>
         
         <!-- Add new sound input -->
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-2">
           <input 
             v-model="newSound"
             @keyup.enter="addSound"
             @blur="addSound"
             placeholder="Add sound..."
-            class="input input-bordered input-sm w-24"
+            class="input input-bordered input-sm flex-1 max-w-xs"
             :class="{ 'input-error': newSoundError }"
           />
           <button 
@@ -40,49 +48,56 @@
             <Plus class="w-3 h-3" />
           </button>
         </div>
+        <div v-if="newSoundError" class="text-error text-xs mt-1">{{ newSoundError }}</div>
       </div>
-      <div v-if="newSoundError" class="text-error text-xs mt-1">{{ newSoundError }}</div>
-    </td>
-    
-    <!-- Notes -->
-    <td>
-      <textarea 
-        v-model="notes"
-        @input="updateNotes"
-        placeholder="Notes..."
-        class="textarea textarea-bordered textarea-sm w-full"
-        rows="2"
-      ></textarea>
-    </td>
-    
-    <!-- Learning data -->
-    <td class="text-sm">
-      <div v-if="hasLearningData" class="space-y-1">
-        <div class="flex items-center gap-2">
-          <WidgetDueDate :due-date="numberToSoundDue" />
-          <span class="text-gray-500">(Digit→Sound)</span>
+      
+      <!-- Notes -->
+      <div class="mb-4">
+        <label class="label">
+          <span class="label-text font-medium">Notes</span>
+        </label>
+        <textarea 
+          v-model="notes"
+          @input="updateNotes"
+          placeholder="Add notes about this digit..."
+          class="textarea textarea-bordered w-full"
+          rows="2"
+        ></textarea>
+      </div>
+      
+      <!-- Learning data -->
+      <div class="border-t border-base-200 pt-4">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-sm font-medium">Learning Progress</span>
         </div>
-        <div class="flex items-center gap-2">
-          <WidgetDueDate :due-date="soundToNumberDue" />
-          <span class="text-gray-500">(Sound→Digit)</span>
-        </div>
-        <div class="flex items-center gap-1 mt-2">
-          <button 
-            @click="resetLearningData"
-            class="btn btn-warning btn-xs"
-          >
-            Reset
-          </button>
-          <div class="tooltip tooltip-top" data-tip="Reset learning data if you've fundamentally changed the sound associations">
-            <button class="btn btn-ghost btn-xs p-1">
-              <Info class="w-3 h-3" />
+        
+        <div v-if="hasLearningData" class="space-y-2">
+          <div class="flex items-center gap-3">
+            <WidgetDueDate :due-date="numberToSoundDue" />
+            <span class="text-sm text-gray-600">Digit → Sound</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <WidgetDueDate :due-date="soundToNumberDue" />
+            <span class="text-sm text-gray-600">Sound → Digit</span>
+          </div>
+          <div class="flex items-center gap-2 mt-3">
+            <button 
+              @click="resetLearningData"
+              class="btn btn-warning btn-sm"
+            >
+              Reset Learning Data
             </button>
+            <div class="tooltip tooltip-top" data-tip="Reset learning data if you've fundamentally changed the sound associations">
+              <button class="btn btn-ghost btn-sm p-1">
+                <Info class="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
+        <span v-else class="text-gray-400 italic text-sm">No learning data yet</span>
       </div>
-      <span v-else class="text-gray-400 italic">No learning data yet</span>
-    </td>
-  </tr>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">

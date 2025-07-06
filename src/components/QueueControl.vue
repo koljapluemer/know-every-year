@@ -31,6 +31,13 @@
     v-else-if="isCreatePegExercise"
   />
   
+  <!-- Year to events exercise -->
+  <ExerciseYearToEventsControl 
+    :year="currentExercise!.identifier"
+    @completed="loadNextExercise"
+    v-else-if="isYearToEventsExercise"
+  />
+  
   <!-- No exercises available -->
   <div v-else class="text-center p-8">
     <h2 class="text-2xl font-bold mb-4">No Exercises Available</h2>
@@ -46,6 +53,7 @@ import NumberExerciseByWordControl from './NumberExerciseByWordControl.vue'
 import DigitExerciseControl from './DigitExerciseControl.vue'
 import DigitExerciseBySoundControl from './DigitExerciseBySoundControl.vue'
 import NumberPegFormControl from './NumberPegFormControl.vue'
+import ExerciseYearToEventsControl from './ExerciseYearToEventsControl.vue'
 
 const { getRandomExercise } = useQueueUtils()
 
@@ -70,6 +78,10 @@ const isSoundToDigitExercise = computed(() =>
 
 const isCreatePegExercise = computed(() => 
   currentExercise.value?.type === 'peg' && currentExercise.value?.direction === 'createPeg'
+)
+
+const isYearToEventsExercise = computed(() => 
+  currentExercise.value?.type === 'year' && currentExercise.value?.direction === 'yearToEvents'
 )
 
 const loadRandomExercise = () => {

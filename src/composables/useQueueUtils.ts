@@ -1,11 +1,13 @@
 import { computed } from 'vue'
 import { useNumberAssociationStore } from '../stores/useNumberAssociationStore'
 import { useDigitAssociationStore } from '../stores/useDigitAssociationStore'
+import { useYearAssociationStore } from '../stores/useYearAssociationStore'
 import type { QueueTask, QueueTaskCategoryInfo } from '../entities/QueueTasks'
 
 export function useQueueUtils() {
   const numberAssociationStore = useNumberAssociationStore()
   const digitAssociationStore = useDigitAssociationStore()
+  const yearAssociationStore = useYearAssociationStore()
 
   // Internal helper functions
   const getNrOfDueNumberToWordExercises = computed(() => numberAssociationStore.getDueNumbers.length)
@@ -16,6 +18,21 @@ export function useQueueUtils() {
   const getNrOfNewDigitToSoundExercises = computed(() => digitAssociationStore.getNewDigits.length)
   const getNrOfDueSoundToDigitExercises = computed(() => digitAssociationStore.getDueSounds.length)
   const getNrOfNewSoundToDigitExercises = computed(() => digitAssociationStore.getNewSounds.length)
+  const getNrOfDueYearToEventsExercises = computed(() => yearAssociationStore.getDueYears.length)
+  const getNrOfNewYearToEventsExercises = computed(() => yearAssociationStore.getNewYears.length)
+
+  // Log counts for debugging
+  console.log('Queue Utils - Exercise Counts:')
+  console.log('Number Associations:')
+  console.log(`  Number→Word: ${getNrOfDueNumberToWordExercises.value} due, ${getNrOfNewNumberToWordExercises.value} new`)
+  console.log(`  Word→Number: ${getNrOfDueWordToNumberExercises.value} due, ${getNrOfNewWordToNumberExercises.value} new`)
+  console.log('Digit Associations:')
+  console.log(`  Digit→Sound: ${getNrOfDueDigitToSoundExercises.value} due, ${getNrOfNewDigitToSoundExercises.value} new`)
+  console.log(`  Sound→Digit: ${getNrOfDueSoundToDigitExercises.value} due, ${getNrOfNewSoundToDigitExercises.value} new`)
+  console.log('Year Associations:')
+  console.log(`  Year→Events: ${getNrOfDueYearToEventsExercises.value} due, ${getNrOfNewYearToEventsExercises.value} new`)
+  console.log('Peg Creation:')
+  console.log(`  Create Peg: ${numberAssociationStore.unassociatedNumbers.length} available`)
 
   // Public "eligible" functions
   const getNrOfEligibleNumberToWordExercises = computed(() => 
@@ -82,6 +99,22 @@ export function useQueueUtils() {
     }))
   ])
 
+  const getNrOfEligibleYearToEventsExercises = computed(() => 
+    getNrOfDueYearToEventsExercises.value + getNrOfNewYearToEventsExercises.value
+  )
+  const getEligibleYearToEventsExercises = computed((): QueueTask[] => [
+    ...yearAssociationStore.getDueYears.map(year => ({ 
+      type: 'year' as const, 
+      identifier: year, 
+      direction: 'yearToEvents' as const 
+    })),
+    ...yearAssociationStore.getNewYears.map(year => ({ 
+      type: 'year' as const, 
+      identifier: year, 
+      direction: 'yearToEvents' as const 
+    }))
+  ])
+
   const getNrOfDigitsWithoutAssociation = computed(() => numberAssociationStore.unassociatedNumbers.length)
   const getDigitsWithoutAssociation = computed((): QueueTask[] => 
     numberAssociationStore.unassociatedNumbers.map(number => ({ 
@@ -127,6 +160,14 @@ export function useQueueUtils() {
       })
     }
 
+    if (getNrOfEligibleYearToEventsExercises.value > 0) {
+      categories.push({
+        name: 'yearToEvents',
+        count: getNrOfEligibleYearToEventsExercises.value,
+        exercises: getEligibleYearToEventsExercises.value
+      })
+    }
+
     if (getNrOfDigitsWithoutAssociation.value > 0) {
       categories.push({
         name: 'createPeg',
@@ -167,6 +208,10 @@ export function useQueueUtils() {
     getEligibleDigitToSoundExercises,
     getNrOfEligibleSoundToDigitExercises,
     getEligibleSoundToDigitExercises,
+
+    // Year Association Exercises
+    getNrOfEligibleYearToEventsExercises,
+    getEligibleYearToEventsExercises,
 
     // Number Association Creation
     getNrOfDigitsWithoutAssociation,

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import type { Year } from '../entities/YearAssociations'
 import { createEmptyCard, fsrs, type Card } from 'ts-fsrs'
+import { useEventsStore } from './useEventsStore'
 
 interface YearAssociationState {
   years: Record<string, Year>
@@ -27,8 +28,9 @@ export const useYearAssociationStore = defineStore('yearAssociation', {
      * Get all years that have events
      */
     yearsWithEvents: (state): string[] => {
+      const eventsStore = useEventsStore()
       return Object.entries(state.years)
-        .filter(([_, year]) => year.events.length > 0)
+        .filter(([yearStr, _]) => eventsStore.getEventsForYear(yearStr).length > 0)
         .map(([yearStr, _]) => yearStr)
     },
 
@@ -45,9 +47,10 @@ export const useYearAssociationStore = defineStore('yearAssociation', {
      * Get all years that have either events or notes
      */
     yearsWithPegs: (state): string[] => {
+      const eventsStore = useEventsStore()
       return Object.entries(state.years)
-        .filter(([_, year]) => 
-          year.events.length > 0 || (year.notes && year.notes.trim() !== '')
+        .filter(([yearStr, year]) => 
+          eventsStore.getEventsForYear(yearStr).length > 0 || (year.notes && year.notes.trim() !== '')
         )
         .map(([yearStr, _]) => yearStr)
     },
@@ -61,6 +64,66 @@ export const useYearAssociationStore = defineStore('yearAssociation', {
         const yearB = parseInt(b === '0000' ? '0' : b)
         return yearB - yearA // Descending order (2025 to 0)
       })
+    },
+
+    /**
+     * Get years that are due for review (yearToEvents direction)
+     */
+    getDueYears: (state): string[] => {
+      const now = new Date()
+      const eventsStore = useEventsStore()
+      return Object.entries(state.years)
+        .filter(([_, year]) => {
+          if (!year.yearToEventsLearningData) return false
+          try {
+            return year.yearToEventsLearningData.due <= now
+          } catch (error) {
+            console.error('Error checking due date for year card:', error)
+            return false
+          }
+        })
+        .map(([yearStr, _]) => yearStr)
+        .filter(year => eventsStore.getEventsForYear(year).length > 0)
+    },
+
+    /**
+     * Get years that have never been practiced (yearToEvents direction)
+     */
+    getNewYears: (state): string[] => {
+      const eventsStore = useEventsStore()
+      return Object.entries(state.years)
+        .filter(([_, year]) => !year.yearToEventsLearningData)
+        .map(([yearStr, _]) => yearStr)
+        .filter(year => eventsStore.getEventsForYear(year).length > 0)
+    },
+
+    /**
+     * Get years that are eligible for practice (have events and are due or new)
+     */
+    getEligibleYears: (state): string[] => {
+      const now = new Date()
+      const eventsStore = useEventsStore()
+      
+      const dueYears = Object.entries(state.years)
+        .filter(([_, year]) => {
+          if (!year.yearToEventsLearningData) return false
+          try {
+            return year.yearToEventsLearningData.due <= now
+          } catch (error) {
+            console.error('Error checking due date for year card:', error)
+            return false
+          }
+        })
+        .map(([yearStr, _]) => yearStr)
+        .filter(year => eventsStore.getEventsForYear(year).length > 0)
+      
+      const newYears = Object.entries(state.years)
+        .filter(([_, year]) => !year.yearToEventsLearningData)
+        .map(([yearStr, _]) => yearStr)
+        .filter(year => eventsStore.getEventsForYear(year).length > 0)
+      
+      // Return combined list (duplicates will be automatically removed)
+      return [...dueYears, ...newYears]
     }
   },
 

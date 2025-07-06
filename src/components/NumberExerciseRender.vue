@@ -21,7 +21,7 @@
       <!-- Answer display -->
       <div class="card bg-base-100 shadow-lg">
         <div class="card-body text-center">
-          <p class="text-2xl font-bold text-primary mb-2">{{ association?.word }}</p>
+          <p class="text-4xl font-bold text-primary mb-2">{{ association?.word }}</p>
           <p v-if="association?.notes" class="text-gray-600">{{ association.notes }}</p>
         </div>
       </div>

@@ -5,11 +5,11 @@
       <div v-if="!isEditing && event" class="space-y-2">
         <div class="flex justify-between items-start">
           <div class="flex-1">
-            <h3 class="font-medium">{{ event.content }}</h3>
-            <p class="text-sm text-gray-600">{{ event.mentalImage }}</p>
-            <p v-if="event.notes" class="text-sm text-gray-500 mt-1">{{ event.notes }}</p>
+            <h3 class="font-bold">{{ event.content }}</h3>
+            <p class="">{{ event.mentalImage }}</p>
+            <p v-if="event.notes" class="text-sm mt-1">{{ event.notes }}</p>
           </div>
-          <div class="flex gap-2 ml-4">
+          <div v-if="!readonly" class="flex gap-2 ml-4">
             <button @click="startEdit" class="btn btn-sm btn-outline">
               Edit
             </button>
@@ -21,7 +21,7 @@
       </div>
 
       <!-- Event Form Mode (for editing or adding) -->
-      <div v-else class="space-y-3">
+      <div v-else-if="!readonly" class="space-y-3">
         <div v-if="!event" class="mb-3">
           <h3 class="font-medium">Add New Event</h3>
         </div>
@@ -61,9 +61,12 @@ import type { Event } from '../entities/YearAssociations'
 
 interface Props {
   event?: Event // Optional for new events
+  readonly?: boolean
 }
 
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  readonly: false
+})
 
 const emit = defineEmits<{
   'update': [eventId: string, updates: { content: string; mentalImage: string; notes?: string }]

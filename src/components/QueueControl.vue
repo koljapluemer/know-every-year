@@ -24,10 +24,10 @@
   />
   
   <!-- Peg creation exercise -->
-  <NumberPegFormControl 
+  <ExerciseFillOutNumberPegFormRender 
     :number="currentExercise!.identifier"
-    @saved="loadNextExercise"
-    @skipped="loadNextExercise"
+    @done="loadNextExercise"
+    @skip="loadNextExercise"
     v-else-if="isCreatePegExercise"
   />
   
@@ -52,7 +52,7 @@ import NumberExerciseControl from './NumberExerciseControl.vue'
 import NumberExerciseByWordControl from './NumberExerciseByWordControl.vue'
 import DigitExerciseControl from './DigitExerciseControl.vue'
 import DigitExerciseBySoundControl from './DigitExerciseBySoundControl.vue'
-import NumberPegFormControl from './NumberPegFormControl.vue'
+import ExerciseFillOutNumberPegFormRender from './ExerciseFillOutNumberPegFormRender.vue'
 import ExerciseYearToEventsControl from './ExerciseYearToEventsControl.vue'
 
 const { getRandomExercise } = useQueueUtils()

@@ -28,7 +28,6 @@ const emit = defineEmits<{
 
 const yearAssociationStore = useYearAssociationStore()
 const eventsStore = useEventsStore()
-const { success } = useToast()
 
 // Reactive state
 const isRevealed = ref(false)

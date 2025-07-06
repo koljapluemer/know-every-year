@@ -6,13 +6,19 @@
         </div>
 
         <!-- Association form -->
-        <form @submit.prevent="handleSubmit" class="space-y-6">
+        <div class="space-y-6">
             <div class="form-control">
                 <label class="label">
                     <span class="label-text font-semibold">Your Association Word *</span>
                 </label>
-                <input v-model="form.word" type="text" placeholder="Enter a word that helps you remember this number..."
-                    class="input input-bordered w-full input-xl" :class="{ 'input-error': errors.word }" required />
+                <input 
+                    v-model="form.word" 
+                    type="text" 
+                    placeholder="Enter a word that helps you remember this number..."
+                    class="input input-bordered w-full input-xl" 
+                    :class="{ 'input-error': errors.word }" 
+                    required 
+                />
                 <label class="label" v-if="errors.word">
                     <span class="label-text-alt text-error">{{ errors.word }}</span>
                 </label>
@@ -22,19 +28,14 @@
                 <label class="label">
                     <span class="label-text font-semibold">Notes (Optional)</span>
                 </label>
-                <textarea v-model="form.notes" placeholder="Any additional notes or explanation for your association..."
-                    class="textarea textarea-bordered w-full" rows="3"></textarea>
+                <textarea 
+                    v-model="form.notes" 
+                    placeholder="Any additional notes or explanation for your association..."
+                    class="textarea textarea-bordered w-full" 
+                    rows="3"
+                ></textarea>
             </div>
-
-            <div class="flex justify-end gap-4">
-                <button type="button" @click="handleSkip" class="btn btn-outline">
-                    Skip
-                </button>
-                <button type="submit" class="btn btn-primary">
-                    Save Association
-                </button>
-            </div>
-        </form>
+        </div>
 
         <!-- Digit associations overview -->
         <div class="grid grid-cols-3 gap-6 mb-8 items-center">
@@ -111,6 +112,8 @@
         </div>
 
         <!-- Ignored sounds info -->
+        <div class="card bg-base-200 shadow-sm">
+            <div class="card-body">
                 <h3 class="mb-2">Ignored Sounds:</h3>
                 <div class="flex flex-wrap gap-2">
                     <span 
@@ -122,13 +125,16 @@
                     </span>
                 </div>
                 <p v-if="ignoredSoundsNotes" class="text-sm text-gray-600 mt-2">{{ ignoredSoundsNotes }}</p>
-
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import { useDigitAssociationStore } from '../stores/useDigitAssociationStore'
+import { useNumberAssociationStore } from '../stores/useNumberAssociationStore'
+import { useToast } from '../ui/useToast'
 import type { DigitAssociation } from '../entities/DigitAssociation'
 
 interface Props {
@@ -142,11 +148,12 @@ interface Props {
 
 const props = defineProps<Props>()
 const emit = defineEmits<{
-    save: [{ word: string; notes?: string }]
-    skip: []
+    'form-validity-changed': [valid: boolean]
 }>()
 
 const digitAssociationStore = useDigitAssociationStore()
+const numberAssociationStore = useNumberAssociationStore()
+const { success } = useToast()
 
 const ignoredSounds = computed(() => digitAssociationStore.ignoredSounds.sounds)
 const ignoredSoundsNotes = computed(() => digitAssociationStore.ignoredSounds.notes)
@@ -160,30 +167,48 @@ const errors = reactive({
     word: ''
 })
 
-const handleSubmit = () => {
-    // Reset errors
-    errors.word = ''
+// Debouncing
+let saveTimeout: number | null = null
 
+// Computed for form validity
+const isFormValid = computed(() => {
+    return form.word.trim().length > 0
+})
+
+// Watch for form changes and auto-save
+watch([() => form.word, () => form.notes], () => {
+    // Clear existing timeout
+    if (saveTimeout) {
+        clearTimeout(saveTimeout)
+    }
+    
     // Validate
+    errors.word = ''
     if (!form.word.trim()) {
         errors.word = 'Please enter a word for your association'
-        return
     }
-
-    // Emit save event
-    emit('save', {
-        word: form.word.trim(),
-        notes: form.notes.trim() || undefined
-    })
-
-    // Don't reset form when editing - let the parent handle navigation
-    if (!props.prefillData) {
-        form.word = ''
-        form.notes = ''
+    
+    // Emit validity change
+    emit('form-validity-changed', isFormValid.value)
+    
+    // Auto-save with debounce if form is valid
+    if (isFormValid.value) {
+        saveTimeout = setTimeout(() => {
+            const association = {
+                word: form.word.trim(),
+                notes: form.notes.trim() || undefined
+            }
+            numberAssociationStore.setAssociation(props.number, association)
+            success(`Association for ${props.number} saved automatically!`)
+        }, 500)
     }
-}
+}, { immediate: true })
 
-const handleSkip = () => {
-    emit('skip')
-}
+// Clean up timeout on unmount
+watch(() => props.number, () => {
+    if (saveTimeout) {
+        clearTimeout(saveTimeout)
+        saveTimeout = null
+    }
+})
 </script>

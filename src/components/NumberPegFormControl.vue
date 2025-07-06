@@ -6,17 +6,15 @@
     :firstDigitAssociation="firstDigitAssociation"
     :secondDigitAssociation="secondDigitAssociation"
     :prefillData="prefillData"
-    @save="handleSave"
-    @skip="handleSkip"
+    @form-validity-changed="handleFormValidityChanged"
   />
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useDigitAssociationStore } from '../stores/useDigitAssociationStore'
 import { useNumberAssociationStore } from '../stores/useNumberAssociationStore'
 import NumberPegFormRender from './NumberPegFormRender.vue'
-import { useToast } from '../ui/useToast'
 
 interface Props {
   number: string
@@ -25,13 +23,11 @@ interface Props {
 
 const props = defineProps<Props>()
 const emit = defineEmits<{
-  saved: []
-  skipped: []
+  'form-validity-changed': [valid: boolean]
 }>()
 
 const digitAssociationStore = useDigitAssociationStore()
 const numberAssociationStore = useNumberAssociationStore()
-const { success } = useToast()
 
 const firstDigit = computed(() => parseInt(props.number[0]))
 const secondDigit = computed(() => parseInt(props.number[1]))
@@ -51,13 +47,7 @@ const prefillData = computed(() => {
   } : null
 })
 
-const handleSave = (association: { word: string; notes?: string }) => {
-  numberAssociationStore.setAssociation(props.number, association)
-  success(`Association for ${props.number} saved successfully!`)
-  emit('saved')
-}
-
-const handleSkip = () => {
-  emit('skipped')
+const handleFormValidityChanged = (valid: boolean) => {
+  emit('form-validity-changed', valid)
 }
 </script>

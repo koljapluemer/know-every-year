@@ -1,5 +1,5 @@
 <template>
-  <NumberPegFormRender
+  <FormRenderNumberAssociation
     :number="number"
     :firstDigit="firstDigit"
     :secondDigit="secondDigit"
@@ -12,9 +12,9 @@
 
 <script setup lang="ts">
 import { computed, watch } from 'vue'
-import { useDigitAssociationStore } from '../../../stores/useDigitAssociationStore'
-import { useNumberAssociationStore } from '../../../stores/useNumberAssociationStore'
-import NumberPegFormRender from './NumberPegFormRender.vue'
+import { useDigitAssociationStore } from '@/stores/useDigitAssociationStore'
+import { useNumberAssociationStore } from '@/stores/useNumberAssociationStore'
+import FormRenderNumberAssociation from '@/components/forms/render/FormRenderNumberAssociation.vue'
 
 interface Props {
   number: string

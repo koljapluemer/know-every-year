@@ -60,7 +60,7 @@
     </div>
 
     <!-- Table -->
-    <ListYearsRender 
+    <ListRenderYears 
       v-else
       :years="filteredYears"
       :show-headings="showHeadings"
@@ -70,10 +70,10 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
-import { useYearAssociationStore } from '../stores/useYearAssociationStore'
-import { useEventsStore } from '../stores/useEventsStore'
-import { useNumberAssociationStore } from '../stores/useNumberAssociationStore'
-import ListYearsRender from './ListYearsRender.vue'
+import { useYearAssociationStore } from '@/stores/useYearAssociationStore'
+import { useEventsStore } from '@/stores/useEventsStore'
+import { useNumberAssociationStore } from '@/stores/useNumberAssociationStore'
+import ListRenderYears from '@/components/lists/render/ListRenderYears.vue'
 
 const yearAssociationStore = useYearAssociationStore()
 const eventsStore = useEventsStore()

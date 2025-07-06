@@ -132,10 +132,10 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue'
-import { useDigitAssociationStore } from '../stores/useDigitAssociationStore'
-import { useNumberAssociationStore } from '../stores/useNumberAssociationStore'
-import { useToast } from '../ui/useToast'
-import type { DigitAssociation } from '../entities/DigitAssociation'
+import { useDigitAssociationStore } from '@/stores/useDigitAssociationStore'
+import { useNumberAssociationStore } from '@/stores/useNumberAssociationStore'
+import { useToast } from '@/ui/useToast'
+import type { DigitAssociation } from '@/entities/DigitAssociation'
 
 interface Props {
     number: string

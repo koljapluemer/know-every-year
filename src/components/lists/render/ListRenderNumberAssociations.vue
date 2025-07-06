@@ -52,7 +52,7 @@
             </td>
             <td class="text-sm">
               <span v-if="item.association?.numberToWordLearningData">
-                <RenderDueDate :due-date="item.association.numberToWordLearningData.due" />
+                <WidgetDueDate :due-date="item.association.numberToWordLearningData.due" />
               </span>
               <span v-else class="text-gray-400 italic">
                 No practice data yet
@@ -60,7 +60,7 @@
             </td>
             <td class="text-sm">
               <span v-if="item.association?.wordToNumberLearningData">
-                <RenderDueDate :due-date="item.association.wordToNumberLearningData.due" />
+                <WidgetDueDate :due-date="item.association.wordToNumberLearningData.due" />
               </span>
               <span v-else class="text-gray-400 italic">
                 No practice data yet
@@ -84,7 +84,7 @@
 <script setup lang="ts">
 import { CheckCircle, Circle } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
-import RenderDueDate from './RenderDueDate.vue'
+import WidgetDueDate from '@/components/widgets/WidgetDueDate.vue'
 
 interface Props {
   associations: Array<{

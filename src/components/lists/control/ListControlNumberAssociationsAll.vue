@@ -1,5 +1,5 @@
 <template>
-  <ListNumberPegRender 
+  <ListRenderNumberAssociations 
     :associations="allAssociations"
     :progress="progress"
     :total="total"
@@ -8,8 +8,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useNumberAssociationStore } from '../../../stores/useNumberAssociationStore'
-import ListNumberPegRender from './ListNumberPegRender.vue'
+import { useNumberAssociationStore } from '@/stores/useNumberAssociationStore'
+import ListRenderNumberAssociations from '@/components/lists/render/ListRenderNumberAssociations.vue'
 
 const numberAssociationStore = useNumberAssociationStore()
 

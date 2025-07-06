@@ -117,9 +117,9 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
-import type { Year } from '../entities/YearAssociations'
-import type { Event } from '../entities/YearAssociations'
-import EventFormRender from './forms/widgets/FormWidgetEvent.vue'
+import type { Year } from '@/entities/YearAssociations'
+import type { Event } from '@/entities/YearAssociations'
+import EventFormRender from '@/components/forms/widgets/FormWidgetEvent.vue'
 
 interface Props {
   year: string

@@ -59,11 +59,11 @@
     <td class="text-sm">
       <div v-if="hasLearningData" class="space-y-1">
         <div class="flex items-center gap-2">
-          <RenderDueDate :due-date="numberToSoundDue" />
+          <WidgetDueDate :due-date="numberToSoundDue" />
           <span class="text-gray-500">(Digit→Sound)</span>
         </div>
         <div class="flex items-center gap-2">
-          <RenderDueDate :due-date="soundToNumberDue" />
+          <WidgetDueDate :due-date="soundToNumberDue" />
           <span class="text-gray-500">(Sound→Digit)</span>
         </div>
         <div class="flex items-center gap-1 mt-2">
@@ -88,8 +88,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { X, Plus, Info } from 'lucide-vue-next'
-import type { DigitAssociation } from '../../../entities/DigitAssociation'
-import RenderDueDate from './RenderDueDate.vue'
+import type { DigitAssociation } from '@/entities/DigitAssociation'
+import WidgetDueDate from '@/components/widgets/WidgetDueDate.vue'
 
 interface Props {
   digit: number

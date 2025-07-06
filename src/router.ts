@@ -1,17 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import ListAllNumberPegsPage from './pages/ListAllNumberPegsPage.vue'
-import ManageNumberPegPage from './pages/ManageNumberPegPage.vue'
-import ManageDigitPegsPage from './pages/ManageDigitPegsPage.vue'
-import QueuePage from './pages/QueuePage.vue'
-import ListAllYearsPage from './pages/ListAllYearsPage.vue'
-import ManageYearPage from './pages/ManageYearPage.vue'
+import ListAllNumberPegsPage from './pages/PageNumberAssociationsList.vue'
+import ManageNumberPegPage from './pages/PageNumberAssociationManage.vue'
+import ManageDigitPegsPage from './pages/PageDigitAssociationsManage.vue'
+import QueuePage from './pages/PageQueue.vue'
+import ListAllYearsPage from './pages/PageYearsList.vue'
+import ManageYearPage from './pages/PageYearManage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: '/',
-      redirect: '/complete-pegs'
+      redirect: '/practice'
     },
     {
       path: '/list-pegs',

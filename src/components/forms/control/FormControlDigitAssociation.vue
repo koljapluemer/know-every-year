@@ -1,5 +1,5 @@
 <template>
-  <ManageDigitPegsRender
+  <FormRenderDigitAssociations
     :digit-associations="digitAssociations"
     :ignored-sounds="ignoredSounds"
     :ignored-sounds-notes="ignoredSoundsNotes"
@@ -13,9 +13,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useDigitAssociationStore } from '../../../stores/useDigitAssociationStore'
-import { useToast } from '../../../ui/useToast'
-import ManageDigitPegsRender from './ManageDigitPegsRender.vue'
+import { useDigitAssociationStore } from '@/stores/useDigitAssociationStore'
+import { useToast } from '@/ui/useToast'
+import FormRenderDigitAssociations from '@/components/forms/render/FormRenderDigitAssociations.vue'
 
 const digitAssociationStore = useDigitAssociationStore()
 const { success, error } = useToast()

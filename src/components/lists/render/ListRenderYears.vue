@@ -21,7 +21,7 @@
           
           <!-- Year Row -->
           <tr v-else class="hover">
-            <ListYearRender :year="year as string" />
+            <ListWidgetYear :year="year as string" />
           </tr>
         </template>
       </tbody>
@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import ListYearRender from './lists/render/ListYearRender.vue'
+import ListWidgetYear from '@/components/lists/widgets/ListWidgetYear.vue'
 
 interface Props {
   years: string[]

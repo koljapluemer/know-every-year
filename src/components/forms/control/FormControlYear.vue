@@ -1,5 +1,5 @@
 <template>
-  <ManageYearRender
+  <FormRenderYear
     :year="year"
     :yearData="yearData"
     :events="events"
@@ -20,11 +20,11 @@
 
 <script setup lang="ts">
 import { computed, onMounted } from 'vue'
-import { useYearAssociationStore } from '../../../stores/useYearAssociationStore'
-import { useEventsStore } from '../../../stores/useEventsStore'
-import { useNumberAssociationStore } from '../../../stores/useNumberAssociationStore'
-import { useToast } from '../../../ui/useToast'
-import ManageYearRender from './ManageYearRender.vue'
+import { useYearAssociationStore } from '@/stores/useYearAssociationStore'
+import { useEventsStore } from '@/stores/useEventsStore'
+import { useNumberAssociationStore } from '@/stores/useNumberAssociationStore'
+import { useToast } from '@/ui/useToast'
+import FormRenderYear from '@/components/forms/render/FormRenderYear.vue'
 
 interface Props {
   year: string

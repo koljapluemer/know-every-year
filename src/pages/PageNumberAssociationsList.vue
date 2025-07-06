@@ -7,10 +7,10 @@
       </p>
     </div>
     
-    <ListAllNumberPegControl />
+    <ListControlNumberAssociationsAll />
   </div>
 </template>
 
 <script setup lang="ts">
-import ListAllNumberPegControl from '../components/lists/control/ListAllNumberPegControl.vue'
+import ListControlNumberAssociationsAll from '@/components/lists/control/ListControlNumberAssociationsAll.vue'
 </script>

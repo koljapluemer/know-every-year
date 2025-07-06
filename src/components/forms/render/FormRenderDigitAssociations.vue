@@ -18,7 +18,7 @@
               </tr>
             </thead>
             <tbody>
-              <ManageDigitPegRender
+              <FormWidgetDigitAssociation
                 v-for="digit in 10"
                 :key="digit - 1"
                 :digit="digit - 1"
@@ -34,7 +34,7 @@
     </div>
 
     <!-- Ignored sounds section -->
-    <ManageIgnoredSoundsRender
+    <FormWidgetIgnoredSounds
       :ignored-sounds="ignoredSounds"
       :ignored-sounds-notes="ignoredSoundsNotes"
       @update-ignored-sounds="handleUpdateIgnoredSounds"
@@ -44,9 +44,9 @@
 </template>
 
 <script setup lang="ts">
-import type { DigitAssociation } from '../../../entities/DigitAssociation'
-import ManageDigitPegRender from './forms/widgets/FormWidgetDigitAssociation.vue'
-import ManageIgnoredSoundsRender from './ManageIgnoredSoundsRender.vue'
+import type { DigitAssociation } from '@/entities/DigitAssociation'
+import FormWidgetDigitAssociation from '@/components/forms/widgets/FormWidgetDigitAssociation.vue'
+import FormWidgetIgnoredSounds from '@/components/forms/widgets/FormWidgetIgnoredSounds.vue'
 
 interface Props {
   digitAssociations: Record<number, DigitAssociation>

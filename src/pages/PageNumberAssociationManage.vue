@@ -7,7 +7,7 @@
       </p>
     </div>
     
-    <NumberPegFormControl 
+    <FormControlNumberAssociation 
       :number="number" 
       @saved="handleSaved"
     />
@@ -17,8 +17,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useNumberAssociationStore } from '../stores/useNumberAssociationStore'
-import NumberPegFormControl from '../components/forms/control/NumberPegFormControl.vue'
+import { useNumberAssociationStore } from '@/stores/useNumberAssociationStore'
+import FormControlNumberAssociation from '@/components/forms/control/FormControlNumberAssociation.vue'
 
 const route = useRoute()
 const router = useRouter()

@@ -7,10 +7,10 @@
       </p>
     </div>
     
-    <ManageDigitPegsControl />
+    <FormControlDigitAssociation />
   </div>
 </template>
 
 <script setup lang="ts">
-import ManageDigitPegsControl from '../components/forms/manage/ManageDigitPegsControl.vue'
+import FormControlDigitAssociation from '@/components/forms/control/FormControlDigitAssociation.vue'
 </script>

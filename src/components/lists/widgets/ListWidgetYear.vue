@@ -33,13 +33,13 @@
     <div class="flex flex-col gap-1 text-xs">
       <div v-if="yearData?.yearToEventsLearningData">
         <span class="text-gray-600">Year→Events:</span>
-        <RenderDueDate :due-date="yearData.yearToEventsLearningData.due" />
+        <WidgetDueDate :due-date="yearData.yearToEventsLearningData.due" />
       </div>
       <div v-if="eventsWithLearningData.length > 0">
         <span class="text-gray-600">Events→Year:</span>
         <div class="ml-1">
           <div v-for="event in eventsWithLearningData" :key="event.id" class="text-xs">
-            {{ event.content.substring(0, 20) }}...: <RenderDueDate :due-date="event.eventToYearLearningData!.due" />
+            {{ event.content.substring(0, 20) }}...: <WidgetDueDate :due-date="event.eventToYearLearningData!.due" />
           </div>
         </div>
       </div>
@@ -53,10 +53,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useYearAssociationStore } from '../../../stores/useYearAssociationStore'
-import { useNumberAssociationStore } from '../../../stores/useNumberAssociationStore'
-import { useEventsStore } from '../../../stores/useEventsStore'
-import RenderDueDate from './RenderDueDate.vue'
+import { useYearAssociationStore } from '@/stores/useYearAssociationStore'
+import { useNumberAssociationStore } from '@/stores/useNumberAssociationStore'
+import { useEventsStore } from '@/stores/useEventsStore'
+import WidgetDueDate from '@/components/widgets/WidgetDueDate.vue'
 
 interface Props {
   year: string

@@ -1,9 +1,10 @@
 <template>
   <div class="container mx-auto py-8">
-    <ListAllYearsControl />
+
+    <QueueControl />
   </div>
 </template>
 
 <script setup lang="ts">
-import ListAllYearsControl from '../components/ListAllYearsControl.vue'
+import QueueControl from '@/components/queue/QueueControl.vue'
 </script>

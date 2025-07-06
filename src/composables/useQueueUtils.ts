@@ -11,6 +11,36 @@ export function useQueueUtils() {
   const yearAssociationStore = useYearAssociationStore()
   const eventsStore = useEventsStore()
 
+  // Helper function to check if a century has any events
+  const checkIfCenturyHasEvents = (century: number): boolean => {
+    const startYear = century * 100
+    const endYear = Math.min(startYear + 99, 2025)
+    
+    for (let year = startYear; year <= endYear; year++) {
+      const yearStr = year === 0 ? '0000' : year.toString()
+      const events = eventsStore.getEventsForYear(yearStr)
+      if (events.length > 0) {
+        return true
+      }
+    }
+    return false
+  }
+
+  // Helper function to check if a decade has any events
+  const checkIfDecadeHasEvents = (decade: number): boolean => {
+    const startYear = decade
+    const endYear = Math.min(startYear + 9, 2025)
+    
+    for (let year = startYear; year <= endYear; year++) {
+      const yearStr = year === 0 ? '0000' : year.toString()
+      const events = eventsStore.getEventsForYear(yearStr)
+      if (events.length > 0) {
+        return true
+      }
+    }
+    return false
+  }
+
   // Only due logic
   const getNrOfDueNumberToWordExercises = computed(() => numberAssociationStore.getDueNumbers.length)
   const getDueNumberToWordExercises = computed((): QueueTask[] =>
@@ -228,26 +258,39 @@ export function useQueueUtils() {
     
     // If the selected category is TaskCreateEventsForYear, apply weighted selection within that category
     if (selectedCategory.name === 'TaskCreateEventsForYear') {
-      // Linear decay weighting: recent years get higher weight, but years after 2000 are devalued
-      // Weight formula: 1.0 for year 0, linearly decreasing to 0.1 for year 2000, then 0.05 for years after 2000
+      // Two-tier weighting system: linear decay + empty century/decade bonuses
       const weightedExercises = selectedCategory.exercises.map(task => {
         const year = parseInt(task.identifier === '0000' ? '0' : task.identifier)
-        let weight = 1.0
         
+        // Base weight: linear decay from year 0 (weight 0.1) to year 2000 (weight 1.0)
+        let baseWeight = 0.1
         if (year <= 2000 && year > 0) {
-          // Linear decay from year 0 (weight 1.0) to year 2000 (weight 0.1)
-          // Formula: weight = 1.0 - (year / 2000) * 0.9
-          weight = 1.0 - (year / 2000) * 0.9
+          baseWeight = 0.1 + (year / 2000) * 0.9  // Linear increase from 0.1 to 1.0
         } else if (year > 2000) {
-          // Years after 2000 get very low weight (too recent/boring)
-          weight = 0.05
+          baseWeight = 0.05  // Years after 2000 get very low weight (too recent/boring)
         } else if (year === 0) {
-          // Year 0 gets full weight
-          weight = 1.0
+          baseWeight = 0.1  // Year 0 gets low weight (ancient)
         }
         
-        console.log(`🔍 DEBUG: Year ${year} gets weight ${weight}`)
-        return { task, weight }
+        // Calculate century and decade for bonus weighting
+        const century = Math.floor(year / 100)
+        const decade = Math.floor(year / 10) * 10
+        
+        // Check if century/decade is empty (no events)
+        const centuryHasEvents = checkIfCenturyHasEvents(century)
+        const decadeHasEvents = checkIfDecadeHasEvents(decade)
+        
+        // Apply multipliers based on empty century/decade
+        let finalWeight = baseWeight
+        if (!centuryHasEvents) {
+          finalWeight = baseWeight * 3.0  // 3x bonus for empty centuries
+        } else if (!decadeHasEvents) {
+          finalWeight = baseWeight * 2.0  // 2x bonus for empty decades
+        }
+        // else: no bonus (multiplier = 1.0)
+        
+        console.log(`🔍 DEBUG: Year ${year} - base: ${baseWeight.toFixed(3)}, century ${century} empty: ${!centuryHasEvents}, decade ${decade} empty: ${!decadeHasEvents}, final: ${finalWeight.toFixed(3)}`)
+        return { task, weight: finalWeight }
       })
       
       // Calculate total weight

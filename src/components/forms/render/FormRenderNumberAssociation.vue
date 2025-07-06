@@ -9,8 +9,14 @@
                 <label class="label">
                     <span class="label-text font-semibold">Your Association Word *</span>
                 </label>
-                <input v-model="form.word" type="text" placeholder="Enter a word that helps you remember this number..."
-                    class="input input-bordered w-full input-xl" :class="{ 'input-error': errors.word }" required />
+                <input 
+                    v-model="form.word" 
+                    type="text" 
+                    placeholder="Enter a word that helps you remember this number..."
+                    class="input input-bordered w-full input-xl" 
+                    :class="{ 'input-error': errors.word }" 
+                    required 
+                />
                 <label class="label" v-if="errors.word">
                     <span class="label-text-alt text-error">{{ errors.word }}</span>
                 </label>
@@ -20,8 +26,12 @@
                 <label class="label">
                     <span class="label-text font-semibold">Notes (Optional)</span>
                 </label>
-                <textarea v-model="form.notes" placeholder="Any additional notes or explanation for your association..."
-                    class="textarea textarea-bordered w-full" rows="3"></textarea>
+                <textarea 
+                    v-model="form.notes" 
+                    placeholder="Any additional notes or explanation for your association..."
+                    class="textarea textarea-bordered w-full" 
+                    rows="3"
+                ></textarea>
             </div>
         </div>
 
@@ -102,10 +112,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watch } from 'vue'
-import { useDigitAssociationStore } from '@/stores/useDigitAssociationStore'
-import { useNumberAssociationStore } from '@/stores/useNumberAssociationStore'
-import { useToast } from '@/ui/useToast'
+import { ref, reactive, watch } from 'vue'
 import type { DigitAssociation } from '@/entities/DigitAssociation'
 
 interface Props {
@@ -115,19 +122,14 @@ interface Props {
     firstDigitAssociation?: DigitAssociation
     secondDigitAssociation?: DigitAssociation
     prefillData?: { word: string; notes: string } | null
+    ignoredSounds: string[]
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits<{
     'form-validity-changed': [valid: boolean]
+    'form-changed': [form: { word: string; notes: string }]
 }>()
-
-const digitAssociationStore = useDigitAssociationStore()
-const numberAssociationStore = useNumberAssociationStore()
-const { success } = useToast()
-
-const ignoredSounds = computed(() => digitAssociationStore.ignoredSounds.sounds)
-const ignoredSoundsNotes = computed(() => digitAssociationStore.ignoredSounds.notes)
 
 const form = reactive({
     word: props.prefillData?.word || '',
@@ -138,21 +140,8 @@ const errors = reactive({
     word: ''
 })
 
-// Debouncing
-let saveTimeout: number | null = null
-
-// Computed for form validity
-const isFormValid = computed(() => {
-    return form.word.trim().length > 0
-})
-
-// Watch for form changes and auto-save
+// Watch for form changes and emit events
 watch([() => form.word, () => form.notes], () => {
-    // Clear existing timeout
-    if (saveTimeout) {
-        clearTimeout(saveTimeout)
-    }
-
     // Validate
     errors.word = ''
     if (!form.word.trim()) {
@@ -160,26 +149,20 @@ watch([() => form.word, () => form.notes], () => {
     }
 
     // Emit validity change
-    emit('form-validity-changed', isFormValid.value)
-
-    // Auto-save with debounce if form is valid
-    if (isFormValid.value) {
-        saveTimeout = setTimeout(() => {
-            const association = {
-                word: form.word.trim(),
-                notes: form.notes.trim() || undefined
-            }
-            numberAssociationStore.setAssociation(props.number, association)
-            success(`Association for ${props.number} saved automatically!`)
-        }, 500)
-    }
+    emit('form-validity-changed', form.word.trim().length > 0)
+    
+    // Emit form data
+    emit('form-changed', {
+        word: form.word,
+        notes: form.notes
+    })
 }, { immediate: true })
 
-// Clean up timeout on unmount
-watch(() => props.number, () => {
-    if (saveTimeout) {
-        clearTimeout(saveTimeout)
-        saveTimeout = null
+// Watch for prop changes to update form
+watch(() => props.prefillData, (newPrefillData) => {
+    if (newPrefillData) {
+        form.word = newPrefillData.word
+        form.notes = newPrefillData.notes
     }
-})
+}, { immediate: true })
 </script>

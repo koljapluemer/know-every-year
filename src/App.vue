@@ -2,10 +2,9 @@
   <header class="flex flex-row justify-between p-4 mb-4">
     <h1 class="text-2xl font-bold">Know Every Year</h1>
     <nav class="flex gap-2 justify-center">
-      <RouterLink class="btn" :class="{ 'btn-secondary': $route.name === 'CompletePegs' }" :to="{ name: 'CompletePegs' }">Complete Number Pegs</RouterLink>
-      <RouterLink class="btn" :class="{ 'btn-secondary': $route.name === 'ListPegs' }" :to="{ name: 'ListPegs' }">My Number Pegs</RouterLink>
-      <RouterLink class="btn" :class="{ 'btn-secondary': $route.name === 'ManageDigitPegs' }" :to="{ name: 'ManageDigitPegs' }">Manage Digit Pegs</RouterLink>
-      <RouterLink class="btn" :class="{ 'btn-secondary': $route.name === 'Practice' }" :to="{ name: 'Practice' }">Practice</RouterLink>
+      <RouterLink class="btn btn-primary" :class="{ 'btn-secondary': $route.name === 'Practice' }" :to="{ name: 'Practice' }">Practice</RouterLink>
+      <RouterLink class="btn" :class="{ 'btn-secondary': $route.name === 'ManageDigitPegs' }" :to="{ name: 'ManageDigitPegs' }">Digit Pegs</RouterLink>
+      <RouterLink class="btn" :class="{ 'btn-secondary': $route.name === 'ListPegs' }" :to="{ name: 'ListPegs' }">Number Pegs</RouterLink>
     </nav>
   </header>
   <RouterView />

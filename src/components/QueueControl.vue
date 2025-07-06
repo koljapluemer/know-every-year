@@ -1,55 +1,78 @@
 <template>
   <!-- Number association exercises -->
   <NumberExerciseControl 
-    :number="currentExercise.identifier" 
+    :number="currentExercise!.identifier" 
     @exercise-completed="loadNextExercise"
-    v-if="currentExercise && currentExercise.type === 'number' && currentExercise.direction === 'numberToWord'"
+    v-if="isNumberToWordExercise"
   />
   <NumberExerciseByWordControl 
-    :number="currentExercise.identifier" 
+    :number="currentExercise!.identifier" 
     @exercise-completed="loadNextExercise"
-    v-else-if="currentExercise && currentExercise.type === 'number' && currentExercise.direction === 'wordToNumber'"
+    v-else-if="isWordToNumberExercise"
   />
   
   <!-- Digit association exercises -->
   <DigitExerciseControl 
-    :digit="currentExercise.identifier" 
+    :digit="currentExercise!.identifier" 
     @exercise-completed="loadNextExercise"
-    v-else-if="currentExercise && currentExercise.type === 'digit' && currentExercise.direction === 'numberToSound'"
+    v-else-if="isDigitToSoundExercise"
   />
   <DigitExerciseBySoundControl 
-    :sound="currentExercise.identifier" 
+    :sound="currentExercise!.identifier" 
     @exercise-completed="loadNextExercise"
-    v-else-if="currentExercise && currentExercise.type === 'digit' && currentExercise.direction === 'soundToNumber'"
+    v-else-if="isSoundToDigitExercise"
+  />
+  
+  <!-- Peg creation exercise -->
+  <NumberPegFormControl 
+    :number="currentExercise!.identifier"
+    @saved="loadNextExercise"
+    v-else-if="isCreatePegExercise"
   />
   
   <!-- No exercises available -->
   <div v-else class="text-center p-8">
     <h2 class="text-2xl font-bold mb-4">No Exercises Available</h2>
-    <p class="text-lg">You need to create some associations first!</p>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useNumberAssociationStore } from '../stores/useNumberAssociationStore'
-import { useDigitAssociationStore } from '../stores/useDigitAssociationStore'
+import { ref, onMounted, computed } from 'vue'
+import { useQueueUtils } from '../composables/useQueueUtils'
+import type { QueueTask } from '../entities/QueueTasks'
 import NumberExerciseControl from './NumberExerciseControl.vue'
 import NumberExerciseByWordControl from './NumberExerciseByWordControl.vue'
 import DigitExerciseControl from './DigitExerciseControl.vue'
 import DigitExerciseBySoundControl from './DigitExerciseBySoundControl.vue'
+import NumberPegFormControl from './NumberPegFormControl.vue'
 
-const numberAssociationStore = useNumberAssociationStore()
-const digitAssociationStore = useDigitAssociationStore()
+const { getRandomExercise } = useQueueUtils()
 
-const currentExercise = ref<{ 
-  type: 'number' | 'digit'; 
-  identifier: string; 
-  direction: 'numberToWord' | 'wordToNumber' | 'numberToSound' | 'soundToNumber' 
-} | null>(null)
+const currentExercise = ref<QueueTask | null>(null)
+
+// Computed properties for type-safe exercise checking
+const isNumberToWordExercise = computed(() => 
+  currentExercise.value?.type === 'number' && currentExercise.value?.direction === 'numberToWord'
+)
+
+const isWordToNumberExercise = computed(() => 
+  currentExercise.value?.type === 'number' && currentExercise.value?.direction === 'wordToNumber'
+)
+
+const isDigitToSoundExercise = computed(() => 
+  currentExercise.value?.type === 'digit' && currentExercise.value?.direction === 'numberToSound'
+)
+
+const isSoundToDigitExercise = computed(() => 
+  currentExercise.value?.type === 'digit' && currentExercise.value?.direction === 'soundToNumber'
+)
+
+const isCreatePegExercise = computed(() => 
+  currentExercise.value?.type === 'peg' && currentExercise.value?.direction === 'createPeg'
+)
 
 const loadRandomExercise = () => {
-  const exercise = numberAssociationStore.getRandomPracticeExerciseFromAll(digitAssociationStore)
+  const exercise = getRandomExercise()
   currentExercise.value = exercise
   
   if (!exercise) {

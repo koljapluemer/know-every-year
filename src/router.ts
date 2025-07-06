@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import CompleteNumberPegsPage from './pages/CompleteNumberPegsPage.vue'
 import ListAllNumberPegsPage from './pages/ListAllNumberPegsPage.vue'
 import ManageNumberPegPage from './pages/ManageNumberPegPage.vue'
 import ManageDigitPegsPage from './pages/ManageDigitPegsPage.vue'
@@ -11,11 +10,6 @@ const router = createRouter({
     {
       path: '/',
       redirect: '/complete-pegs'
-    },
-    {
-      path: '/complete-pegs',
-      name: 'CompletePegs',
-      component: CompleteNumberPegsPage
     },
     {
       path: '/list-pegs',

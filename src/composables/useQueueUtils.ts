@@ -5,6 +5,9 @@ import { useYearAssociationStore } from '../stores/useYearAssociationStore'
 import { useEventsStore } from '../stores/useEventsStore'
 import type { QueueTask, QueueTaskCategoryInfo } from '../entities/QueueTasks'
 
+// Special numbers that should be prioritized when creating associations
+const PRIORITY_NUMBERS = [15, 16, 17, 18, 19, 20]
+
 export function useQueueUtils() {
   const numberAssociationStore = useNumberAssociationStore()
   const digitAssociationStore = useDigitAssociationStore()
@@ -328,6 +331,31 @@ export function useQueueUtils() {
       // Fallback to first task if something goes wrong
       console.log(`🔍 DEBUG: Fallback to first task: ${weightedExercises[0].task.identifier}`)
       return weightedExercises[0].task
+    }
+
+    // If the selected category is TaskCreateNumberAssociation, apply priority number logic
+    if (selectedCategory.name === 'TaskCreateNumberAssociation') {
+      // Find which priority numbers are still missing associations
+      const missingPriorityNumbers = PRIORITY_NUMBERS.filter(num => 
+        !numberAssociationStore.hasAssociation(num.toString().padStart(2, '0'))
+      )
+      
+      // If we have missing priority numbers, 30% chance to prioritize them
+      if (missingPriorityNumbers.length > 0 && Math.random() < 0.3) {
+        // Filter exercises to only include priority numbers
+        const priorityExercises = selectedCategory.exercises.filter(task => 
+          missingPriorityNumbers.includes(parseInt(task.identifier))
+        )
+        
+        if (priorityExercises.length > 0) {
+          const randomIndex = Math.floor(Math.random() * priorityExercises.length)
+          return priorityExercises[randomIndex]
+        }
+      }
+      
+      // Otherwise, use normal random selection from all available exercises
+      const randomExerciseIndex = Math.floor(Math.random() * selectedCategory.exercises.length)
+      return selectedCategory.exercises[randomExerciseIndex]
     }
 
     // For other categories, use normal random selection

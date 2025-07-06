@@ -4,7 +4,7 @@
 
 A little app to gradually memorize what happened in every year from 0 to 2025, using the [Major System](https://artofmemory.com/blog/major-system/)
 
-## Start Practicing on [years.koljapluemer.com](years.koljapluemer.com)
+## Start Practicing on [years.koljapluemer.com](https://years.koljapluemer.com/)
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/S6S81CWUVD)
 

@@ -1,9 +1,7 @@
 <template>
-    <div class="max-w-2xl mx-auto p-6">
+    <div class="flex flex-col gap-8 items-center p-2">
         <!-- Number display -->
-        <div class="text-center mb-8">
-            <h1 class="text-9xl font-bold text-primary mb-4">{{ number }}</h1>
-        </div>
+        <h1 class="big-digit">{{ number }}</h1>
 
         <!-- Association form -->
         <div class="space-y-6">
@@ -11,14 +9,8 @@
                 <label class="label">
                     <span class="label-text font-semibold">Your Association Word *</span>
                 </label>
-                <input 
-                    v-model="form.word" 
-                    type="text" 
-                    placeholder="Enter a word that helps you remember this number..."
-                    class="input input-bordered w-full input-xl" 
-                    :class="{ 'input-error': errors.word }" 
-                    required 
-                />
+                <input v-model="form.word" type="text" placeholder="Enter a word that helps you remember this number..."
+                    class="input input-bordered w-full input-xl" :class="{ 'input-error': errors.word }" required />
                 <label class="label" v-if="errors.word">
                     <span class="label-text-alt text-error">{{ errors.word }}</span>
                 </label>
@@ -28,17 +20,13 @@
                 <label class="label">
                     <span class="label-text font-semibold">Notes (Optional)</span>
                 </label>
-                <textarea 
-                    v-model="form.notes" 
-                    placeholder="Any additional notes or explanation for your association..."
-                    class="textarea textarea-bordered w-full" 
-                    rows="3"
-                ></textarea>
+                <textarea v-model="form.notes" placeholder="Any additional notes or explanation for your association..."
+                    class="textarea textarea-bordered w-full" rows="3"></textarea>
             </div>
         </div>
 
         <!-- Digit associations overview -->
-        <div class="grid grid-cols-3 gap-6 mb-8 items-center">
+        <div class="flex flex-row gap-2 justify-center items-center">
             <!-- First digit -->
             <div class="card bg-base-100 shadow-lg">
                 <div class="card-body">
@@ -65,17 +53,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div v-if="firstDigitAssociation?.notes">
-                            <p class="text-sm text-gray-700 mt-1">{{ firstDigitAssociation.notes }}</p>
-                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Plus sign -->
-            <div class="flex justify-center">
-                <p class="text-8xl">+</p>
-            </div>
+            <p class="text-8xl">+</p>
 
             <!-- Second digit -->
             <div class="card bg-base-100 shadow-lg">
@@ -103,30 +86,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div v-if="secondDigitAssociation?.notes">
-                            <p class="text-sm text-gray-700 mt-1">{{ secondDigitAssociation.notes }}</p>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Ignored sounds info -->
-        <div class="card bg-base-200 shadow-sm">
-            <div class="card-body">
-                <h3 class="mb-2">Ignored Sounds:</h3>
-                <div class="flex flex-wrap gap-2">
-                    <span 
-                        v-for="sound in ignoredSounds" 
-                        :key="sound"
-                        class="badge badge-neutral"
-                    >
-                        {{ sound }}
-                    </span>
-                </div>
-                <p v-if="ignoredSoundsNotes" class="text-sm text-gray-600 mt-2">{{ ignoredSoundsNotes }}</p>
-            </div>
-        </div>
+        <p>Ignored Sounds:</p>
+        <p>
+            <span v-for="sound in ignoredSounds" :key="sound" class="badge badge-neutral mx-1">
+                {{ sound }}
+            </span>
+        </p>
     </div>
 </template>
 
@@ -181,16 +152,16 @@ watch([() => form.word, () => form.notes], () => {
     if (saveTimeout) {
         clearTimeout(saveTimeout)
     }
-    
+
     // Validate
     errors.word = ''
     if (!form.word.trim()) {
         errors.word = 'Please enter a word for your association'
     }
-    
+
     // Emit validity change
     emit('form-validity-changed', isFormValid.value)
-    
+
     // Auto-save with debounce if form is valid
     if (isFormValid.value) {
         saveTimeout = setTimeout(() => {

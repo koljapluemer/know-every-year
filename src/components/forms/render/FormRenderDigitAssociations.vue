@@ -1,6 +1,7 @@
 <!-- special case: we have only 10 digits, thus one form for all the digits at once -->
 <template>
-  <div class="max-w-6xl mx-auto space-y-8">
+     <div class="flex flex-col gap-8 items-center p-2">
+
     <!-- Digit associations table -->
     <div class="card bg-base-100 shadow-lg">
       <div class="card-body">

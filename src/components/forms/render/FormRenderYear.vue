@@ -1,42 +1,31 @@
 <template>
-  <div class="max-w-4xl mx-auto">
-    <!-- Header -->
-    <div class="mb-8">
-      <div class="flex items-center justify-between mb-4">
-        <h1 class="text-4xl font-bold">Year {{ year }}</h1>
-        <RouterLink :to="{ name: 'YearAssociations' }" class="btn btn-outline">
-          ← Back to Years
-        </RouterLink>
-      </div>
+  <!-- Header -->
+  <div class="flex flex-col gap-8 items-center p-2 mt-10">
 
-      <!-- Digit Associations Display -->
-      <div class="card bg-base-100 shadow-lg mb-4">
-        <div class="card-body">
-          <h2 class="card-title">Digit Associations</h2>
-          <WidgetNumberAssociationsForYear :year="year" />
-        </div>
-      </div>
+    <h1 class="big-digit">{{ year }}</h1>
 
-      <!-- Missing Pegs Warning -->
-      <div v-if="!hasFirstPeg || !hasSecondPeg" class="alert alert-warning mb-4">
-        <div class="w-6 h-6">⚠️</div>
-        <div>
-          <h3 class="font-bold">Missing Digit Associations</h3>
-          <div class="text-sm">
-            <span v-if="!hasFirstPeg">
-              Missing association for {{ firstDigitStr }}.
-              <RouterLink :to="{ name: 'ManagePeg', params: { number: firstDigitStr } }" class="link link-primary">
-                Create it here
-              </RouterLink>
-            </span>
-            <span v-if="!hasFirstPeg && !hasSecondPeg"> and </span>
-            <span v-if="!hasSecondPeg">
-              Missing association for {{ secondDigitStr }}.
-              <RouterLink :to="{ name: 'ManagePeg', params: { number: secondDigitStr } }" class="link link-primary">
-                Create it here
-              </RouterLink>
-            </span>
-          </div>
+    <!-- Digit Associations Display -->
+    <WidgetNumberAssociationsForYear :year="year" />
+
+    <!-- Missing Pegs Warning -->
+    <div v-if="!hasFirstPeg || !hasSecondPeg" class="alert alert-warning mb-4">
+      <div class="w-6 h-6">⚠️</div>
+      <div>
+        <h3 class="font-bold">Missing Digit Associations</h3>
+        <div class="text-sm">
+          <span v-if="!hasFirstPeg">
+            Missing association for {{ firstDigitStr }}.
+            <RouterLink :to="{ name: 'ManagePeg', params: { number: firstDigitStr } }" class="link link-primary">
+              Create it here
+            </RouterLink>
+          </span>
+          <span v-if="!hasFirstPeg && !hasSecondPeg"> and </span>
+          <span v-if="!hasSecondPeg">
+            Missing association for {{ secondDigitStr }}.
+            <RouterLink :to="{ name: 'ManagePeg', params: { number: secondDigitStr } }" class="link link-primary">
+              Create it here
+            </RouterLink>
+          </span>
         </div>
       </div>
     </div>

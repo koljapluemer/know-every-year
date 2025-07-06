@@ -29,12 +29,12 @@
         <textarea  
           v-model="formData.content"
           placeholder="Event content"
-          class="textarea textarea-bordered w-full"
+          class="textarea textarea-bordered w-full textarea-xl"
         />
         <textarea 
           v-model="formData.mentalImage"
           placeholder="Mental image"
-          class="textarea textarea-bordered w-full"
+          class="textarea textarea-bordered w-full textarea-xl"
         />
         <textarea 
           v-model="formData.notes"

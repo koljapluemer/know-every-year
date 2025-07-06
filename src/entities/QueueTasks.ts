@@ -4,6 +4,7 @@ export type TaskComponentName =
   | 'TaskRememberSoundByDigit'
   | 'TaskRememberDigitBySound'
   | 'TaskCreateNumberAssociation'
+  | 'TaskCreateEventsForYear'
   | 'TaskRememberEventsByYear'
   | 'TaskRememberYearByEvent'
 

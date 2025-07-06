@@ -1,0 +1,209 @@
+<!-- no control component for this, it's very simple -->
+
+<template>
+  <tr class="hover:bg-base-200">
+    <td class="font-mono text-lg font-bold w-16">{{ digit }}</td>
+    
+    <!-- Sound associations -->
+    <td class="py-4">
+      <div class="flex flex-wrap gap-2 items-center">
+        <!-- Existing sound pills -->
+        <span 
+          v-for="sound in sounds" 
+          :key="sound"
+          class="badge badge-primary gap-2"
+        >
+          {{ sound }}
+          <button 
+            @click="removeSound(sound)"
+            class="btn btn-ghost btn-xs p-0 h-auto min-h-0"
+          >
+            <X class="w-3 h-3" />
+          </button>
+        </span>
+        
+        <!-- Add new sound input -->
+        <div class="flex items-center gap-1">
+          <input 
+            v-model="newSound"
+            @keyup.enter="addSound"
+            @blur="addSound"
+            placeholder="Add sound..."
+            class="input input-bordered input-sm w-24"
+            :class="{ 'input-error': newSoundError }"
+          />
+          <button 
+            @click="addSound"
+            class="btn btn-primary btn-sm"
+            :disabled="!newSound.trim()"
+          >
+            <Plus class="w-3 h-3" />
+          </button>
+        </div>
+      </div>
+      <div v-if="newSoundError" class="text-error text-xs mt-1">{{ newSoundError }}</div>
+    </td>
+    
+    <!-- Notes -->
+    <td>
+      <textarea 
+        v-model="notes"
+        @input="updateNotes"
+        placeholder="Notes..."
+        class="textarea textarea-bordered textarea-sm w-full"
+        rows="2"
+      ></textarea>
+    </td>
+    
+    <!-- Learning data -->
+    <td class="text-sm">
+      <div v-if="hasLearningData" class="space-y-1">
+        <div class="flex items-center gap-2">
+          <span class="font-mono" :class="getDueDateClass(numberToSoundDue)">
+            {{ formatDueDate(numberToSoundDue) }}
+          </span>
+          <span class="text-gray-500">(Digit→Sound)</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="font-mono" :class="getDueDateClass(soundToNumberDue)">
+            {{ formatDueDate(soundToNumberDue) }}
+          </span>
+          <span class="text-gray-500">(Sound→Digit)</span>
+        </div>
+        <div class="flex items-center gap-1 mt-2">
+          <button 
+            @click="resetLearningData"
+            class="btn btn-warning btn-xs"
+          >
+            Reset
+          </button>
+          <div class="tooltip tooltip-top" data-tip="Reset learning data if you've fundamentally changed the sound associations">
+            <button class="btn btn-ghost btn-xs p-1">
+              <Info class="w-3 h-3" />
+            </button>
+          </div>
+        </div>
+      </div>
+      <span v-else class="text-gray-400 italic">No learning data yet</span>
+    </td>
+  </tr>
+</template>
+
+<script setup lang="ts">
+import { ref, computed } from 'vue'
+import { X, Plus, Info } from 'lucide-vue-next'
+import type { DigitAssociation } from '../entities/DigitAssociation'
+
+interface Props {
+  digit: number
+  association: DigitAssociation
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits<{
+  'update-sounds': [digit: number, sounds: string[]]
+  'update-notes': [digit: number, notes: string]
+  'reset-learning-data': [digit: number]
+}>()
+
+const newSound = ref('')
+const newSoundError = ref('')
+const notes = ref(props.association.notes || '')
+let notesTimeout: number | null = null
+
+const sounds = computed(() => props.association.sounds)
+
+const hasLearningData = computed(() => 
+  props.association.numberToSoundLearningData || props.association.soundToNumberLearningData
+)
+
+const numberToSoundDue = computed(() => props.association.numberToSoundLearningData?.due)
+const soundToNumberDue = computed(() => props.association.soundToNumberLearningData?.due)
+
+const addSound = () => {
+  const sound = newSound.value.trim()
+  if (!sound) return
+  
+  // Validate
+  if (sounds.value.includes(sound)) {
+    newSoundError.value = 'Sound already exists'
+    return
+  }
+  
+  if (sound.length > 20) {
+    newSoundError.value = 'Sound too long'
+    return
+  }
+  
+  // Add sound
+  const updatedSounds = [...sounds.value, sound]
+  emit('update-sounds', props.digit, updatedSounds)
+  
+  // Clear input
+  newSound.value = ''
+  newSoundError.value = ''
+}
+
+const removeSound = (soundToRemove: string) => {
+  const updatedSounds = sounds.value.filter(s => s !== soundToRemove)
+  emit('update-sounds', props.digit, updatedSounds)
+}
+
+const updateNotes = () => {
+  // Clear existing timeout
+  if (notesTimeout) {
+    clearTimeout(notesTimeout)
+  }
+  
+  // Set new timeout to debounce the update
+  notesTimeout = setTimeout(() => {
+    emit('update-notes', props.digit, notes.value)
+  }, 500) // 500ms delay
+}
+
+const resetLearningData = () => {
+  emit('reset-learning-data', props.digit)
+}
+
+const formatDueDate = (dueDate: Date | string | undefined) => {
+  if (!dueDate) return 'No practice data yet'
+  
+  const date = new Date(dueDate)
+  
+  // Format as "MMM DD, YYYY HH:MM" (e.g., "Jul 06, 2025 14:30")
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric'
+  }) + ' ' + date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  })
+}
+
+const getDueDateClass = (dueDate: Date | string | undefined) => {
+  if (!dueDate) return ''
+  
+  const date = new Date(dueDate)
+  const now = new Date()
+  
+  // If due date is in the past, show as red (overdue)
+  if (date <= now) {
+    return 'text-error font-semibold'
+  }
+  
+  // If due today, show as orange (urgent)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const dueToday = new Date(date)
+  dueToday.setHours(0, 0, 0, 0)
+  
+  if (dueToday.getTime() === today.getTime()) {
+    return 'text-warning font-semibold'
+  }
+  
+  // Otherwise show as normal (future)
+  return 'text-success'
+}
+</script>

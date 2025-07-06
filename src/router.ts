@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import CompleteNumberPegsPage from './pages/CompleteNumberPegsPage.vue'
 import ListAllNumberPegsPage from './pages/ListAllNumberPegsPage.vue'
 import ManageNumberPegPage from './pages/ManageNumberPegPage.vue'
+import ManageDigitPegsPage from './pages/ManageDigitPegsPage.vue'
 import QueuePage from './pages/QueuePage.vue'
 
 const router = createRouter({
@@ -26,6 +27,11 @@ const router = createRouter({
       name: 'ManagePeg',
       component: ManageNumberPegPage,
       props: true
+    },
+    {
+      path: '/manage-digit-pegs',
+      name: 'ManageDigitPegs',
+      component: ManageDigitPegsPage
     },
     {
       path: '/practice',

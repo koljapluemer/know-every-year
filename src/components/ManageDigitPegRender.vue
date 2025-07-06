@@ -59,15 +59,11 @@
     <td class="text-sm">
       <div v-if="hasLearningData" class="space-y-1">
         <div class="flex items-center gap-2">
-          <span class="font-mono" :class="getDueDateClass(numberToSoundDue)">
-            {{ formatDueDate(numberToSoundDue) }}
-          </span>
+          <RenderDueDate :due-date="numberToSoundDue" />
           <span class="text-gray-500">(Digit→Sound)</span>
         </div>
         <div class="flex items-center gap-2">
-          <span class="font-mono" :class="getDueDateClass(soundToNumberDue)">
-            {{ formatDueDate(soundToNumberDue) }}
-          </span>
+          <RenderDueDate :due-date="soundToNumberDue" />
           <span class="text-gray-500">(Sound→Digit)</span>
         </div>
         <div class="flex items-center gap-1 mt-2">
@@ -93,6 +89,7 @@
 import { ref, computed } from 'vue'
 import { X, Plus, Info } from 'lucide-vue-next'
 import type { DigitAssociation } from '../entities/DigitAssociation'
+import RenderDueDate from './RenderDueDate.vue'
 
 interface Props {
   digit: number
@@ -163,47 +160,5 @@ const updateNotes = () => {
 
 const resetLearningData = () => {
   emit('reset-learning-data', props.digit)
-}
-
-const formatDueDate = (dueDate: Date | string | undefined) => {
-  if (!dueDate) return 'No practice data yet'
-  
-  const date = new Date(dueDate)
-  
-  // Format as "MMM DD, YYYY HH:MM" (e.g., "Jul 06, 2025 14:30")
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: '2-digit',
-    year: 'numeric'
-  }) + ' ' + date.toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  })
-}
-
-const getDueDateClass = (dueDate: Date | string | undefined) => {
-  if (!dueDate) return ''
-  
-  const date = new Date(dueDate)
-  const now = new Date()
-  
-  // If due date is in the past, show as red (overdue)
-  if (date <= now) {
-    return 'text-error font-semibold'
-  }
-  
-  // If due today, show as orange (urgent)
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-  const dueToday = new Date(date)
-  dueToday.setHours(0, 0, 0, 0)
-  
-  if (dueToday.getTime() === today.getTime()) {
-    return 'text-warning font-semibold'
-  }
-  
-  // Otherwise show as normal (future)
-  return 'text-success'
 }
 </script>

@@ -86,7 +86,10 @@ const filteredYears = computed(() => {
 
   // Apply filters
   if (showOnlyYearsWithEvents.value) {
-    years = years.filter(year => yearAssociationStore.yearsWithEvents.includes(year))
+    years = years.filter(year => {
+      const events = eventsStore.getEventsForYear(year)
+      return events.length > 0
+    })
   }
 
   if (showOnlyYearsWithPegs.value) {

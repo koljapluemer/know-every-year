@@ -9,7 +9,7 @@
       <div 
         v-for="event in events" 
         :key="event.id"
-        class="card bg-base-200 shadow-sm p-2"
+        class="card bg-base-300 shadow-sm p-2"
       >
         <div class="text-sm font-medium">{{ event.content }}</div>
         <div class="text-xs text-gray-600">{{ event.mentalImage }}</div>
@@ -33,13 +33,13 @@
     <div class="flex flex-col gap-1 text-xs">
       <div v-if="yearData?.yearToEventsLearningData">
         <span class="text-gray-600">Year→Events:</span>
-        <span class="ml-1">{{ formatDueDate(yearData.yearToEventsLearningData.due) }}</span>
+        <RenderDueDate :due-date="yearData.yearToEventsLearningData.due" />
       </div>
       <div v-if="eventsWithLearningData.length > 0">
         <span class="text-gray-600">Events→Year:</span>
         <div class="ml-1">
           <div v-for="event in eventsWithLearningData" :key="event.id" class="text-xs">
-            {{ event.content.substring(0, 20) }}...: {{ formatDueDate(event.eventToYearLearningData!.due) }}
+            {{ event.content.substring(0, 20) }}...: <RenderDueDate :due-date="event.eventToYearLearningData!.due" />
           </div>
         </div>
       </div>
@@ -56,6 +56,7 @@ import { RouterLink } from 'vue-router'
 import { useYearAssociationStore } from '../stores/useYearAssociationStore'
 import { useNumberAssociationStore } from '../stores/useNumberAssociationStore'
 import { useEventsStore } from '../stores/useEventsStore'
+import RenderDueDate from './RenderDueDate.vue'
 
 interface Props {
   year: string
@@ -93,22 +94,4 @@ const secondNumberAssociation = computed(() => {
 const eventsWithLearningData = computed(() => {
   return events.value.filter(event => event.eventToYearLearningData)
 })
-
-const formatDueDate = (date: Date) => {
-  const now = new Date()
-  const diffTime = date.getTime() - now.getTime()
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-  
-  if (diffDays < 0) {
-    return `Overdue (${Math.abs(diffDays)} days)`
-  } else if (diffDays === 0) {
-    return 'Today'
-  } else if (diffDays === 1) {
-    return 'Tomorrow'
-  } else if (diffDays <= 7) {
-    return `In ${diffDays} days`
-  } else {
-    return date.toLocaleDateString()
-  }
-}
 </script>

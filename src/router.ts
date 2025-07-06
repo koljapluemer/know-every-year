@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import CompletePegsPage from './pages/CompletePegsPage.vue'
+import CompleteNumberPegsPage from './pages/CompleteNumberPegsPage.vue'
+import ListAllNumberPegsPage from './pages/ListAllNumberPegsPage.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -11,7 +12,12 @@ const router = createRouter({
     {
       path: '/complete-pegs',
       name: 'CompletePegs',
-      component: CompletePegsPage
+      component: CompleteNumberPegsPage
+    },
+    {
+      path: '/list-pegs',
+      name: 'ListPegs',
+      component: ListAllNumberPegsPage
     }
   ]
 })

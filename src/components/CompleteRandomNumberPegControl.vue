@@ -21,7 +21,7 @@
       </div>
     </div>
     
-    <PegFormControl 
+    <NumberPegFormControl
       :number="currentNumber" 
       @saved="handleSaved"
       v-if="currentNumber"
@@ -36,7 +36,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useNumberAssociationStore } from '../stores/useNumberAssociationStore'
-import PegFormControl from './PegFormControl.vue'
+import NumberPegFormControl from './NumberPegFormControl.vue'
 
 const numberAssociationStore = useNumberAssociationStore()
 const currentNumber = ref<string | null>(null)

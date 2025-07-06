@@ -1,8 +1,6 @@
 <template>
     <div class="max-w-2xl mx-auto p-6">
-        <!-- Exercise question -->
         <div class="text-center mb-8">
-            <h2 class="text-2xl font-bold mb-4">What number is associated with this word?</h2>
             <div class="text-6xl font-bold text-primary mb-6 break-words">{{ association?.word }}</div>
         </div>
 
@@ -37,7 +35,7 @@ interface Props {
 
 const props = defineProps<Props>()
 const emit = defineEmits<{
-    'exercise-completed': []
+    'task-done': []
 }>()
 
 const numberAssociationStore = useNumberAssociationStore()
@@ -53,17 +51,9 @@ const revealAnswer = () => {
 const selectRating = (rating: 'wrong' | 'hard' | 'good' | 'easy') => {
     // Update the word card with the rating
     numberAssociationStore.updateWordCard(props.number, rating)
-
-    // Pass the event up to load next exercise
-    emit('exercise-completed')
+    emit('task-done')
 }
 
-// Button configurations
-const revealButton = computed(() =>
-    createRevealButton(revealAnswer)
-)
-
-const ratingButtons = computed(() =>
-    createRatingButtons(selectRating)
-)
+const revealButton = computed(() => createRevealButton(revealAnswer))
+const ratingButtons = computed(() => createRatingButtons(selectRating))
 </script>

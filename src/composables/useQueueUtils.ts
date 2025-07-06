@@ -40,14 +40,12 @@ export function useQueueUtils() {
   )
   const getEligibleNumberToWordExercises = computed((): QueueTask[] => [
     ...numberAssociationStore.getDueNumbers.map(number => ({ 
-      type: 'number' as const, 
-      identifier: number, 
-      direction: 'numberToWord' as const 
+      component: 'TaskRememberWordByNumber' as const, 
+      identifier: number
     })),
     ...numberAssociationStore.getNewNumbers.map(number => ({ 
-      type: 'number' as const, 
-      identifier: number, 
-      direction: 'numberToWord' as const 
+      component: 'TaskRememberWordByNumber' as const, 
+      identifier: number
     }))
   ])
 
@@ -56,14 +54,12 @@ export function useQueueUtils() {
   )
   const getEligibleWordToNumberExercises = computed((): QueueTask[] => [
     ...numberAssociationStore.getDueWords.map(number => ({ 
-      type: 'number' as const, 
-      identifier: number, 
-      direction: 'wordToNumber' as const 
+      component: 'TaskRememberNumberByWord' as const, 
+      identifier: number
     })),
     ...numberAssociationStore.getNewWords.map(number => ({ 
-      type: 'number' as const, 
-      identifier: number, 
-      direction: 'wordToNumber' as const 
+      component: 'TaskRememberNumberByWord' as const, 
+      identifier: number
     }))
   ])
 
@@ -72,14 +68,12 @@ export function useQueueUtils() {
   )
   const getEligibleDigitToSoundExercises = computed((): QueueTask[] => [
     ...digitAssociationStore.getDueDigits.map(digit => ({ 
-      type: 'digit' as const, 
-      identifier: digit.toString(), 
-      direction: 'numberToSound' as const 
+      component: 'TaskRememberSoundByDigit' as const, 
+      identifier: digit.toString()
     })),
     ...digitAssociationStore.getNewDigits.map(digit => ({ 
-      type: 'digit' as const, 
-      identifier: digit.toString(), 
-      direction: 'numberToSound' as const 
+      component: 'TaskRememberSoundByDigit' as const, 
+      identifier: digit.toString()
     }))
   ])
 
@@ -88,14 +82,12 @@ export function useQueueUtils() {
   )
   const getEligibleSoundToDigitExercises = computed((): QueueTask[] => [
     ...digitAssociationStore.getDueSounds.map(sound => ({ 
-      type: 'digit' as const, 
-      identifier: sound, 
-      direction: 'soundToNumber' as const 
+      component: 'TaskRememberDigitBySound' as const, 
+      identifier: sound
     })),
     ...digitAssociationStore.getNewSounds.map(sound => ({ 
-      type: 'digit' as const, 
-      identifier: sound, 
-      direction: 'soundToNumber' as const 
+      component: 'TaskRememberDigitBySound' as const, 
+      identifier: sound
     }))
   ])
 
@@ -104,23 +96,20 @@ export function useQueueUtils() {
   )
   const getEligibleYearToEventsExercises = computed((): QueueTask[] => [
     ...yearAssociationStore.getDueYears.map(year => ({ 
-      type: 'year' as const, 
-      identifier: year, 
-      direction: 'yearToEvents' as const 
+      component: 'TaskRememberEventsByYear' as const, 
+      identifier: year
     })),
     ...yearAssociationStore.getNewYears.map(year => ({ 
-      type: 'year' as const, 
-      identifier: year, 
-      direction: 'yearToEvents' as const 
+      component: 'TaskRememberEventsByYear' as const, 
+      identifier: year
     }))
   ])
 
   const getNrOfDigitsWithoutAssociation = computed(() => numberAssociationStore.unassociatedNumbers.length)
   const getDigitsWithoutAssociation = computed((): QueueTask[] => 
     numberAssociationStore.unassociatedNumbers.map(number => ({ 
-      type: 'peg' as const, 
-      identifier: number, 
-      direction: 'createPeg' as const 
+      component: 'TaskCreateNumberAssociation' as const, 
+      identifier: number
     }))
   )
 
@@ -130,7 +119,7 @@ export function useQueueUtils() {
 
     if (getNrOfEligibleNumberToWordExercises.value > 0) {
       categories.push({
-        name: 'numberToWord',
+        name: 'TaskRememberWordByNumber',
         count: getNrOfEligibleNumberToWordExercises.value,
         exercises: getEligibleNumberToWordExercises.value
       })
@@ -138,7 +127,7 @@ export function useQueueUtils() {
 
     if (getNrOfEligibleWordToNumberExercises.value > 0) {
       categories.push({
-        name: 'wordToNumber',
+        name: 'TaskRememberNumberByWord',
         count: getNrOfEligibleWordToNumberExercises.value,
         exercises: getEligibleWordToNumberExercises.value
       })
@@ -146,7 +135,7 @@ export function useQueueUtils() {
 
     if (getNrOfEligibleDigitToSoundExercises.value > 0) {
       categories.push({
-        name: 'digitToSound',
+        name: 'TaskRememberSoundByDigit',
         count: getNrOfEligibleDigitToSoundExercises.value,
         exercises: getEligibleDigitToSoundExercises.value
       })
@@ -154,7 +143,7 @@ export function useQueueUtils() {
 
     if (getNrOfEligibleSoundToDigitExercises.value > 0) {
       categories.push({
-        name: 'soundToDigit',
+        name: 'TaskRememberDigitBySound',
         count: getNrOfEligibleSoundToDigitExercises.value,
         exercises: getEligibleSoundToDigitExercises.value
       })
@@ -162,7 +151,7 @@ export function useQueueUtils() {
 
     if (getNrOfEligibleYearToEventsExercises.value > 0) {
       categories.push({
-        name: 'yearToEvents',
+        name: 'TaskRememberEventsByYear',
         count: getNrOfEligibleYearToEventsExercises.value,
         exercises: getEligibleYearToEventsExercises.value
       })
@@ -170,7 +159,7 @@ export function useQueueUtils() {
 
     if (getNrOfDigitsWithoutAssociation.value > 0) {
       categories.push({
-        name: 'createPeg',
+        name: 'TaskCreateNumberAssociation',
         count: getNrOfDigitsWithoutAssociation.value,
         exercises: getDigitsWithoutAssociation.value
       })

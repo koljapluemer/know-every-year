@@ -1,17 +1,19 @@
-export type QueueTaskType = 'number' | 'digit' | 'peg' | 'year'
-
-export type QueueTaskDirection = 'numberToWord' | 'wordToNumber' | 'numberToSound' | 'soundToNumber' | 'createPeg' | 'yearToEvents'
-
-export type QueueTaskCategory = 'numberToWord' | 'wordToNumber' | 'digitToSound' | 'soundToDigit' | 'createPeg' | 'yearToEvents'
+export type TaskComponentName = 
+  | 'TaskRememberWordByNumber'
+  | 'TaskRememberNumberByWord'
+  | 'TaskRememberSoundByDigit'
+  | 'TaskRememberDigitBySound'
+  | 'TaskCreateNumberAssociation'
+  | 'TaskRememberEventsByYear'
 
 export interface QueueTask {
-  type: QueueTaskType
+  component: TaskComponentName
   identifier: string
-  direction: QueueTaskDirection
+  props?: Record<string, any> // Additional props specific to each task
 }
 
 export interface QueueTaskCategoryInfo {
-  name: QueueTaskCategory
+  name: TaskComponentName
   count: number
   exercises: QueueTask[]
 }

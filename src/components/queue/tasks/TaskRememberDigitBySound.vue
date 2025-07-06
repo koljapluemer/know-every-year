@@ -2,7 +2,6 @@
     <div class="max-w-2xl mx-auto p-6">
         <!-- Exercise question -->
         <div class="text-center mb-8">
-            <h2 class="text-2xl font-bold mb-4">What digit is associated with this sound?</h2>
             <div class="text-6xl font-bold text-primary mb-6 break-words">{{ sound }}</div>
         </div>
 
@@ -37,7 +36,7 @@ interface Props {
 
 const props = defineProps<Props>()
 const emit = defineEmits<{
-    'exercise-completed': []
+    'task-done': []
 }>()
 
 const digitAssociationStore = useDigitAssociationStore()
@@ -62,9 +61,9 @@ const revealAnswer = () => {
 const selectRating = (rating: 'wrong' | 'hard' | 'good' | 'easy') => {
     // Update the sound card with the rating
     digitAssociationStore.updateSoundCard(props.sound, rating)
-
-    // Pass the event up to load next exercise
-    emit('exercise-completed')
+    
+    // Pass the event up to load next task
+    emit('task-done')
 }
 
 // Button configurations

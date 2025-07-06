@@ -215,54 +215,63 @@ export function useQueueUtils() {
     return categories
   })
 
-  // Get a random exercise from a random category with weighted priority for recent years
+  // Get a random exercise from a random category with fair distribution
   const getRandomExercise = (): QueueTask | null => {
     const availableCategories = getAvailableCategories.value
     if (availableCategories.length === 0) {
       return null
     }
 
-    // Special handling for TaskCreateEventsForYear to prioritize recent years
-    const eventCreationCategory = availableCategories.find(cat => cat.name === 'TaskCreateEventsForYear')
-    if (eventCreationCategory && eventCreationCategory.exercises.length > 0) {
-      // Weight recent years more heavily (excluding years after 2000)
-      const weightedExercises = eventCreationCategory.exercises.map(task => {
+    // Randomly select a category first (fair distribution)
+    const randomCategoryIndex = Math.floor(Math.random() * availableCategories.length)
+    const selectedCategory = availableCategories[randomCategoryIndex]
+    
+    // If the selected category is TaskCreateEventsForYear, apply weighted selection within that category
+    if (selectedCategory.name === 'TaskCreateEventsForYear') {
+      // Linear decay weighting: recent years get higher weight, but years after 2000 are devalued
+      // Weight formula: 1.0 for year 0, linearly decreasing to 0.1 for year 2000, then 0.05 for years after 2000
+      const weightedExercises = selectedCategory.exercises.map(task => {
         const year = parseInt(task.identifier === '0000' ? '0' : task.identifier)
-        let weight = 1
+        let weight = 1.0
         
         if (year <= 2000 && year > 0) {
-          // Recent years (1800-2000) get higher weight, decreasing exponentially
-          weight = Math.exp((year - 1800) / 200) // Exponential decay from 1800 to 2000
+          // Linear decay from year 0 (weight 1.0) to year 2000 (weight 0.1)
+          // Formula: weight = 1.0 - (year / 2000) * 0.9
+          weight = 1.0 - (year / 2000) * 0.9
         } else if (year > 2000) {
-          // Years after 2000 get very low weight
-          weight = 0.1
+          // Years after 2000 get very low weight (too recent/boring)
+          weight = 0.05
         } else if (year === 0) {
-          // Year 0 gets medium weight
-          weight = 0.5
+          // Year 0 gets full weight
+          weight = 1.0
         }
         
+        console.log(`🔍 DEBUG: Year ${year} gets weight ${weight}`)
         return { task, weight }
       })
       
       // Calculate total weight
       const totalWeight = weightedExercises.reduce((sum, item) => sum + item.weight, 0)
+      console.log(`🔍 DEBUG: Total weight: ${totalWeight}`)
       
       // Select random task based on weights
       let random = Math.random() * totalWeight
+      console.log(`🔍 DEBUG: Random value: ${random}`)
       for (const { task, weight } of weightedExercises) {
         random -= weight
+        console.log(`🔍 DEBUG: Subtracting weight ${weight}, remaining: ${random}`)
         if (random <= 0) {
+          console.log(`🔍 DEBUG: Selected year ${task.identifier}`)
           return task
         }
       }
       
       // Fallback to first task if something goes wrong
+      console.log(`🔍 DEBUG: Fallback to first task: ${weightedExercises[0].task.identifier}`)
       return weightedExercises[0].task
     }
 
     // For other categories, use normal random selection
-    const randomCategoryIndex = Math.floor(Math.random() * availableCategories.length)
-    const selectedCategory = availableCategories[randomCategoryIndex]
     const randomExerciseIndex = Math.floor(Math.random() * selectedCategory.exercises.length)
     return selectedCategory.exercises[randomExerciseIndex]
   }

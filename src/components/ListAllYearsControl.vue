@@ -53,8 +53,15 @@
       </p>
     </div>
 
+    <!-- Loading spinner -->
+    <div v-if="isFiltering" class="flex justify-center items-center py-8">
+      <span class="loading loading-spinner loading-lg"></span>
+      <span class="ml-2">Filtering years...</span>
+    </div>
+
     <!-- Table -->
     <ListYearsRender 
+      v-else
       :years="filteredYears"
       :show-headings="showHeadings"
     />
@@ -62,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import { useYearAssociationStore } from '../stores/useYearAssociationStore'
 import { useEventsStore } from '../stores/useEventsStore'
 import { useNumberAssociationStore } from '../stores/useNumberAssociationStore'
@@ -77,11 +84,24 @@ const searchQuery = ref('')
 const showOnlyYearsWithEvents = ref(false)
 const showOnlyYearsWithPegs = ref(false)
 const showHeadings = ref(false)
+const isFiltering = ref(false)
+const filteredYears = ref<string[]>([])
 
 // Computed properties
 const totalYears = computed(() => yearAssociationStore.allYears.length)
 
-const filteredYears = computed(() => {
+// Debounced filtering
+let filterTimeout: number | null = null
+
+const performFiltering = async () => {
+  isFiltering.value = true
+  
+  // Use nextTick to ensure UI updates before heavy computation
+  await nextTick()
+  
+  // Small delay to ensure spinner shows
+  await new Promise(resolve => setTimeout(resolve, 10))
+  
   let years = yearAssociationStore.allYears
 
   // Apply filters
@@ -137,6 +157,25 @@ const filteredYears = computed(() => {
     })
   }
 
-  return years
-})
+  filteredYears.value = years
+  isFiltering.value = false
+}
+
+// Watch for changes and trigger filtering
+watch([searchQuery, showOnlyYearsWithEvents, showOnlyYearsWithPegs], () => {
+  if (filterTimeout) {
+    clearTimeout(filterTimeout)
+  }
+  
+  // Immediate feedback - show spinner
+  isFiltering.value = true
+  
+  // Debounce the actual filtering
+  filterTimeout = setTimeout(() => {
+    performFiltering()
+  }, 100)
+}, { immediate: true })
+
+// Initialize with all years
+filteredYears.value = yearAssociationStore.allYears
 </script>

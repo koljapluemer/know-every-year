@@ -25,8 +25,11 @@ const numberAssociationStore = useNumberAssociationStore()
 
 const association = computed(() => numberAssociationStore.getAssociation(props.number))
 
-const handleRatingSelected = (rating: string) => {
-  // For now, just pass the event up
+const handleRatingSelected = (rating: 'wrong' | 'hard' | 'good' | 'easy') => {
+  // Update the card with the rating
+  numberAssociationStore.updateCard(props.number, rating)
+  
+  // Pass the event up to load next exercise
   emit('exercise-completed')
 }
 </script>

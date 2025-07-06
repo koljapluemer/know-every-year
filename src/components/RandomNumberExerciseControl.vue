@@ -19,14 +19,7 @@ const numberAssociationStore = useNumberAssociationStore()
 const currentNumber = ref<string | null>(null)
 
 const loadRandomExercise = () => {
-  const associatedNumbers = numberAssociationStore.associatedNumbers
-  if (associatedNumbers.length === 0) {
-    currentNumber.value = null
-    return
-  }
-  
-  const randomIndex = Math.floor(Math.random() * associatedNumbers.length)
-  currentNumber.value = associatedNumbers[randomIndex]
+  currentNumber.value = numberAssociationStore.getRandomPracticeNumber()
 }
 
 const loadNextExercise = () => {

@@ -71,7 +71,7 @@ interface Props {
 
 const props = defineProps<Props>()
 const emit = defineEmits<{
-  'rating-selected': [rating: string]
+  'rating-selected': [rating: 'wrong' | 'hard' | 'good' | 'easy']
 }>()
 
 const isRevealed = ref(false)
@@ -80,7 +80,7 @@ const revealAnswer = () => {
   isRevealed.value = true
 }
 
-const selectRating = (rating: string) => {
+const selectRating = (rating: 'wrong' | 'hard' | 'good' | 'easy') => {
   emit('rating-selected', rating)
 }
 </script>

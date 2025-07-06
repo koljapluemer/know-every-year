@@ -21,6 +21,8 @@
             <th class="w-20">Number</th>
             <th>Association</th>
             <th>Notes</th>
+            <th class="w-32">Number→Word Due</th>
+            <th class="w-32">Word→Number Due</th>
             <th class="w-16">Status</th>
           </tr>
         </thead>
@@ -48,6 +50,22 @@
                 -
               </span>
             </td>
+            <td class="text-sm">
+              <span v-if="item.association?.numberToWordLearningData" class="font-mono">
+                {{ formatDueDate(item.association.numberToWordLearningData.due) }}
+              </span>
+              <span v-else class="text-gray-400 italic">
+                No practice data yet
+              </span>
+            </td>
+            <td class="text-sm">
+              <span v-if="item.association?.wordToNumberLearningData" class="font-mono">
+                {{ formatDueDate(item.association.wordToNumberLearningData.due) }}
+              </span>
+              <span v-else class="text-gray-400 italic">
+                No practice data yet
+              </span>
+            </td>
             <td class="text-center">
               <div v-if="item.association" class="flex justify-center">
                 <CheckCircle class="w-5 h-5 text-success" />
@@ -70,7 +88,12 @@ import { useRouter } from 'vue-router'
 interface Props {
   associations: Array<{
     number: string
-    association?: { word: string; notes?: string }
+    association?: { 
+      word: string; 
+      notes?: string;
+      numberToWordLearningData?: any;
+      wordToNumberLearningData?: any;
+    }
   }>
   progress: number
   total: number
@@ -81,5 +104,30 @@ const router = useRouter()
 
 const navigateToManage = (number: string) => {
   router.push({ name: 'ManagePeg', params: { number } })
+}
+
+const formatDueDate = (dueDate: Date | string) => {
+  if (!dueDate) return 'No practice data yet'
+  
+  const date = new Date(dueDate)
+  const now = new Date()
+  
+  // If due date is in the past, show as overdue
+  if (date <= now) {
+    return 'Overdue'
+  }
+  
+  // If due today, show "Today"
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const dueToday = new Date(date)
+  dueToday.setHours(0, 0, 0, 0)
+  
+  if (dueToday.getTime() === today.getTime()) {
+    return 'Today'
+  }
+  
+  // Otherwise show the date
+  return date.toLocaleDateString()
 }
 </script>

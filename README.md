@@ -1,5 +1,8 @@
 # Know Every Year
 
+> [!NOTE]  
+> *Archived Prototype — it works, but I want to focus on other things.*
+
 ![demo combined screenshot](publicdemo_crop.webp)
 
 A little app to gradually memorize what happened in every year from 0 to 2025, using the [Major System](https://artofmemory.com/blog/major-system/)

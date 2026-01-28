@@ -98,18 +98,6 @@
         />
       </div>
 
-      <!-- TaskCreateEventsForYear -->
-      <div v-else-if="currentTask.component === 'TaskCreateEventsForYear'">
-        <InstructionRender 
-          subtitle="Fill out the form"
-          title="Add events for this year"
-        />
-        <TaskCreateEventsForYear 
-          :year="currentTask.identifier"
-          :key="currentTask.identifier"
-          @task-done="loadNextTask"
-        />
-      </div>
     </div>
   </div>
 </template>
@@ -122,7 +110,6 @@ import TaskRememberNumberByWord from '@/components/queue/tasks/TaskRememberNumbe
 import TaskRememberSoundByDigit from '@/components/queue/tasks/TaskRememberSoundByDigit.vue'
 import TaskRememberDigitBySound from '@/components/queue/tasks/TaskRememberDigitBySound.vue'
 import TaskCreateNumberAssociation from '@/components/queue/tasks/TaskCreateNumberAssociation.vue'
-import TaskCreateEventsForYear from '@/components/queue/tasks/TaskCreateEventsForYear.vue'
 import TaskRememberEventsByYear from '@/components/queue/tasks/TaskRememberEventsByYear.vue'
 import TaskRememberYearByEvent from '@/components/queue/tasks/TaskRememberYearByEvent.vue'
 

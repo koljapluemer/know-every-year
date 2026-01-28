@@ -54,8 +54,9 @@ const yearsWithHeadings = computed(() => {
   
   for (let i = 0; i < props.years.length; i++) {
     const year = props.years[i]
+    if (!year) continue
     const yearNum = parseInt(year === '0000' ? '0' : year)
-    
+
     // Add century heading
     if (yearNum % 100 === 0 && yearNum !== 0) {
       result.push({
@@ -70,7 +71,7 @@ const yearsWithHeadings = computed(() => {
         text: `${yearNum}s`
       })
     }
-    
+
     result.push(year)
   }
   

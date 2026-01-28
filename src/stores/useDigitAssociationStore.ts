@@ -299,7 +299,7 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
       }
       
       const randomIndex = Math.floor(Math.random() * availableExercises.length)
-      return availableExercises[randomIndex]
+      return availableExercises[randomIndex] ?? null
     },
 
     /**

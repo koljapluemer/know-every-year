@@ -14,36 +14,6 @@ export function useQueueUtils() {
   const yearAssociationStore = useYearAssociationStore()
   const eventsStore = useEventsStore()
 
-  // Helper function to check if a century has any events
-  const checkIfCenturyHasEvents = (century: number): boolean => {
-    const startYear = century * 100
-    const endYear = Math.min(startYear + 99, 2025)
-    
-    for (let year = startYear; year <= endYear; year++) {
-      const yearStr = year === 0 ? '0000' : year.toString()
-      const events = eventsStore.getEventsForYear(yearStr)
-      if (events.length > 0) {
-        return true
-      }
-    }
-    return false
-  }
-
-  // Helper function to check if a decade has any events
-  const checkIfDecadeHasEvents = (decade: number): boolean => {
-    const startYear = decade
-    const endYear = Math.min(startYear + 9, 2025)
-    
-    for (let year = startYear; year <= endYear; year++) {
-      const yearStr = year === 0 ? '0000' : year.toString()
-      const events = eventsStore.getEventsForYear(yearStr)
-      if (events.length > 0) {
-        return true
-      }
-    }
-    return false
-  }
-
   // Only due logic
   const getNrOfDueNumberToWordExercises = computed(() => numberAssociationStore.getDueNumbers.length)
   const getDueNumberToWordExercises = computed((): QueueTask[] =>
@@ -117,49 +87,6 @@ export function useQueueUtils() {
     }))
   )
 
-  const getNrOfYearsWithoutEvents = computed(() => {
-    const eventsStore = useEventsStore()
-    return yearAssociationStore.allYears.filter(year => {
-      // Check if year has no events
-      const events = eventsStore.getEventsForYear(year)
-      if (events.length > 0) return false
-      
-      // Check if year has BOTH number associations (pegs)
-      const yearNum = parseInt(year === '0000' ? '0' : year)
-      const firstDigit = Math.floor(yearNum / 100).toString().padStart(2, '0')
-      const secondDigit = (yearNum % 100).toString().padStart(2, '0')
-      
-      const hasFirstPeg = numberAssociationStore.hasAssociation(firstDigit)
-      const hasSecondPeg = numberAssociationStore.hasAssociation(secondDigit)
-      
-      return hasFirstPeg && hasSecondPeg
-    }).length
-  })
-
-  const getYearsWithoutEvents = computed((): QueueTask[] => {
-    const eventsStore = useEventsStore()
-    return yearAssociationStore.allYears
-      .filter(year => {
-        // Check if year has no events
-        const events = eventsStore.getEventsForYear(year)
-        if (events.length > 0) return false
-        
-        // Check if year has BOTH number associations (pegs)
-        const yearNum = parseInt(year === '0000' ? '0' : year)
-        const firstDigit = Math.floor(yearNum / 100).toString().padStart(2, '0')
-        const secondDigit = (yearNum % 100).toString().padStart(2, '0')
-        
-        const hasFirstPeg = numberAssociationStore.hasAssociation(firstDigit)
-        const hasSecondPeg = numberAssociationStore.hasAssociation(secondDigit)
-        
-        return hasFirstPeg && hasSecondPeg
-      })
-      .map(year => ({
-        component: 'TaskCreateEventsForYear' as const,
-        identifier: year
-      }))
-  })
-
   // Debug logging - only computed when accessed
   const debugExerciseCounts = computed(() => {
     console.log('🔍 DEBUG: Queue Utils - Exercise Counts:')
@@ -195,7 +122,6 @@ export function useQueueUtils() {
     console.log(`  Year→Events: ${getNrOfDueYearToEventsExercises.value} due`)
     console.log(`  Event→Year: ${getNrOfDueEventToYearExercises.value} due`)
     console.log(`  Create Peg: ${getNrOfDigitsWithoutAssociation.value} available`)
-    console.log(`  Create Events: ${getNrOfYearsWithoutEvents.value} available`)
   })
 
   // Only due categories
@@ -254,13 +180,6 @@ export function useQueueUtils() {
         exercises: getDigitsWithoutAssociation.value
       })
     }
-    if (getNrOfYearsWithoutEvents.value > 0) {
-      categories.push({
-        name: 'TaskCreateEventsForYear',
-        count: getNrOfYearsWithoutEvents.value,
-        exercises: getYearsWithoutEvents.value
-      })
-    }
     return categories
   })
 
@@ -274,93 +193,38 @@ export function useQueueUtils() {
     // Randomly select a category first (fair distribution)
     const randomCategoryIndex = Math.floor(Math.random() * availableCategories.length)
     const selectedCategory = availableCategories[randomCategoryIndex]
-    
-    // If the selected category is TaskCreateEventsForYear, apply weighted selection within that category
-    if (selectedCategory.name === 'TaskCreateEventsForYear') {
-      // Two-tier weighting system: linear decay + empty century/decade bonuses
-      const weightedExercises = selectedCategory.exercises.map(task => {
-        const year = parseInt(task.identifier === '0000' ? '0' : task.identifier)
-        
-        // Base weight: linear decay from year 0 (weight 0.1) to year 2000 (weight 1.0)
-        let baseWeight = 0.1
-        if (year <= 2000 && year > 0) {
-          baseWeight = 0.1 + (year / 2000) * 0.9  // Linear increase from 0.1 to 1.0
-        } else if (year > 2000) {
-          baseWeight = 0.05  // Years after 2000 get very low weight (too recent/boring)
-        } else if (year === 0) {
-          baseWeight = 0.1  // Year 0 gets low weight (ancient)
-        }
-        
-        // Calculate century and decade for bonus weighting
-        const century = Math.floor(year / 100)
-        const decade = Math.floor(year / 10) * 10
-        
-        // Check if century/decade is empty (no events)
-        const centuryHasEvents = checkIfCenturyHasEvents(century)
-        const decadeHasEvents = checkIfDecadeHasEvents(decade)
-        
-        // Apply multipliers based on empty century/decade
-        let finalWeight = baseWeight
-        if (!centuryHasEvents) {
-          finalWeight = baseWeight * 3.0  // 3x bonus for empty centuries
-        } else if (!decadeHasEvents) {
-          finalWeight = baseWeight * 2.0  // 2x bonus for empty decades
-        }
-        // else: no bonus (multiplier = 1.0)
-        
-        console.log(`🔍 DEBUG: Year ${year} - base: ${baseWeight.toFixed(3)}, century ${century} empty: ${!centuryHasEvents}, decade ${decade} empty: ${!decadeHasEvents}, final: ${finalWeight.toFixed(3)}`)
-        return { task, weight: finalWeight }
-      })
-      
-      // Calculate total weight
-      const totalWeight = weightedExercises.reduce((sum, item) => sum + item.weight, 0)
-      console.log(`🔍 DEBUG: Total weight: ${totalWeight}`)
-      
-      // Select random task based on weights
-      let random = Math.random() * totalWeight
-      console.log(`🔍 DEBUG: Random value: ${random}`)
-      for (const { task, weight } of weightedExercises) {
-        random -= weight
-        console.log(`🔍 DEBUG: Subtracting weight ${weight}, remaining: ${random}`)
-        if (random <= 0) {
-          console.log(`🔍 DEBUG: Selected year ${task.identifier}`)
-          return task
-        }
-      }
-      
-      // Fallback to first task if something goes wrong
-      console.log(`🔍 DEBUG: Fallback to first task: ${weightedExercises[0].task.identifier}`)
-      return weightedExercises[0].task
+    if (!selectedCategory) {
+      return null
     }
 
     // If the selected category is TaskCreateNumberAssociation, apply priority number logic
     if (selectedCategory.name === 'TaskCreateNumberAssociation') {
       // Find which priority numbers are still missing associations
-      const missingPriorityNumbers = PRIORITY_NUMBERS.filter(num => 
+      const missingPriorityNumbers = PRIORITY_NUMBERS.filter(num =>
         !numberAssociationStore.hasAssociation(num.toString().padStart(2, '0'))
       )
-      
+
       // If we have missing priority numbers, 30% chance to prioritize them
       if (missingPriorityNumbers.length > 0 && Math.random() < 0.3) {
         // Filter exercises to only include priority numbers
-        const priorityExercises = selectedCategory.exercises.filter(task => 
+        const priorityExercises = selectedCategory.exercises.filter(task =>
           missingPriorityNumbers.includes(parseInt(task.identifier))
         )
-        
+
         if (priorityExercises.length > 0) {
           const randomIndex = Math.floor(Math.random() * priorityExercises.length)
-          return priorityExercises[randomIndex]
+          return priorityExercises[randomIndex] ?? null
         }
       }
-      
+
       // Otherwise, use normal random selection from all available exercises
       const randomExerciseIndex = Math.floor(Math.random() * selectedCategory.exercises.length)
-      return selectedCategory.exercises[randomExerciseIndex]
+      return selectedCategory.exercises[randomExerciseIndex] ?? null
     }
 
     // For other categories, use normal random selection
     const randomExerciseIndex = Math.floor(Math.random() * selectedCategory.exercises.length)
-    return selectedCategory.exercises[randomExerciseIndex]
+    return selectedCategory.exercises[randomExerciseIndex] ?? null
   }
 
   return {
@@ -382,9 +246,6 @@ export function useQueueUtils() {
     // Number Association Creation
     getNrOfDigitsWithoutAssociation,
     getDigitsWithoutAssociation,
-    // Event Creation
-    getNrOfYearsWithoutEvents,
-    getYearsWithoutEvents,
     // Utility functions
     getAvailableCategories,
     getRandomExercise

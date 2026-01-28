@@ -19,7 +19,7 @@ export const useEventsStore = defineStore('events', {
      */
     getEventsForYear: (state) => (year: string): Event[] => {
       const eventIds = state.eventsByYear[year] || []
-      return eventIds.map(id => state.events[id]).filter(Boolean)
+      return eventIds.map(id => state.events[id]).filter((e): e is Event => e !== undefined)
     },
 
     /**
@@ -33,8 +33,8 @@ export const useEventsStore = defineStore('events', {
      * Get all years that have events
      */
     yearsWithEvents: (state): string[] => {
-      return Object.keys(state.eventsByYear).filter(year => 
-        state.eventsByYear[year].length > 0
+      return Object.keys(state.eventsByYear).filter(year =>
+        (state.eventsByYear[year]?.length ?? 0) > 0
       )
     },
 

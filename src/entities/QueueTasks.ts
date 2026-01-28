@@ -1,10 +1,9 @@
-export type TaskComponentName = 
+export type TaskComponentName =
   | 'TaskRememberWordByNumber'
   | 'TaskRememberNumberByWord'
   | 'TaskRememberSoundByDigit'
   | 'TaskRememberDigitBySound'
   | 'TaskCreateNumberAssociation'
-  | 'TaskCreateEventsForYear'
   | 'TaskRememberEventsByYear'
   | 'TaskRememberYearByEvent'
 

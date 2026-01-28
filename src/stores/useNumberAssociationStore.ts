@@ -34,7 +34,7 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
       const allNumbers = Array.from({ length: 100 }, (_, i) => i.toString().padStart(2, '0'))
       const unassociated = allNumbers.filter(num => !state.associations[num])
       if (unassociated.length === 0) return null
-      return unassociated[Math.floor(Math.random() * unassociated.length)]
+      return unassociated[Math.floor(Math.random() * unassociated.length)] ?? null
     },
 
     /**
@@ -262,7 +262,7 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
       }
       
       const randomIndex = Math.floor(Math.random() * availableExercises.length)
-      return availableExercises[randomIndex]
+      return availableExercises[randomIndex] ?? null
     },
 
     /**

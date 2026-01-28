@@ -34,8 +34,8 @@ const digitAssociationStore = useDigitAssociationStore()
 const numberAssociationStore = useNumberAssociationStore()
 const { success } = useToast()
 
-const firstDigit = computed(() => parseInt(props.number[0]))
-const secondDigit = computed(() => parseInt(props.number[1]))
+const firstDigit = computed(() => parseInt(props.number[0] ?? '0'))
+const secondDigit = computed(() => parseInt(props.number[1] ?? '0'))
 
 const firstDigitAssociation = computed(() => digitAssociationStore.associations[firstDigit.value])
 const secondDigitAssociation = computed(() => digitAssociationStore.associations[secondDigit.value])

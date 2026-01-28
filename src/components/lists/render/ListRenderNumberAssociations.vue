@@ -8,7 +8,7 @@
           <div 
             class="bg-primary h-2 rounded-full transition-all duration-300" 
             :style="{ width: `${(progress / total) * 100}%` }"
-          ></div>
+          />
         </div>
       </div>
     </div>
@@ -18,12 +18,22 @@
       <table class="table table-zebra w-full">
         <thead>
           <tr>
-            <th class="w-20">Number</th>
+            <th class="w-20">
+              Number
+            </th>
             <th>Association</th>
-            <th class="hidden md:table-cell">Notes</th>
-            <th class="hidden md:table-cell w-32">Number→Word Due</th>
-            <th class="hidden md:table-cell w-32">Word→Number Due</th>
-            <th class="hidden md:table-cell w-16">Status</th>
+            <th class="hidden md:table-cell">
+              Notes
+            </th>
+            <th class="hidden md:table-cell w-32">
+              Number→Word Due
+            </th>
+            <th class="hidden md:table-cell w-32">
+              Word→Number Due
+            </th>
+            <th class="hidden md:table-cell w-16">
+              Status
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -33,20 +43,34 @@
             class="cursor-pointer hover:bg-base-200 transition-colors"
             @click="navigateToManage(item.number)"
           >
-            <td class="font-mono text-lg font-bold">{{ item.number }}</td>
+            <td class="font-mono text-lg font-bold">
+              {{ item.number }}
+            </td>
             <td>
-              <span v-if="item.association" class="font-medium">
+              <span
+                v-if="item.association"
+                class="font-medium"
+              >
                 {{ item.association.word }}
               </span>
-              <span v-else class="text-gray-400 italic">
+              <span
+                v-else
+                class="text-gray-400 italic"
+              >
                 No association yet
               </span>
             </td>
             <td class="hidden md:table-cell">
-              <span v-if="item.association?.notes" class="text-sm text-gray-600">
+              <span
+                v-if="item.association?.notes"
+                class="text-sm text-gray-600"
+              >
                 {{ item.association.notes }}
               </span>
-              <span v-else class="text-gray-400 text-sm">
+              <span
+                v-else
+                class="text-gray-400 text-sm"
+              >
                 -
               </span>
             </td>
@@ -54,7 +78,10 @@
               <span v-if="item.association?.numberToWordLearningData">
                 <WidgetDueDate :due-date="item.association.numberToWordLearningData.due" />
               </span>
-              <span v-else class="text-gray-400 italic">
+              <span
+                v-else
+                class="text-gray-400 italic"
+              >
                 No practice data yet
               </span>
             </td>
@@ -62,15 +89,24 @@
               <span v-if="item.association?.wordToNumberLearningData">
                 <WidgetDueDate :due-date="item.association.wordToNumberLearningData.due" />
               </span>
-              <span v-else class="text-gray-400 italic">
+              <span
+                v-else
+                class="text-gray-400 italic"
+              >
                 No practice data yet
               </span>
             </td>
             <td class="hidden md:table-cell text-center">
-              <div v-if="item.association" class="flex justify-center">
+              <div
+                v-if="item.association"
+                class="flex justify-center"
+              >
                 <CheckCircle class="w-5 h-5 text-success" />
               </div>
-              <div v-else class="flex justify-center">
+              <div
+                v-else
+                class="flex justify-center"
+              >
                 <Circle class="w-5 h-5 text-gray-400" />
               </div>
             </td>
@@ -92,8 +128,8 @@ interface Props {
     association?: { 
       word: string; 
       notes?: string;
-      numberToWordLearningData?: any;
-      wordToNumberLearningData?: any;
+      numberToWordLearningData?: { due?: Date };
+      wordToNumberLearningData?: { due?: Date };
     }
   }>
   progress: number

@@ -1,14 +1,14 @@
 <template>
   <FormRenderYear
     :year="year"
-    :yearData="yearData"
+    :year-data="yearData"
     :events="events"
-    :firstDigitStr="firstDigitStr"
-    :secondDigitStr="secondDigitStr"
-    :firstNumberAssociation="firstNumberAssociation"
-    :secondNumberAssociation="secondNumberAssociation"
-    :hasFirstPeg="hasFirstPeg"
-    :hasSecondPeg="hasSecondPeg"
+    :first-digit-str="firstDigitStr"
+    :second-digit-str="secondDigitStr"
+    :first-number-association="firstNumberAssociation"
+    :second-number-association="secondNumberAssociation"
+    :has-first-peg="hasFirstPeg"
+    :has-second-peg="hasSecondPeg"
     @update-year-notes="handleUpdateYearNotes"
     @add-event="handleAddEvent"
     @update-event="handleUpdateEvent"
@@ -70,8 +70,8 @@ const handleUpdateYearNotes = (notes: string) => {
   try {
     yearAssociationStore.setYear(props.year, { notes })
     success('Year notes updated successfully!')
-  } catch (err) {
-    error('Failed to update year notes')
+  } catch (e) {
+    error(`Failed to update year notes: ${e instanceof Error ? e.message : String(e)}`)
   }
 }
 
@@ -83,8 +83,8 @@ const handleAddEvent = (eventData: { content: string; mentalImage: string; notes
     })
     success('Event added successfully!')
     return eventId
-  } catch (err) {
-    error('Failed to add event')
+  } catch (e) {
+    error(`Failed to add event: ${e instanceof Error ? e.message : String(e)}`)
   }
 }
 
@@ -92,8 +92,8 @@ const handleUpdateEvent = (eventId: string, updates: { content: string; mentalIm
   try {
     eventsStore.updateEvent(eventId, updates)
     success('Event updated successfully!')
-  } catch (err) {
-    error('Failed to update event')
+  } catch (e) {
+    error(`Failed to update event: ${e instanceof Error ? e.message : String(e)}`)
   }
 }
 
@@ -101,8 +101,8 @@ const handleDeleteEvent = (eventId: string) => {
   try {
     eventsStore.removeEvent(eventId)
     success('Event deleted successfully!')
-  } catch (err) {
-    error('Failed to delete event')
+  } catch (e) {
+    error(`Failed to delete event: ${e instanceof Error ? e.message : String(e)}`)
   }
 }
 
@@ -113,8 +113,8 @@ const handleResetYearLearning = () => {
       yearData.yearToEventsLearningData = createEmptyCard()
       success('Year learning data reset successfully!')
     }
-  } catch (err) {
-    error('Failed to reset year learning data')
+  } catch (e) {
+    error(`Failed to reset year learning data: ${e instanceof Error ? e.message : String(e)}`)
   }
 }
 
@@ -125,8 +125,8 @@ const handleResetEventLearning = (eventId: string) => {
       event.eventToYearLearningData = createEmptyCard()
       success('Event learning data reset successfully!')
     }
-  } catch (err) {
-    error('Failed to reset event learning data')
+  } catch (e) {
+    error(`Failed to reset event learning data: ${e instanceof Error ? e.message : String(e)}`)
   }
 }
 </script> 

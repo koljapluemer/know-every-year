@@ -1,5 +1,8 @@
 <template>
-  <span class="font-mono" :class="dueDateClass">
+  <span
+    class="font-mono"
+    :class="dueDateClass"
+  >
     {{ formattedDueDate }}
   </span>
 </template>

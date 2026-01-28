@@ -1,22 +1,37 @@
 <template>
-    <div class="big-digit">{{ number }}</div>
+  <div class="big-digit">
+    {{ number }}
+  </div>
 
-    <!-- Reveal section -->
-    <TaskButtonRender v-if="!isRevealed" :buttons="[revealButton]" />
+  <!-- Reveal section -->
+  <TaskButtonRender
+    v-if="!isRevealed"
+    :buttons="[revealButton]"
+  />
 
-    <!-- Answer and rating section -->
-    <div v-else class="space-y-6">
-        <!-- Answer display -->
-        <div class="card bg-base-100 shadow-lg">
-            <div class="card-body text-center">
-                <p class="big-word">{{ association?.word }}</p>
-                <p v-if="association?.notes" class="text-gray-600">{{ association.notes }}</p>
-            </div>
-        </div>
-
-        <!-- Rating buttons -->
-        <TaskButtonRender :buttons="ratingButtons" />
+  <!-- Answer and rating section -->
+  <div
+    v-else
+    class="space-y-6"
+  >
+    <!-- Answer display -->
+    <div class="card bg-base-100 shadow-lg">
+      <div class="card-body text-center">
+        <p class="big-word">
+          {{ association?.word }}
+        </p>
+        <p
+          v-if="association?.notes"
+          class="text-gray-600"
+        >
+          {{ association.notes }}
+        </p>
+      </div>
     </div>
+
+    <!-- Rating buttons -->
+    <TaskButtonRender :buttons="ratingButtons" />
+  </div>
 </template>
 
 <script setup lang="ts">

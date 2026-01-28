@@ -7,7 +7,9 @@
           <X class="w-6 h-6 text-neutral mx-auto" />
         </div>
         <div class="flex-1">
-          <h3 class="font-semibold">Ignored Sounds</h3>
+          <h3 class="font-semibold">
+            Ignored Sounds
+          </h3>
         </div>
       </div>
       
@@ -22,8 +24,8 @@
           >
             {{ sound }}
             <button 
-              @click="removeIgnoredSound(sound)"
               class="btn btn-ghost btn-xs p-0 h-auto min-h-0"
+              @click="removeIgnoredSound(sound)"
             >
               <X class="w-3 h-3" />
             </button>
@@ -34,21 +36,26 @@
         <div class="flex items-center gap-2">
           <input 
             v-model="newIgnoredSound"
-            @keyup.enter="addIgnoredSound"
-            @blur="addIgnoredSound"
             placeholder="Add ignored sound..."
             class="input input-bordered input-sm flex-1 max-w-xs"
             :class="{ 'input-error': newIgnoredSoundError }"
-          />
+            @keyup.enter="addIgnoredSound"
+            @blur="addIgnoredSound"
+          >
           <button 
-            @click="addIgnoredSound"
             class="btn btn-neutral btn-sm"
             :disabled="!newIgnoredSound.trim()"
+            @click="addIgnoredSound"
           >
             <Plus class="w-3 h-3" />
           </button>
         </div>
-        <div v-if="newIgnoredSoundError" class="text-error text-xs mt-1">{{ newIgnoredSoundError }}</div>
+        <div
+          v-if="newIgnoredSoundError"
+          class="text-error text-xs mt-1"
+        >
+          {{ newIgnoredSoundError }}
+        </div>
       </div>
       
       <!-- Notes for ignored sounds -->
@@ -58,11 +65,11 @@
         </label>
         <textarea 
           v-model="ignoredSoundsNotes"
-          @input="updateIgnoredSoundsNotes"
           placeholder="Add notes about ignored sounds..."
           class="textarea textarea-bordered w-full"
           rows="2"
-        ></textarea>
+          @input="updateIgnoredSoundsNotes"
+        />
       </div>
     </div>
   </div>

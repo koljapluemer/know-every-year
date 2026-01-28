@@ -1,10 +1,22 @@
 <template>
   <div class="">
-    <slot :buttons="props.buttons" :config="props.config">
+    <slot
+      :buttons="props.buttons"
+      :config="props.config"
+    >
       <!-- Default slot content - renders buttons if no custom slot provided -->
-      <button v-for="button in visibleButtons" :key="button.id" @click="button.onClick" :disabled="button.disabled"
-        :class="buttonClasses(button)">
-        <component v-if="button.icon" :is="button.icon" class="w-4 h-4 mx-2" />
+      <button
+        v-for="button in visibleButtons"
+        :key="button.id"
+        :disabled="button.disabled"
+        :class="buttonClasses(button)"
+        @click="button.onClick"
+      >
+        <component
+          :is="button.icon"
+          v-if="button.icon"
+          class="w-4 h-4 mx-2"
+        />
         {{ button.label }}
       </button>
     </slot>

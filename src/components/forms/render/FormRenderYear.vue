@@ -1,28 +1,42 @@
 <template>
   <!-- Header -->
   <div class="flex flex-col gap-8 items-center p-2 mt-10">
-
-    <h1 class="big-digit">{{ year }}</h1>
+    <h1 class="big-digit">
+      {{ year }}
+    </h1>
 
     <!-- Digit Associations Display -->
     <WidgetNumberAssociationsForYear :year="year" />
 
     <!-- Missing Pegs Warning -->
-    <div v-if="!hasFirstPeg || !hasSecondPeg" class="alert alert-warning mb-4">
-      <div class="w-6 h-6">⚠️</div>
+    <div
+      v-if="!hasFirstPeg || !hasSecondPeg"
+      class="alert alert-warning mb-4"
+    >
+      <div class="w-6 h-6">
+        ⚠️
+      </div>
       <div>
-        <h3 class="font-bold">Missing Digit Associations</h3>
+        <h3 class="font-bold">
+          Missing Digit Associations
+        </h3>
         <div class="text-sm">
           <span v-if="!hasFirstPeg">
             Missing association for {{ firstDigitStr }}.
-            <RouterLink :to="{ name: 'ManagePeg', params: { number: firstDigitStr } }" class="link link-primary">
+            <RouterLink
+              :to="{ name: 'ManagePeg', params: { number: firstDigitStr } }"
+              class="link link-primary"
+            >
               Create it here
             </RouterLink>
           </span>
           <span v-if="!hasFirstPeg && !hasSecondPeg"> and </span>
           <span v-if="!hasSecondPeg">
             Missing association for {{ secondDigitStr }}.
-            <RouterLink :to="{ name: 'ManagePeg', params: { number: secondDigitStr } }" class="link link-primary">
+            <RouterLink
+              :to="{ name: 'ManagePeg', params: { number: secondDigitStr } }"
+              class="link link-primary"
+            >
               Create it here
             </RouterLink>
           </span>
@@ -35,12 +49,22 @@
     <!-- Events List -->
     <div class="card bg-base-100 shadow-lg mb-6">
       <div class="card-body">
-        <h2 class="card-title">Events</h2>
+        <h2 class="card-title">
+          Events
+        </h2>
 
         <!-- Existing Events -->
-        <div v-if="events.length > 0" class="space-y-4 mb-6">
-          <EventFormRender v-for="event in events" :key="event.id" :event="event" @update="handleUpdateEvent"
-            @delete="handleDeleteEvent" />
+        <div
+          v-if="events.length > 0"
+          class="space-y-4 mb-6"
+        >
+          <EventFormRender
+            v-for="event in events"
+            :key="event.id"
+            :event="event"
+            @update="handleUpdateEvent"
+            @delete="handleDeleteEvent"
+          />
         </div>
 
         <!-- Add New Event Form -->
@@ -51,38 +75,69 @@
     <!-- Year Notes -->
     <div class="card bg-base-100 shadow-lg mb-6">
       <div class="card-body">
-        <h2 class="card-title">Year Notes</h2>
-        <textarea v-model="yearNotes" @input="debouncedUpdateYearNotes"
-          placeholder="Add general notes about this year..." class="textarea textarea-bordered w-full"
-          rows="3"></textarea>
+        <h2 class="card-title">
+          Year Notes
+        </h2>
+        <textarea
+          v-model="yearNotes"
+          placeholder="Add general notes about this year..."
+          class="textarea textarea-bordered w-full"
+          rows="3"
+          @input="debouncedUpdateYearNotes"
+        />
       </div>
     </div>
 
     <div class="card bg-base-100 shadow-lg">
       <div class="card-body">
-        <h2 class="card-title">Manage Learning Data</h2>
+        <h2 class="card-title">
+          Manage Learning Data
+        </h2>
         <div class="space-y-4">
           <!-- Year Practice Due At -->
           <div class="flex items-center justify-between">
             <div>
-              <h3 class="font-medium">Year → Events</h3>
-              <p class="text-sm text-gray-600">Reset learning progress for recalling events from this year</p>
+              <h3 class="font-medium">
+                Year → Events
+              </h3>
+              <p class="text-sm text-gray-600">
+                Reset learning progress for recalling events from this year
+              </p>
             </div>
-            <button @click="$emit('reset-year-learning')" class="btn btn-sm btn-outline btn-error"
-              :disabled="!yearData?.yearToEventsLearningData">
+            <button
+              class="btn btn-sm btn-outline btn-error"
+              :disabled="!yearData?.yearToEventsLearningData"
+              @click="$emit('reset-year-learning')"
+            >
               Reset
             </button>
           </div>
 
-          <div v-if="events.length > 0" class="space-y-2">
-            <h3 class="font-medium">Events → Year</h3>
-            <div v-for="event in events" :key="event.id" class="flex items-center justify-between">
+          <div
+            v-if="events.length > 0"
+            class="space-y-2"
+          >
+            <h3 class="font-medium">
+              Events → Year
+            </h3>
+            <div
+              v-for="event in events"
+              :key="event.id"
+              class="flex items-center justify-between"
+            >
               <div class="flex-1">
-                <p class="text-sm">{{ event.content }}</p>
-                <p class="text-xs text-gray-600">Reset learning progress for recalling this year from the event</p>
+                <p class="text-sm">
+                  {{ event.content }}
+                </p>
+                <p class="text-xs text-gray-600">
+                  Reset learning progress for recalling this year from the event
+                </p>
               </div>
-              <button @click="$emit('reset-event-learning', event.id)" class="btn btn-sm btn-outline btn-error ml-4"
-                :disabled="!event.eventToYearLearningData">
+              <button
+                class="btn btn-sm btn-outline btn-error ml-4"
+                :disabled="!event.eventToYearLearningData"
+                @click="$emit('reset-event-learning', event.id)"
+              >
                 Reset
               </button>
             </div>
@@ -140,7 +195,7 @@ const handleAddEvent = (eventData: { content: string; mentalImage: string; notes
 }
 
 // Debounced functions
-const debouncedUpdateYearNotes = (inputEvent: any) => {
+const debouncedUpdateYearNotes = (inputEvent: InputEvent) => {
   const target = inputEvent.target as HTMLTextAreaElement
   setTimeout(() => {
     emit('update-year-notes', target.value)

@@ -1,12 +1,20 @@
 <template>
   <div class="container mx-auto">
     <!-- No exercises available -->
-    <div v-if="!currentTask" class="text-center p-8">
-      <h2 class="text-2xl font-bold mb-4">No Tasks Available</h2>
+    <div
+      v-if="!currentTask"
+      class="text-center p-8"
+    >
+      <h2 class="text-2xl font-bold mb-4">
+        No Tasks Available
+      </h2>
     </div>
 
     <!-- Task components -->
-    <div v-else class="text-center flex-col gap-8 flex items-center">
+    <div
+      v-else
+      class="text-center flex-col gap-8 flex items-center"
+    >
       <!-- TaskRememberWordByNumber -->
       <div v-if="currentTask.component === 'TaskRememberWordByNumber'">
         <InstructionRender 
@@ -14,8 +22,8 @@
           title="What is your association with this number?"
         />
         <TaskRememberWordByNumber 
-          :number="currentTask.identifier"
           :key="currentTask.identifier"
+          :number="currentTask.identifier"
           @task-done="loadNextTask"
         />
       </div>
@@ -27,8 +35,8 @@
           title="What number is associated with this word?"
         />
         <TaskRememberNumberByWord 
-          :number="currentTask.identifier"
           :key="currentTask.identifier"
+          :number="currentTask.identifier"
           @task-done="loadNextTask"
         />
       </div>
@@ -40,8 +48,8 @@
           title="What sounds are associated with this digit?"
         />
         <TaskRememberSoundByDigit 
-          :digit="currentTask.identifier"
           :key="currentTask.identifier"
+          :digit="currentTask.identifier"
           @task-done="loadNextTask"
         />
       </div>
@@ -53,8 +61,8 @@
           title="What digit is associated with this sound?"
         />
         <TaskRememberDigitBySound 
-          :sound="currentTask.identifier"
           :key="currentTask.identifier"
+          :sound="currentTask.identifier"
           @task-done="loadNextTask"
         />
       </div>
@@ -66,8 +74,8 @@
           title="Add an association for this number"
         />
         <TaskCreateNumberAssociation 
-          :number="currentTask.identifier"
           :key="currentTask.identifier"
+          :number="currentTask.identifier"
           @task-done="loadNextTask"
         />
       </div>
@@ -79,25 +87,37 @@
           title="What events happened in this year?"
         />
         <TaskRememberEventsByYear 
-          :year="currentTask.identifier"
           :key="currentTask.identifier"
+          :year="currentTask.identifier"
           @task-done="loadNextTask"
         />
       </div>
 
       <!-- TaskRememberYearByEvent -->
       <div v-else-if="currentTask.component === 'TaskRememberYearByEvent'">
-        <InstructionRender 
+        <InstructionRender
           subtitle="Answer the question"
           title="What year did this event happen?"
         />
-        <TaskRememberYearByEvent 
-          :event-id="currentTask.identifier"
+        <TaskRememberYearByEvent
           :key="currentTask.identifier"
+          :event-id="currentTask.identifier"
           @task-done="loadNextTask"
         />
       </div>
 
+      <!-- TaskAddEventsForTodo -->
+      <div v-else-if="currentTask.component === 'TaskAddEventsForTodo'">
+        <InstructionRender
+          subtitle="Add events"
+          title="Add events for this todo"
+        />
+        <TaskAddEventsForTodo
+          :key="currentTask.identifier"
+          :todo-id="currentTask.identifier"
+          @task-done="loadNextTask"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -112,6 +132,7 @@ import TaskRememberDigitBySound from '@/components/queue/tasks/TaskRememberDigit
 import TaskCreateNumberAssociation from '@/components/queue/tasks/TaskCreateNumberAssociation.vue'
 import TaskRememberEventsByYear from '@/components/queue/tasks/TaskRememberEventsByYear.vue'
 import TaskRememberYearByEvent from '@/components/queue/tasks/TaskRememberYearByEvent.vue'
+import TaskAddEventsForTodo from '@/components/queue/tasks/TaskAddEventsForTodo.vue'
 
 interface Props {
   currentTask: QueueTask | null

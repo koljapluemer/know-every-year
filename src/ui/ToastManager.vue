@@ -14,16 +14,28 @@
         <div class="flex items-center justify-between p-4 rounded-lg shadow-lg min-w-64">
           <div class="flex items-center space-x-3">
             <div class="flex-shrink-0">
-              <CheckCircle v-if="toast.type === 'success'" class="w-5 h-5 text-green-500" />
-              <XCircle v-else-if="toast.type === 'error'" class="w-5 h-5 text-red-500" />
-              <Info v-else-if="toast.type === 'info'" class="w-5 h-5 text-blue-500" />
-              <AlertTriangle v-else-if="toast.type === 'warning'" class="w-5 h-5 text-yellow-500" />
+              <CheckCircle
+                v-if="toast.type === 'success'"
+                class="w-5 h-5 text-green-500"
+              />
+              <XCircle
+                v-else-if="toast.type === 'error'"
+                class="w-5 h-5 text-red-500"
+              />
+              <Info
+                v-else-if="toast.type === 'info'"
+                class="w-5 h-5 text-blue-500"
+              />
+              <AlertTriangle
+                v-else-if="toast.type === 'warning'"
+                class="w-5 h-5 text-yellow-500"
+              />
             </div>
             <span class="text-sm font-medium">{{ toast.message }}</span>
           </div>
           <button
-            @click="removeToast(toast.id)"
             class="flex-shrink-0 ml-3 text-gray-400 hover:text-gray-600 transition-colors"
+            @click="removeToast(toast.id)"
           >
             <X class="w-4 h-4" />
           </button>

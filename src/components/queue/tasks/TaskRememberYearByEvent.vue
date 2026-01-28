@@ -1,45 +1,81 @@
 <template>
-  <div v-if="event" class=" mb-8">
-    <div class="text-3xl">{{ event.content }}</div>
+  <div
+    v-if="event"
+    class=" mb-8"
+  >
+    <div class="text-3xl">
+      {{ event.content }}
+    </div>
   </div>
 
   <!-- Reveal Button -->
-  <TaskButtonRender v-if="!isRevealed && event" :buttons="[revealButton]" />
+  <TaskButtonRender
+    v-if="!isRevealed && event"
+    :buttons="[revealButton]"
+  />
 
   <!-- Answer Display -->
-  <div v-if="isRevealed && event" class="space-y-6 ">
+  <div
+    v-if="isRevealed && event"
+    class="space-y-6 "
+  >
     <!-- Year Answer -->
     <div class="">
-      <h3 class="big-digit">{{ year }}</h3>
+      <h3 class="big-digit">
+        {{ year }}
+      </h3>
 
       <!-- Mental Image -->
       <div class="mb-4">
-        <h4 class="font-medium mb-2">Mental Image:</h4>
-        <p class="text-lg">{{ event.mentalImage }}</p>
+        <h4 class="font-medium mb-2">
+          Mental Image:
+        </h4>
+        <p class="text-lg">
+          {{ event.mentalImage }}
+        </p>
       </div>
 
       <!-- Notes -->
-      <div v-if="event.notes" class="mb-4">
-        <h4 class="font-medium mb-2">Notes:</h4>
-        <p class="text-lg">{{ event.notes }}</p>
+      <div
+        v-if="event.notes"
+        class="mb-4"
+      >
+        <h4 class="font-medium mb-2">
+          Notes:
+        </h4>
+        <p class="text-lg">
+          {{ event.notes }}
+        </p>
       </div>
 
       <!-- Digit Associations -->
       <div class="flex flex-col items-center">
-        <h4 class="font-medium mb-2">Number Associations for Year:</h4>
+        <h4 class="font-medium mb-2">
+          Number Associations for Year:
+        </h4>
         <WidgetNumberAssociationsForYear :year="year" />
       </div>
     </div>
 
     <!-- Rating Buttons -->
-    <TaskButtonRender v-if="!isCompleted" :buttons="ratingButtons" />
+    <TaskButtonRender
+      v-if="!isCompleted"
+      :buttons="ratingButtons"
+    />
 
 
 
     <!-- Error state -->
-    <div v-if="!event" class=" p-8">
-      <h2 class="text-2xl font-bold mb-4">Event Not Found</h2>
-      <p class="text-gray-600">The requested event could not be found.</p>
+    <div
+      v-if="!event"
+      class=" p-8"
+    >
+      <h2 class="text-2xl font-bold mb-4">
+        Event Not Found
+      </h2>
+      <p class="text-gray-600">
+        The requested event could not be found.
+      </p>
     </div>
   </div>
 </template>

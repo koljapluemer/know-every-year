@@ -1,7 +1,9 @@
 <template>
   <div class="container mx-auto py-8">
     <div class="text-center mb-8">
-      <h1 class="text-4xl font-bold mb-4">Manage Number Association</h1>
+      <h1 class="text-4xl font-bold mb-4">
+        Manage Number Association
+      </h1>
       <p class="text-lg text-gray-600">
         {{ isEditing ? 'Edit' : 'Create' }} association for number {{ number }}
       </p>

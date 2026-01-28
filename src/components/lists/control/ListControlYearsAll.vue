@@ -12,7 +12,7 @@
           type="text" 
           placeholder="Search in year, event, mental image, or notes..."
           class="input input-bordered w-full"
-        />
+        >
       </div>
 
       <!-- Filters -->
@@ -22,7 +22,7 @@
             v-model="showOnlyYearsWithEvents" 
             type="checkbox" 
             class="checkbox checkbox-primary"
-          />
+          >
           <span class="label-text ml-2">Show only years with events</span>
         </label>
 
@@ -31,7 +31,7 @@
             v-model="showOnlyYearsWithPegs" 
             type="checkbox" 
             class="checkbox checkbox-primary"
-          />
+          >
           <span class="label-text ml-2">Show only years with pegs</span>
         </label>
 
@@ -40,7 +40,7 @@
             v-model="showHeadings" 
             type="checkbox" 
             class="checkbox checkbox-primary"
-          />
+          >
           <span class="label-text ml-2">Add headings</span>
         </label>
       </div>
@@ -54,8 +54,11 @@
     </div>
 
     <!-- Loading spinner -->
-    <div v-if="isFiltering" class="flex justify-center items-center py-8">
-      <span class="loading loading-spinner loading-lg"></span>
+    <div
+      v-if="isFiltering"
+      class="flex justify-center items-center py-8"
+    >
+      <span class="loading loading-spinner loading-lg" />
       <span class="ml-2">Filtering years...</span>
     </div>
 

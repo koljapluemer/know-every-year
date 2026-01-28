@@ -5,9 +5,13 @@
     <div class="card-body p-4">
       <!-- Header with digit -->
       <div class="flex items-center gap-4 mb-4">
-        <div class="font-mono text-2xl font-bold text-primary w-12 text-center">{{ digit }}</div>
+        <div class="font-mono text-2xl font-bold text-primary w-12 text-center">
+          {{ digit }}
+        </div>
         <div class="flex-1">
-          <h3 class="font-semibold">Sound Associations</h3>
+          <h3 class="font-semibold">
+            Sound Associations
+          </h3>
         </div>
       </div>
       
@@ -22,8 +26,8 @@
           >
             {{ sound }}
             <button 
-              @click="removeSound(sound)"
               class="btn btn-ghost btn-xs p-0 h-auto min-h-0"
+              @click="removeSound(sound)"
             >
               <X class="w-3 h-3" />
             </button>
@@ -34,21 +38,26 @@
         <div class="flex items-center gap-2">
           <input 
             v-model="newSound"
-            @keyup.enter="addSound"
-            @blur="addSound"
             placeholder="Add sound..."
             class="input input-bordered input-sm flex-1 max-w-xs"
             :class="{ 'input-error': newSoundError }"
-          />
+            @keyup.enter="addSound"
+            @blur="addSound"
+          >
           <button 
-            @click="addSound"
             class="btn btn-primary btn-sm"
             :disabled="!newSound.trim()"
+            @click="addSound"
           >
             <Plus class="w-3 h-3" />
           </button>
         </div>
-        <div v-if="newSoundError" class="text-error text-xs mt-1">{{ newSoundError }}</div>
+        <div
+          v-if="newSoundError"
+          class="text-error text-xs mt-1"
+        >
+          {{ newSoundError }}
+        </div>
       </div>
       
       <!-- Notes -->
@@ -58,11 +67,11 @@
         </label>
         <textarea 
           v-model="notes"
-          @input="updateNotes"
           placeholder="Add notes about this digit..."
           class="textarea textarea-bordered w-full"
           rows="2"
-        ></textarea>
+          @input="updateNotes"
+        />
       </div>
       
       <!-- Learning data -->
@@ -71,7 +80,10 @@
           <span class="text-sm font-medium">Learning Progress</span>
         </div>
         
-        <div v-if="hasLearningData" class="space-y-2">
+        <div
+          v-if="hasLearningData"
+          class="space-y-2"
+        >
           <div class="flex items-center gap-3">
             <WidgetDueDate :due-date="numberToSoundDue" />
             <span class="text-sm text-gray-600">Digit → Sound</span>
@@ -82,19 +94,25 @@
           </div>
           <div class="flex items-center gap-2 mt-3">
             <button 
-              @click="resetLearningData"
               class="btn btn-warning btn-sm"
+              @click="resetLearningData"
             >
               Reset Learning Data
             </button>
-            <div class="tooltip tooltip-top" data-tip="Reset learning data if you've fundamentally changed the sound associations">
+            <div
+              class="tooltip tooltip-top"
+              data-tip="Reset learning data if you've fundamentally changed the sound associations"
+            >
               <button class="btn btn-ghost btn-sm p-1">
                 <Info class="w-4 h-4" />
               </button>
             </div>
           </div>
         </div>
-        <span v-else class="text-gray-400 italic text-sm">No learning data yet</span>
+        <span
+          v-else
+          class="text-gray-400 italic text-sm"
+        >No learning data yet</span>
       </div>
     </div>
   </div>

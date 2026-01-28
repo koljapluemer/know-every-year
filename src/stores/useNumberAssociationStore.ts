@@ -57,7 +57,7 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
     getDueNumbers: (state): string[] => {
       const now = new Date()
       return Object.entries(state.associations)
-        .filter(([_, association]) => {
+        .filter(([, association]) => {
           if (!association.numberToWordLearningData) return false
           try {
             return association.numberToWordLearningData.due <= now
@@ -66,7 +66,7 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
             return false
           }
         })
-        .map(([number, _]) => number)
+        .map(([number]) => number)
     },
 
     /**
@@ -74,8 +74,8 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
      */
     getNewNumbers: (state): string[] => {
       return Object.entries(state.associations)
-        .filter(([_, association]) => !association.numberToWordLearningData)
-        .map(([number, _]) => number)
+        .filter(([, association]) => !association.numberToWordLearningData)
+        .map(([number]) => number)
     },
 
     /**
@@ -84,7 +84,7 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
     getDueWords: (state): string[] => {
       const now = new Date()
       return Object.entries(state.associations)
-        .filter(([_, association]) => {
+        .filter(([, association]) => {
           if (!association.wordToNumberLearningData) return false
           try {
             return association.wordToNumberLearningData.due <= now
@@ -93,7 +93,7 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
             return false
           }
         })
-        .map(([number, _]) => number)
+        .map(([number]) => number)
     },
 
     /**
@@ -101,8 +101,8 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
      */
     getNewWords: (state): string[] => {
       return Object.entries(state.associations)
-        .filter(([_, association]) => !association.wordToNumberLearningData)
-        .map(([number, _]) => number)
+        .filter(([, association]) => !association.wordToNumberLearningData)
+        .map(([number]) => number)
     }
   },
 
@@ -323,12 +323,13 @@ export const useNumberAssociationStore = defineStore('numberAssociation', {
   persist: {
     afterHydrate: (ctx) => {
       // Convert string dates back to Date objects after hydration
-      Object.values(ctx.store.associations).forEach((association: any) => {
-        if (association.numberToWordLearningData?.due && typeof association.numberToWordLearningData.due === 'string') {
-          association.numberToWordLearningData.due = new Date(association.numberToWordLearningData.due)
+      Object.values(ctx.store.associations).forEach((association) => {
+        const a = association as NumberAssociation & { numberToWordLearningData?: { due?: string | Date }; wordToNumberLearningData?: { due?: string | Date } }
+        if (a.numberToWordLearningData?.due && typeof a.numberToWordLearningData.due === 'string') {
+          a.numberToWordLearningData.due = new Date(a.numberToWordLearningData.due)
         }
-        if (association.wordToNumberLearningData?.due && typeof association.wordToNumberLearningData.due === 'string') {
-          association.wordToNumberLearningData.due = new Date(association.wordToNumberLearningData.due)
+        if (a.wordToNumberLearningData?.due && typeof a.wordToNumberLearningData.due === 'string') {
+          a.wordToNumberLearningData.due = new Date(a.wordToNumberLearningData.due)
         }
       })
     }

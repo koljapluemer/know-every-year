@@ -1,27 +1,46 @@
 <template>
-
-
   <div class="text-center mb-8">
-    <div class="text-6xl font-bold font-mono">{{ year }}</div>
+    <div class="text-6xl font-bold font-mono">
+      {{ year }}
+    </div>
   </div>
 
   <!-- Reveal Button -->
-  <TaskButtonRender v-if="!isRevealed" :buttons="[revealButton]" />
+  <TaskButtonRender
+    v-if="!isRevealed"
+    :buttons="[revealButton]"
+  />
 
   <!-- Events Display -->
-  <div v-if="isRevealed" class="flex flex-col gap-8 items-center">
+  <div
+    v-if="isRevealed"
+    class="flex flex-col gap-8 items-center"
+  >
     <WidgetNumberAssociationsForYear :year="year" />
 
     <!-- Events List -->
-    <FormWidgetEvent v-if="events.length > 0" v-for="event in events" :key="event.id" :event="event" :readonly="true" />
-    <p v-else class="text-gray-500 text-lg">No events found for this year</p>
+    <template v-if="events.length > 0">
+      <FormWidgetEvent
+        v-for="event in events"
+        :key="event.id"
+        :event="event"
+        :readonly="true"
+      />
+    </template>
+    <p
+      v-else
+      class="text-gray-500 text-lg"
+    >
+      No events found for this year
+    </p>
 
-    <TaskButtonRender :buttons="ratingButtons" v-if="!isCompleted" />
-
+    <TaskButtonRender
+      v-if="!isCompleted"
+      :buttons="ratingButtons"
+    />
   </div>
 
   <!-- Rating Buttons -->
-
 </template>
 
 <script setup lang="ts">

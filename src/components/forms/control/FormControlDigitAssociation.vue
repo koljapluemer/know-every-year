@@ -29,8 +29,8 @@ const handleUpdateSounds = (digit: number, sounds: string[]) => {
   try {
     digitAssociationStore.updateDigitSounds(digit, sounds)
     success(`Updated sounds for digit ${digit}`)
-  } catch (err) {
-    error(`Failed to update sounds for digit ${digit}`)
+  } catch (e) {
+    error(`Failed to update sounds for digit ${digit}: ${e instanceof Error ? e.message : String(e)}`)
   }
 }
 
@@ -38,8 +38,8 @@ const handleUpdateNotes = (digit: number, notes: string) => {
   try {
     digitAssociationStore.updateDigitNotes(digit, notes)
     success(`Updated notes for digit ${digit}`)
-  } catch (err) {
-    error(`Failed to update notes for digit ${digit}`)
+  } catch (e) {
+    error(`Failed to update notes for digit ${digit}: ${e instanceof Error ? e.message : String(e)}`)
   }
 }
 
@@ -52,8 +52,8 @@ const handleResetLearningData = (digit: number) => {
       association.soundToNumberLearningData = createEmptyCard()
     }
     success(`Reset learning data for digit ${digit}`)
-  } catch (err) {
-    error(`Failed to reset learning data for digit ${digit}`)
+  } catch (e) {
+    error(`Failed to reset learning data for digit ${digit}: ${e instanceof Error ? e.message : String(e)}`)
   }
 }
 
@@ -65,8 +65,8 @@ const handleUpdateIgnoredSounds = (sounds: string[]) => {
       digitAssociationStore.addIgnoredSound(sound)
     })
     success('Updated ignored sounds')
-  } catch (err) {
-    error('Failed to update ignored sounds')
+  } catch (e) {
+    error(`Failed to update ignored sounds: ${e instanceof Error ? e.message : String(e)}`)
   }
 }
 
@@ -74,8 +74,8 @@ const handleUpdateIgnoredSoundsNotes = (notes: string) => {
   try {
     digitAssociationStore.updateIgnoredSoundsNotes(notes)
     success('Updated ignored sounds notes')
-  } catch (err) {
-    error('Failed to update ignored sounds notes')
+  } catch (e) {
+    error(`Failed to update ignored sounds notes: ${e instanceof Error ? e.message : String(e)}`)
   }
 }
 </script>

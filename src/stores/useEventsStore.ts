@@ -53,7 +53,7 @@ export const useEventsStore = defineStore('events', {
       console.log('🔍 getDueEvents - checking events:', Object.keys(state.events).length, 'total events')
       
       const dueEvents = Object.entries(state.events)
-        .filter(([_, event]) => {
+        .filter(([, event]) => {
           if (!event.eventToYearLearningData) {
             console.log('❌ Event has no learning data:', event.id, event.content)
             return false
@@ -67,7 +67,7 @@ export const useEventsStore = defineStore('events', {
             return false
           }
         })
-        .map(([eventId, _]) => eventId)
+        .map(([eventId]) => eventId)
       
       console.log('✅ getDueEvents result:', dueEvents.length, 'due events')
       return dueEvents
@@ -200,9 +200,10 @@ export const useEventsStore = defineStore('events', {
   persist: {
     afterHydrate: (ctx) => {
       // Convert string dates back to Date objects after hydration
-      Object.values(ctx.store.events).forEach((event: any) => {
-        if (event.eventToYearLearningData?.due && typeof event.eventToYearLearningData.due === 'string') {
-          event.eventToYearLearningData.due = new Date(event.eventToYearLearningData.due)
+      Object.values(ctx.store.events).forEach((event) => {
+        const e = event as Event & { eventToYearLearningData?: { due?: string | Date } }
+        if (e.eventToYearLearningData?.due && typeof e.eventToYearLearningData.due === 'string') {
+          e.eventToYearLearningData.due = new Date(e.eventToYearLearningData.due)
         }
       })
     }

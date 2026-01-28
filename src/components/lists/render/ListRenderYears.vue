@@ -5,22 +5,40 @@
         <tr>
           <th>Year</th>
           <th>Events</th>
-          <th class="hidden md:table-cell">Notes</th>
-          <th class="hidden md:table-cell">Digit Associations</th>
-          <th class="hidden md:table-cell">Learning Data</th>
+          <th class="hidden md:table-cell">
+            Notes
+          </th>
+          <th class="hidden md:table-cell">
+            Digit Associations
+          </th>
+          <th class="hidden md:table-cell">
+            Learning Data
+          </th>
         </tr>
       </thead>
       <tbody>
-        <template v-for="year in yearsWithHeadings" :key="isHeading(year) ? (year as HeadingItem).text : year">
+        <template
+          v-for="year in yearsWithHeadings"
+          :key="isHeading(year) ? (year as HeadingItem).text : year"
+        >
           <!-- Century/Decade Heading -->
-          <tr v-if="isHeading(year)" class="bg-base-200">
-            <td colspan="5" class="text-center font-bold text-lg py-4">
+          <tr
+            v-if="isHeading(year)"
+            class="bg-base-200"
+          >
+            <td
+              colspan="5"
+              class="text-center font-bold text-lg py-4"
+            >
               {{ (year as HeadingItem).text }}
             </td>
           </tr>
           
           <!-- Year Row -->
-          <tr v-else class="hover">
+          <tr
+            v-else
+            class="hover"
+          >
             <ListWidgetYear :year="year as string" />
           </tr>
         </template>

@@ -1,27 +1,41 @@
 <template>
-    <div class="text-center ">
-
-        <div class="text-center mb-8">
-            <div class="big-word">{{ association?.word }}</div>
-        </div>
-
-        <!-- Reveal section -->
-        <TaskButtonRender v-if="!isRevealed" :buttons="[revealButton]" />
-
-        <!-- Answer and rating section -->
-        <div v-else class="space-y-6">
-            <!-- Answer display -->
-            <div class="card bg-base-100 shadow-lg">
-                <div class="card-body text-center">
-                    <p class="big-digit">{{ number }}</p>
-                    <p v-if="association?.notes" class="text-gray-600">{{ association.notes }}</p>
-                </div>
-            </div>
-
-            <!-- Rating buttons -->
-            <TaskButtonRender :buttons="ratingButtons" />
-        </div>
+  <div class="text-center ">
+    <div class="text-center mb-8">
+      <div class="big-word">
+        {{ association?.word }}
+      </div>
     </div>
+
+    <!-- Reveal section -->
+    <TaskButtonRender
+      v-if="!isRevealed"
+      :buttons="[revealButton]"
+    />
+
+    <!-- Answer and rating section -->
+    <div
+      v-else
+      class="space-y-6"
+    >
+      <!-- Answer display -->
+      <div class="card bg-base-100 shadow-lg">
+        <div class="card-body text-center">
+          <p class="big-digit">
+            {{ number }}
+          </p>
+          <p
+            v-if="association?.notes"
+            class="text-gray-600"
+          >
+            {{ association.notes }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Rating buttons -->
+      <TaskButtonRender :buttons="ratingButtons" />
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">

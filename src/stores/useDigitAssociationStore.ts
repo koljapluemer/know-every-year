@@ -74,7 +74,7 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
             return false
           }
         })
-        .map(([digit, _]) => parseInt(digit))
+        .map(([digit]) => parseInt(digit))
     },
 
     /**
@@ -83,7 +83,7 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
     getNewDigits: (state): number[] => {
       return Object.entries(state.associations)
         .filter(([, association]) => !association.numberToSoundLearningData)
-        .map(([digit, _]) => parseInt(digit))
+        .map(([digit]) => parseInt(digit))
     },
 
     /**
@@ -101,7 +101,7 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
             return false
           }
         })
-        .map(([digit, _]) => parseInt(digit))
+        .map(([digit]) => parseInt(digit))
     },
 
     /**
@@ -110,7 +110,7 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
     getNewSounds: (state): number[] => {
       return Object.entries(state.associations)
         .filter(([, association]) => !association.soundToNumberLearningData)
-        .map(([digit, _]) => parseInt(digit))
+        .map(([digit]) => parseInt(digit))
     }
   },
 
@@ -360,12 +360,13 @@ export const useDigitAssociationStore = defineStore('digitAssociation', {
   persist: {
     afterHydrate: (ctx) => {
       // Convert string dates back to Date objects after hydration
-      Object.values(ctx.store.associations).forEach((association: any) => {
-        if (association.numberToSoundLearningData?.due && typeof association.numberToSoundLearningData.due === 'string') {
-          association.numberToSoundLearningData.due = new Date(association.numberToSoundLearningData.due)
+      Object.values(ctx.store.associations).forEach((association) => {
+        const a = association as DigitAssociation & { numberToSoundLearningData?: { due?: string | Date }; soundToNumberLearningData?: { due?: string | Date } }
+        if (a.numberToSoundLearningData?.due && typeof a.numberToSoundLearningData.due === 'string') {
+          a.numberToSoundLearningData.due = new Date(a.numberToSoundLearningData.due)
         }
-        if (association.soundToNumberLearningData?.due && typeof association.soundToNumberLearningData.due === 'string') {
-          association.soundToNumberLearningData.due = new Date(association.soundToNumberLearningData.due)
+        if (a.soundToNumberLearningData?.due && typeof a.soundToNumberLearningData.due === 'string') {
+          a.soundToNumberLearningData.due = new Date(a.soundToNumberLearningData.due)
         }
       })
       

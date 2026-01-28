@@ -1,21 +1,29 @@
 <!-- special case: we have only 10 digits, thus one form for all the digits at once -->
 <template>
   <div class="flex flex-col gap-6 p-4 max-w-4xl mx-auto">
-
     <div class="grid gap-4">
-      <template v-for="digit in 10" :key="digit - 1">
-        <FormWidgetDigitAssociation v-if="digitAssociations[digit - 1]" :digit="digit - 1"
-          :association="digitAssociations[digit - 1]!" @update-sounds="handleUpdateSounds"
-          @update-notes="handleUpdateNotes" @reset-learning-data="handleResetLearningData" />
+      <template
+        v-for="digit in 10"
+        :key="digit - 1"
+      >
+        <FormWidgetDigitAssociation
+          v-if="digitAssociations[digit - 1]"
+          :digit="digit - 1"
+          :association="digitAssociations[digit - 1]!"
+          @update-sounds="handleUpdateSounds"
+          @update-notes="handleUpdateNotes"
+          @reset-learning-data="handleResetLearningData"
+        />
       </template>
 
-      <FormWidgetIgnoredSounds :ignored-sounds="ignoredSounds" :ignored-sounds-notes="ignoredSoundsNotes"
+      <FormWidgetIgnoredSounds
+        :ignored-sounds="ignoredSounds"
+        :ignored-sounds-notes="ignoredSoundsNotes"
         @update-ignored-sounds="handleUpdateIgnoredSounds"
-        @update-ignored-sounds-notes="handleUpdateIgnoredSoundsNotes" />
+        @update-ignored-sounds-notes="handleUpdateIgnoredSoundsNotes"
+      />
     </div>
   </div>
-
-
 </template>
 
 <script setup lang="ts">

@@ -1,29 +1,43 @@
 <template>
   <td class="font-mono">
-    <RouterLink :to="{ name: 'ManageYear', params: { year } }" class="link link-primary hover:link-primary-focus">
+    <RouterLink
+      :to="{ name: 'ManageYear', params: { year } }"
+      class="link link-primary hover:link-primary-focus"
+    >
       {{ year }}
     </RouterLink>
   </td>
   <td>
-    <div v-if="events.length > 0" class="space-y-2">
+    <div
+      v-if="events.length > 0"
+      class="space-y-2"
+    >
       <div 
         v-for="event in events" 
         :key="event.id"
         class="card bg-base-300 shadow-sm p-2"
       >
-        <div class="text-sm font-medium">{{ event.content }}</div>
-        <div class="text-xs text-gray-600">{{ event.mentalImage }}</div>
+        <div class="text-sm font-medium">
+          {{ event.content }}
+        </div>
+        <div class="text-xs text-gray-600">
+          {{ event.mentalImage }}
+        </div>
       </div>
     </div>
     <span v-else>-</span>
   </td>
-  <td class="hidden md:table-cell">{{ yearData?.notes || '-' }}</td>
+  <td class="hidden md:table-cell">
+    {{ yearData?.notes || '-' }}
+  </td>
   <td class="hidden md:table-cell">
     <div class="flex flex-row gap-1">
       <div class="text-sm">
         {{ firstNumberAssociation || '?' }}
       </div>
-      <div class="text-sm">+</div>
+      <div class="text-sm">
+        +
+      </div>
       <div class="text-sm">
         {{ secondNumberAssociation || '?' }}
       </div>
@@ -38,7 +52,11 @@
       <div v-if="eventsWithLearningData.length > 0">
         <span class="text-gray-600">Events→Year:</span>
         <div class="ml-1">
-          <div v-for="event in eventsWithLearningData" :key="event.id" class="text-xs">
+          <div
+            v-for="event in eventsWithLearningData"
+            :key="event.id"
+            class="text-xs"
+          >
             {{ event.content.substring(0, 20) }}...: <WidgetDueDate :due-date="event.eventToYearLearningData!.due" />
           </div>
         </div>

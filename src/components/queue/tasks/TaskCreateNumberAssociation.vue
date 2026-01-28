@@ -1,14 +1,14 @@
 <template>
   <div class="text-center ">
-
     <!-- Action Buttons -->
     <div class="flex justify-center gap-4 mt-8">
       <TaskButtonRender :buttons="actionButtons" />
     </div>
     <!-- Form -->
-    <FormControlNumberAssociation :number="number" @form-validity-changed="handleFormValidityChanged" />
-
-
+    <FormControlNumberAssociation
+      :number="number"
+      @form-validity-changed="handleFormValidityChanged"
+    />
   </div>
 </template>
 

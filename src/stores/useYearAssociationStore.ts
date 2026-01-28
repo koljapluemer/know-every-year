@@ -31,8 +31,8 @@ export const useYearAssociationStore = defineStore('yearAssociation', {
     yearsWithEvents: (state): string[] => {
       const eventsStore = useEventsStore()
       return Object.entries(state.years)
-        .filter(([yearStr, _]) => eventsStore.getEventsForYear(yearStr).length > 0)
-        .map(([yearStr, _]) => yearStr)
+        .filter(([yearStr]) => eventsStore.getEventsForYear(yearStr).length > 0)
+        .map(([yearStr]) => yearStr)
     },
 
     /**
@@ -40,8 +40,8 @@ export const useYearAssociationStore = defineStore('yearAssociation', {
      */
     yearsWithNotes: (state): string[] => {
       return Object.entries(state.years)
-        .filter(([_, year]) => year.notes && year.notes.trim() !== '')
-        .map(([yearStr, _]) => yearStr)
+        .filter(([, year]) => year.notes && year.notes.trim() !== '')
+        .map(([yearStr]) => yearStr)
     },
 
     /**
@@ -53,7 +53,7 @@ export const useYearAssociationStore = defineStore('yearAssociation', {
         .filter(([yearStr, year]) => 
           eventsStore.getEventsForYear(yearStr).length > 0 || (year.notes && year.notes.trim() !== '')
         )
-        .map(([yearStr, _]) => yearStr)
+        .map(([yearStr]) => yearStr)
     },
 
     /**
@@ -74,7 +74,7 @@ export const useYearAssociationStore = defineStore('yearAssociation', {
       const now = new Date()
       const eventsStore = useEventsStore()
       return Object.entries(state.years)
-        .filter(([_, year]) => {
+        .filter(([, year]) => {
           if (!year.yearToEventsLearningData) return false
           try {
             return year.yearToEventsLearningData.due <= now
@@ -83,7 +83,7 @@ export const useYearAssociationStore = defineStore('yearAssociation', {
             return false
           }
         })
-        .map(([yearStr, _]) => yearStr)
+        .map(([yearStr]) => yearStr)
         .filter(year => eventsStore.getEventsForYear(year).length > 0)
     },
 
@@ -93,8 +93,8 @@ export const useYearAssociationStore = defineStore('yearAssociation', {
     getNewYears: (state): string[] => {
       const eventsStore = useEventsStore()
       return Object.entries(state.years)
-        .filter(([_, year]) => !year.yearToEventsLearningData)
-        .map(([yearStr, _]) => yearStr)
+        .filter(([, year]) => !year.yearToEventsLearningData)
+        .map(([yearStr]) => yearStr)
         .filter(year => eventsStore.getEventsForYear(year).length > 0)
     },
 
@@ -106,7 +106,7 @@ export const useYearAssociationStore = defineStore('yearAssociation', {
       const eventsStore = useEventsStore()
       
       const dueYears = Object.entries(state.years)
-        .filter(([_, year]) => {
+        .filter(([, year]) => {
           if (!year.yearToEventsLearningData) return false
           try {
             return year.yearToEventsLearningData.due <= now
@@ -115,12 +115,12 @@ export const useYearAssociationStore = defineStore('yearAssociation', {
             return false
           }
         })
-        .map(([yearStr, _]) => yearStr)
+        .map(([yearStr]) => yearStr)
         .filter(year => eventsStore.getEventsForYear(year).length > 0)
       
       const newYears = Object.entries(state.years)
-        .filter(([_, year]) => !year.yearToEventsLearningData)
-        .map(([yearStr, _]) => yearStr)
+        .filter(([, year]) => !year.yearToEventsLearningData)
+        .map(([yearStr]) => yearStr)
         .filter(year => eventsStore.getEventsForYear(year).length > 0)
       
       // Return combined list (duplicates will be automatically removed)
@@ -219,9 +219,10 @@ export const useYearAssociationStore = defineStore('yearAssociation', {
   persist: {
     afterHydrate: (ctx) => {
       // Convert string dates back to Date objects after hydration
-      Object.values(ctx.store.years).forEach((year: any) => {
-        if (year.yearToEventsLearningData?.due && typeof year.yearToEventsLearningData.due === 'string') {
-          year.yearToEventsLearningData.due = new Date(year.yearToEventsLearningData.due)
+      Object.values(ctx.store.years).forEach((year) => {
+        const y = year as Year & { yearToEventsLearningData?: { due?: string | Date } }
+        if (y.yearToEventsLearningData?.due && typeof y.yearToEventsLearningData.due === 'string') {
+          y.yearToEventsLearningData.due = new Date(y.yearToEventsLearningData.due)
         }
       })
     }

@@ -6,6 +6,7 @@ import QueuePage from './pages/PageQueue.vue'
 import ListAllYearsPage from './pages/PageYearsList.vue'
 import ManageYearPage from './pages/PageYearManage.vue'
 import PageHome from './pages/PageHome.vue'
+import PageTodosList from './pages/PageTodosList.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -46,6 +47,11 @@ const router = createRouter({
       name: 'ManageYear',
       component: ManageYearPage,
       props: true
+    },
+    {
+      path: '/todos',
+      name: 'Todos',
+      component: PageTodosList
     }
   ]
 })

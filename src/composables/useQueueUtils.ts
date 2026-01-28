@@ -3,6 +3,7 @@ import { useNumberAssociationStore } from '../stores/useNumberAssociationStore'
 import { useDigitAssociationStore } from '../stores/useDigitAssociationStore'
 import { useYearAssociationStore } from '../stores/useYearAssociationStore'
 import { useEventsStore } from '../stores/useEventsStore'
+import { useTodosStore } from '../stores/useTodosStore'
 import type { QueueTask, QueueTaskCategoryInfo } from '../entities/QueueTasks'
 
 // Special numbers that should be prioritized when creating associations
@@ -13,6 +14,7 @@ export function useQueueUtils() {
   const digitAssociationStore = useDigitAssociationStore()
   const yearAssociationStore = useYearAssociationStore()
   const eventsStore = useEventsStore()
+  const todosStore = useTodosStore()
 
   // Only due logic
   const getNrOfDueNumberToWordExercises = computed(() => numberAssociationStore.getDueNumbers.length)
@@ -87,6 +89,14 @@ export function useQueueUtils() {
     }))
   )
 
+  const getNrOfDueTodoExercises = computed(() => todosStore.getDueTodos.length)
+  const getDueTodoExercises = computed((): QueueTask[] =>
+    todosStore.getDueTodos.map(todoId => ({
+      component: 'TaskAddEventsForTodo' as const,
+      identifier: todoId
+    }))
+  )
+
   // Debug logging - only computed when accessed
   const debugExerciseCounts = computed(() => {
     console.log('🔍 DEBUG: Queue Utils - Exercise Counts:')
@@ -122,12 +132,14 @@ export function useQueueUtils() {
     console.log(`  Year→Events: ${getNrOfDueYearToEventsExercises.value} due`)
     console.log(`  Event→Year: ${getNrOfDueEventToYearExercises.value} due`)
     console.log(`  Create Peg: ${getNrOfDigitsWithoutAssociation.value} available`)
+    console.log(`  Todo Events: ${getNrOfDueTodoExercises.value} due`)
+    return true
   })
 
   // Only due categories
   const getAvailableCategories = computed((): QueueTaskCategoryInfo[] => {
     // Trigger debug logging when categories are computed
-    debugExerciseCounts.value
+    void debugExerciseCounts.value
     
     const categories: QueueTaskCategoryInfo[] = []
 
@@ -178,6 +190,13 @@ export function useQueueUtils() {
         name: 'TaskCreateNumberAssociation',
         count: getNrOfDigitsWithoutAssociation.value,
         exercises: getDigitsWithoutAssociation.value
+      })
+    }
+    if (getNrOfDueTodoExercises.value > 0) {
+      categories.push({
+        name: 'TaskAddEventsForTodo',
+        count: getNrOfDueTodoExercises.value,
+        exercises: getDueTodoExercises.value
       })
     }
     return categories
@@ -246,6 +265,9 @@ export function useQueueUtils() {
     // Number Association Creation
     getNrOfDigitsWithoutAssociation,
     getDigitsWithoutAssociation,
+    // Todo Exercises
+    getNrOfDueTodoExercises,
+    getDueTodoExercises,
     // Utility functions
     getAvailableCategories,
     getRandomExercise

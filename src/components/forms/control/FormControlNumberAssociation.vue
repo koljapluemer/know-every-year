@@ -1,12 +1,12 @@
 <template>
   <FormRenderNumberAssociation
     :number="number"
-    :firstDigit="firstDigit"
-    :secondDigit="secondDigit"
-    :firstDigitAssociation="firstDigitAssociation"
-    :secondDigitAssociation="secondDigitAssociation"
-    :prefillData="prefillData"
-    :ignoredSounds="ignoredSounds"
+    :first-digit="firstDigit"
+    :second-digit="secondDigit"
+    :first-digit-association="firstDigitAssociation"
+    :second-digit-association="secondDigitAssociation"
+    :prefill-data="prefillData"
+    :ignored-sounds="ignoredSounds"
     @form-validity-changed="handleFormValidityChanged"
     @form-changed="handleFormChanged"
   />

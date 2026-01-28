@@ -2,18 +2,39 @@
   <div class="card bg-base-200 shadow-sm">
     <div class="card-body p-4">
       <!-- Event Display Mode (only for existing events) -->
-      <div v-if="!isEditing && event" class="space-y-2">
+      <div
+        v-if="!isEditing && event"
+        class="space-y-2"
+      >
         <div class="flex justify-between items-start">
           <div class="flex-1">
-            <h3 class="font-bold">{{ event.content }}</h3>
-            <p class="">{{ event.mentalImage }}</p>
-            <p v-if="event.notes" class="text-sm mt-1">{{ event.notes }}</p>
+            <h3 class="font-bold">
+              {{ event.content }}
+            </h3>
+            <p class="">
+              {{ event.mentalImage }}
+            </p>
+            <p
+              v-if="event.notes"
+              class="text-sm mt-1"
+            >
+              {{ event.notes }}
+            </p>
           </div>
-          <div v-if="!readonly" class="flex gap-2 ml-4">
-            <button @click="startEdit" class="btn btn-sm btn-outline">
+          <div
+            v-if="!readonly"
+            class="flex gap-2 ml-4"
+          >
+            <button
+              class="btn btn-sm btn-outline"
+              @click="startEdit"
+            >
               Edit
             </button>
-            <button @click="confirmDelete" class="btn btn-sm btn-error">
+            <button
+              class="btn btn-sm btn-error"
+              @click="confirmDelete"
+            >
               Delete
             </button>
           </div>
@@ -21,9 +42,17 @@
       </div>
 
       <!-- Event Form Mode (for editing or adding) -->
-      <div v-else-if="!readonly" class="space-y-3">
-        <div v-if="!event" class="mb-3">
-          <h3 class="font-medium">Add New Event</h3>
+      <div
+        v-else-if="!readonly"
+        class="space-y-3"
+      >
+        <div
+          v-if="!event"
+          class="mb-3"
+        >
+          <h3 class="font-medium">
+            Add New Event
+          </h3>
         </div>
         
         <textarea  
@@ -41,12 +70,19 @@
           placeholder="Notes (optional)"
           class="textarea textarea-bordered w-full"
           rows="2"
-        ></textarea>
+        />
         <div class="flex justify-end gap-2">
-          <button @click="cancel" class="btn btn-sm btn-outline">
+          <button
+            class="btn btn-sm btn-outline"
+            @click="cancel"
+          >
             {{ event ? 'Cancel' : 'Clear' }}
           </button>
-          <button @click="save" class="btn btn-sm btn-primary" :disabled="!canSave">
+          <button
+            class="btn btn-sm btn-primary"
+            :disabled="!canSave"
+            @click="save"
+          >
             {{ event ? 'Save' : 'Add Event' }}
           </button>
         </div>
@@ -65,6 +101,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  event: undefined,
   readonly: false
 })
 

@@ -1,27 +1,43 @@
 <template>
-    <div class="text-center ">
-
-        <div class="text-center mb-8">
-            <div class="big-digit">{{ digit }}</div>
-        </div>
-
-        <!-- Reveal section -->
-        <TaskButtonRender v-if="!isRevealed" :buttons="[revealButton]" />
-
-        <!-- Answer and rating section -->
-        <div v-else class="space-y-6">
-            <!-- Answer display -->
-            <div class="flex flex-wrap gap-6 justify-center mb-2">
-                <span v-for="sound in sounds" :key="sound" class="big-digit letter-wrap">
-                    {{ sound }}
-                </span>
-            </div>
-            <p v-if="notes" class="text-gray-600">{{ notes }}</p>
-
-            <!-- Rating buttons -->
-            <TaskButtonRender :buttons="ratingButtons" />
-        </div>
+  <div class="text-center ">
+    <div class="text-center mb-8">
+      <div class="big-digit">
+        {{ digit }}
+      </div>
     </div>
+
+    <!-- Reveal section -->
+    <TaskButtonRender
+      v-if="!isRevealed"
+      :buttons="[revealButton]"
+    />
+
+    <!-- Answer and rating section -->
+    <div
+      v-else
+      class="space-y-6"
+    >
+      <!-- Answer display -->
+      <div class="flex flex-wrap gap-6 justify-center mb-2">
+        <span
+          v-for="sound in sounds"
+          :key="sound"
+          class="big-digit letter-wrap"
+        >
+          {{ sound }}
+        </span>
+      </div>
+      <p
+        v-if="notes"
+        class="text-gray-600"
+      >
+        {{ notes }}
+      </p>
+
+      <!-- Rating buttons -->
+      <TaskButtonRender :buttons="ratingButtons" />
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">

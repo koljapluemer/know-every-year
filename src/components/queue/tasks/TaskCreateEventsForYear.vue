@@ -1,9 +1,7 @@
 <template>
   <div class="text-center">
-
     <TaskButtonRender :buttons="actionButtons" />
     <FormControlYear :year="year" />
-
   </div>
 </template>
 

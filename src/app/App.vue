@@ -7,11 +7,17 @@ import { RouterView } from 'vue-router';
 <template>
     <header class="flex flex-row justify-center items-center p-4">
         <nav class="flex flex-row gap-2 justify-center">
-            <router-link class="btn" :class="{ 'marked': $route.name === 'Practice' }" :to="{ name: 'Practice' }"><Play :size="12" /></router-link>
-            <router-link class="btn" :class="{ 'marked': $route.name === 'Data' }" :to="{ name: 'Data' }"><Database :size="12" /></router-link>
+            <router-link class="btn" :class="{ 'marked': $route.name === 'Practice' }" :to="{ name: 'Practice' }">
+                <Play :size="12" />
+            </router-link>
+            <router-link class="btn" :class="{ 'marked': $route.name === 'Data' }" :to="{ name: 'Data' }">
+                <Database :size="12" />
+            </router-link>
         </nav>
     </header>
-    <RouterView></RouterView>
+    <main class="max-w-2xl mx-auto grid grid-columns-12 gap-4">
+        <RouterView></RouterView>
+    </main>
 
 </template>
 
@@ -24,7 +30,7 @@ import { RouterView } from 'vue-router';
     }
 
     h2 {
-        @apply text-2xl font-semibold tracking-tight mb-4;
+        @apply text-2xl font-semibold tracking-tight;
     }
 
     h3 {
@@ -40,8 +46,8 @@ import { RouterView } from 'vue-router';
 
     }
 
-    .btn:hover  {
-        @apply  bg-gray-900 text-white;
+    .btn:hover {
+        @apply bg-gray-900 text-white;
 
     }
 
@@ -59,7 +65,7 @@ import { RouterView } from 'vue-router';
     }
 
     input {
-        @apply border-gray-900 border-b-2 p-2;
+        @apply border-gray-900 border-b-1 p-2 bg-gray-100;
     }
 
 }

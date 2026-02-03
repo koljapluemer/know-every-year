@@ -1,11 +1,17 @@
 <script setup lang="ts">
-import { Check, Edit, Square, SquareCheckBig, Trash, X } from 'lucide-vue-next';
+import { Check, ChevronUp, Edit, Square, SquareCheckBig, Trash, X } from 'lucide-vue-next';
 
 </script>
 
 <template>
     <section>
-        <h2>Per Digit Mnemonics</h2>
+        <h2>Major System</h2>
+        <div class="flex gap-2 items-center mt-8 mb-4">
+            <button class="btn">
+                <ChevronUp :size="12" />
+            </button>
+            <h3>Digit-Sound Associations</h3>
+        </div>
         <div class="grid grid-cols-[auto_auto_1fr] gap-2 items-center">
             <div>
                 <button class="btn">
@@ -98,7 +104,12 @@ import { Check, Edit, Square, SquareCheckBig, Trash, X } from 'lucide-vue-next';
         </div>
     </section>
     <section>
-        <h2>Two-Digit Word Hooks</h2>
+        <div class="flex gap-2 items-center mt-8 mb-4">
+            <button class="btn">
+                <ChevronUp :size="12" />
+            </button>
+            <h3>Two-Digit Number Associations</h3>
+        </div>
         <div class="grid grid-cols-[auto_auto_1fr] gap-2 items-center">
             <div>
                 <button class="btn">
@@ -117,35 +128,45 @@ import { Check, Edit, Square, SquareCheckBig, Trash, X } from 'lucide-vue-next';
             <div>sad</div>
         </div>
     </section>
-    <section>
-        <h2>Custom Number Word Hooks</h2>
-        <div class="grid grid-cols-[auto_auto_1fr] gap-2 items-center">
-            <div class="flex flex-row gap-2">
-                <button class="btn">
-                    <Edit :size="12" />
-                </button>
-                <button class="btn">
-                    <Trash :size="12" />
-                </button>
-            </div>
-            <div class="font-bold">9999</div>
-            <div>propeller</div>
 
-            <div class="flex flex-row gap-2">
+    <section>
+        <h2>Ben System </h2>
+        <div class="flex gap-2 items-center mt-8 mb-4">
+            <button class="btn">
+                <ChevronUp :size="12" />
+            </button>
+            <h3>Digit-Sound Associations</h3>
+        </div>
+
+        <div class="grid grid-cols-[auto_auto_1fr] gap-2 items-center">
+            <div>
                 <button class="btn">
                     <Edit :size="12" />
                 </button>
+            </div>
+            <div class="font-bold">0</div>
+            <div>s | 'oo' is in 'you' | s</div>
+        </div>
+        <div class="flex gap-2 items-center mt-8 mb-4">
+            <button class="btn">
+                <ChevronUp :size="12" />
+            </button>
+            <h3>Three-Digit Number Associations</h3>
+        </div>
+        <div class="grid grid-cols-[auto_auto_1fr] gap-2 items-center">
+            <div>
                 <button class="btn">
-                    <Trash :size="12" />
+                    <Edit :size="12" />
                 </button>
             </div>
-            <div class="font-bold">-</div>
-            <div>object on fire</div>
+            <div class="font-bold">000</div>
+            <div>susan</div>
         </div>
     </section>
+
     <section>
         <h2>To-Dos</h2>
-        <div class="flex flex-col gap-2">
+        <div class="flex flex-col gap-2 mt-8 mb-4">
             <div class="flex flex-row gap-2">
                 <button class="btn">
                     <Square :size="12" />
@@ -184,9 +205,23 @@ import { Check, Edit, Square, SquareCheckBig, Trash, X } from 'lucide-vue-next';
                 </button>
                 <div>Friend's Birthdays</div>
             </div>
+
+            <button class="btn">
+                <Plus :size="12" />
+                Add To-Do
+            </button>
         </div>
     </section>
+
+
     <section>
         <h2>To Memorize</h2>
+        <div class="flex flex-col gap-2 mt-8 mb-4">
+
+            <button class="btn">
+                <Plus :size="12" />
+                Add Number to Memorize
+            </button>
+        </div>
     </section>
 </template>

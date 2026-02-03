@@ -4,7 +4,7 @@
         <h2>Add Essential Dates of Classical Music History</h2>
         <div class="flex flex-col gap-8 mt-12 items-start">
             <div class="flex flex-row gap-2 items-start">
-                <div class="flex flex-row gap-2 justify-center">
+                <div class="flex flex-row gap-2 justify-start">
                     <button class="btn">
                         <Trash :size="12" />
                     </button>
@@ -12,7 +12,7 @@
                         <Edit :size="12" />
                     </button>
                 </div>
-                <div class="flex flex-col gap-2 justify-center">
+                <div class="flex flex-col gap-2 justify-start">
                     <h3>1770</h3>
 
                     <h4>Beethoven born</h4>
@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="flex flex-row gap-2 items-start">
-                <div class="flex flex-row gap-2 justify-center">
+                <div class="flex flex-row gap-2 justify-start">
                     <button class="btn">
                         <Trash :size="12" />
                     </button>
@@ -28,7 +28,7 @@
                         <Edit :size="12" />
                     </button>
                 </div>
-                <div class="flex flex-col gap-2 justify-center">
+                <div class="flex flex-col gap-2 justify-start">
                     <h3>1770</h3>
 
                     <h4>Giuseppe Tartini (violinist) dies</h4>
@@ -39,7 +39,7 @@
 
 
             <div class="flex flex-row gap-2 items-start">
-                <div class="flex flex-row gap-2 justify-center">
+                <div class="flex flex-row gap-2 justify-start">
                     <button class="btn">
                         <Trash :size="12" />
                     </button>
@@ -47,7 +47,7 @@
                         <Edit :size="12" />
                     </button>
                 </div>
-                <div class="flex flex-col gap-2 justify-center">
+                <div class="flex flex-col gap-2 justify-start">
                     <h3>26.03.1827</h3>
 
                     <h4>Beethoven dies</h4>
@@ -77,7 +77,7 @@
 
             <button class="btn">
                 <Plus :size="12" />
-                Add Event
+                Add Number to Memorize
             </button>
         </div>
 

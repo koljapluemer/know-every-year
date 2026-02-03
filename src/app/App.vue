@@ -1,9 +1,16 @@
 <script setup lang="ts">
+import { Database, Play } from 'lucide-vue-next';
 import { RouterView } from 'vue-router';
 
 </script>
 
 <template>
+    <header class="flex flex-row justify-center items-center p-4">
+        <nav class="flex flex-row gap-2 justify-center">
+            <router-link class="btn" :class="{ 'marked': $route.name === 'Practice' }" :to="{ name: 'Practice' }"><Play :size="12" /></router-link>
+            <router-link class="btn" :class="{ 'marked': $route.name === 'Data' }" :to="{ name: 'Data' }"><Database :size="12" /></router-link>
+        </nav>
+    </header>
     <RouterView></RouterView>
 
 </template>
@@ -17,7 +24,7 @@ import { RouterView } from 'vue-router';
     }
 
     h2 {
-        @apply text-2xl font-semibold tracking-tight;
+        @apply text-2xl font-semibold tracking-tight mb-4;
     }
 
     h3 {
@@ -28,14 +35,18 @@ import { RouterView } from 'vue-router';
         @apply text-sm text-gray-500 uppercase font-bold tracking-widest;
     }
 
-    button {
-        @apply border-1 border-gray-900 p-2 text-sm;
+    .btn {
+        @apply border-1 border-gray-900 p-2 text-sm flex gap-2 items-center;
 
     }
 
-    button:hover  {
+    .btn:hover  {
         @apply  bg-gray-900 text-white;
 
+    }
+
+    .marked {
+        @apply border-b-3 border-gray-900;
     }
 
 

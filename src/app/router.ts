@@ -12,6 +12,11 @@ const router = createRouter({
       path: '/practice',
       name: 'Practice',
       component: import("@/pages/practice/PagePractice.vue")
+    },
+    {
+      path: '/data',
+      name: 'Data',
+      component: import("@/pages/data/PageData.vue")
     }
   ]
 })

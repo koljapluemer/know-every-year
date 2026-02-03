@@ -3,7 +3,7 @@
 - Tailwind for styling. Flat, hardcore minimalist design.
 - lucide icons (via the vue package)
 - vue router
-- dexie as SINGLE source of truth for data
+- dexie (dexie-cloud ready) as SINGLE source of truth for data
 
 ## Architecture
 
@@ -30,4 +30,3 @@ Do not use `index.ts` file reexporting components, simply export directly.
 - Keep copy and micro-copy short and to the point. Avoid waffling, avoid marketing speak, and avoid labelling everything with triple redundancy.
 - KEEP. IT. SIMPLE.
 - always run `npm run build` and `npm run lint:fix` to ensure everything is well done. Fix problems by writing clean code, not by disabling the linter.
-- save inputs on blur, avoid using "Save" buttons
